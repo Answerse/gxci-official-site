@@ -173,25 +173,22 @@ figure.bfig figcaption{margin-top:12px;font-size:0.8125rem;line-height:1.7;lette
   .pv-phone{margin-inline:auto}
 }
 
-/* V259：产品页累计数据带（茧易通 / 陈皮通）
-   只靠字号与字重分层，不加色块；上方一条 8% 细线划分区块，列间细线分隔。
+/* V276：产品页累计数据（茧易通 / 陈皮通）改为居中卡片
+   用户指定：文字居中、5% 黑描边、4px 圆角，每项一张卡。
    不画比例条/环形图——除 100% 外没有可比基数，画出来等于编数据 */
 .pstat{margin-top:clamp(26px,3.4vh,38px)}
-.pstat-cap{font-size:0.8125rem;line-height:1.7;letter-spacing:.02em;color:var(--mut)}
-.pstat-grid{margin-top:clamp(14px,1.8vh,20px);display:grid;align-items:start}
+.pstat-cap{font-size:0.8125rem;line-height:1.7;letter-spacing:.02em;color:var(--mut);text-align:center}
+.pstat-grid{margin-top:clamp(14px,1.8vh,20px);display:grid;align-items:stretch;gap:clamp(12px,1.6vw,18px)}
 .pstat--2 .pstat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 .pstat--3 .pstat-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
-.pstat-i{padding-inline:clamp(14px,2.6vw,44px);min-width:0}
-.pstat-i:first-child{padding-left:0}
-.pstat-i:last-child{padding-right:0}
-.pstat-i b{display:flex;align-items:baseline;gap:4px;font-family:var(--num);
+.pstat-i{min-width:0;padding:clamp(20px,2.8vh,30px) clamp(14px,1.8vw,22px);
+  border:1px solid rgba(0,0,0,.08);border-radius:4px;text-align:center}
+.pstat-i b{display:flex;justify-content:center;align-items:baseline;gap:4px;font-family:var(--num);
   font-size:clamp(2.125rem,3.3vw,3rem);font-weight:700;line-height:1.06;letter-spacing:-.02em;color:var(--ink)}
 .pstat-i b i{font-style:normal;font-family:var(--font);font-size:1rem;font-weight:600;letter-spacing:0}
 .pstat-i span{display:block;margin-top:10px;font-size:0.8125rem;line-height:1.7;color:var(--mut)}
 @media (max-width:860px){
-  .pstat--2 .pstat-grid,.pstat--3 .pstat-grid{grid-template-columns:minmax(0,1fr);gap:20px}
-  .pstat-i{padding-inline:0}
-  .pstat-i+.pstat-i{padding-top:20px}
+  .pstat--2 .pstat-grid,.pstat--3 .pstat-grid{grid-template-columns:minmax(0,1fr);gap:12px}
 }
 
 /* V254：产品页小程序码（四页统一，横排：码 + 说明）
