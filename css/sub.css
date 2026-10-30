@@ -1,0 +1,339 @@
+/* ============================================================
+   子页体系：业务领域 / 场景聚焦 / 产品中心
+   版式：通栏大图首屏 + 左栏题注 + 大留白正文（参考宇通方案页）
+   色彩：群青蓝为结构色，金色只用于交互反馈
+   ============================================================ */
+
+/* ---------- 通栏首屏 ---------- */
+/* V188 用户定：子页 banner 恒 300px（V136 曾收到 clamp(380,45vh,430)，V188 再压到 300）。
+   padding 与标题下间距同步收小，否则「标题 + 副标题 + 底栏 60px」在 300 里装不下会把高度顶开 */
+.dhero{position:relative;min-height:300px;display:flex;flex-direction:column;justify-content:flex-end;background:#0b1038;color:#fff;overflow:hidden}
+.dhero-media{position:absolute;inset:0}
+.dhero-media img{width:100%;height:100%;object-fit:cover;object-position:58% 46%;border-radius:0;transform:scale(1.015)}
+/* V273：原本写在 <img style> 里的构图焦点，按「HTML 不含行内样式」的约定移到这里 */
+/* 必须带上 .dhero-media img 才压得过上面那条同属性规则（特异性 0,2,1 > 0,1,1） */
+.dhero-media img.dhero-img--agri{object-position:60% 66%}
+.dhero-media img.dhero-img--jyt{object-position:58% 70%}
+.dhero-media img.dhero-img--nongyi{object-position:58% 66%}
+/* V139 标题改为居中，遮罩由「左深右浅」改成横向均匀压深：
+   原来的 90° 渐变到右侧只剩 .02，居中标题的右半会落在亮图上读不清 */
+.dhero-shade{position:absolute;inset:0;background:
+  linear-gradient(90deg,rgba(18,28,86,.86) 0%,rgba(18,28,86,.77) 38%,rgba(18,28,86,.70) 70%,rgba(18,28,86,.60) 100%),
+  linear-gradient(180deg,rgba(16,26,78,.34) 0%,rgba(16,26,78,.04) 30%,rgba(16,26,78,.28) 60%,rgba(16,26,78,.68) 100%)}
+/* V193：底栏（面包屑/向下滚动）已删。标题在原 V188 位置上整体下移 20px：
+   top +20、bottom -20（60→40，为已删的 60px 底栏预留位），flex 居中下移量 = (20+20)/2 = 20px */
+.dhero-in{position:relative;z-index:2;width:100%;flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center;padding-top:calc(var(--nav-h) + clamp(10px,1.4vh,16px) + 20px);padding-bottom:calc(40px + clamp(8px,1.2vh,12px))}
+/* 副标题：正文字号 + 字距，单行不换行（文案统一控制在 12 字内） */
+.dhero-sub{margin-top:clamp(12px,1.8vh,18px);padding-left:.13em;font-size:1.125rem;letter-spacing:.13em;color:rgba(255,255,255,.7);white-space:nowrap}
+/* 标题上限收到 3.25rem（V188）：banner 压到 300 后 62px 标题压不住，且最长的
+   「林易通 · 林产品交易市场线上综合平台」（19 字）在 861–1024 必须单行 —— 斜率取 4.2vw，
+   861 下 36.2px 与 ≤860 的 36px 正好接上，全靠一条 clamp 维持全站等高 */
+.dhero h1{margin-top:0;font-size:clamp(2rem,4.2vw,3.25rem);font-weight:600;line-height:1.16;letter-spacing:.01em;text-wrap:balance}
+/* V193：底栏与 dsc 动画随面包屑/向下滚动一起删除 */
+
+/* ---------- 通用板块 ---------- */
+.dsec{padding:clamp(44px,6.2vh,80px) 0}
+.dsec.no-line{border-top:0}
+/* V136：序号列删除后，原 150–232px 栏 + 28–96px 间距（1440 下共 317px）全部还给正文 */
+.dgrid{display:block}
+.dbody{max-width:1040px;min-width:0;margin-inline:auto}
+.dtext{margin-top:clamp(16px,2.2vh,24px);max-width:1040px;font-size:1.0625rem;line-height:2;color:var(--ink2)}
+.dtext+.dtext{margin-top:14px}
+/* 折行控制（V89）：中文按字断行，末行常掉下一两个字（产品中心 1920 下原本是「力。」「案。」）。
+   正文用 pretty：只在末行过短时回退几个字，行宽不变，末行至少是一个完整的词；
+   大号导语用 balance：两行拉齐，不会出现长行带一条小尾巴。balance 只给 1–2 行的导语用，
+   段落一旦 3 行以上，balance 会把整块压窄（实测 780 → 490），正文不能用。
+   不支持的浏览器退回原折行，无副作用。 */
+.dbody p,.dhead-p{text-wrap:pretty}
+.dbody p.dlead{text-wrap:balance}
+.dserv-i .sn{font-family:var(--num);font-size:0.8125rem;letter-spacing:.14em;color:var(--mut);padding-top:7px;transition:color .3s}
+.dserv-i:hover .sn,.dserv-i:hover h3{color:var(--accent)}
+
+/* ---------- 上/下一篇 ---------- */
+.dpn{display:grid;grid-template-columns:1fr 1fr}
+.dpn a{display:block;padding:clamp(20px,3vh,32px) 0;min-width:0;transition:background .4s}
+.dpn .sp+a,.dpn a+a{text-align:right;padding-left:clamp(24px,4vw,56px)}
+.dpn small{display:block;font-family:var(--num);font-size:0.8125rem;letter-spacing:.26em;color:var(--mut)}
+.dpn b{display:block;margin-top:12px;font-size:clamp(1.0625rem,1.7vw,1.375rem);font-weight:600;letter-spacing:.02em;transition:color .3s}
+.dpn a:hover b{color:var(--accent)}
+/* 概览块已删（V122），留白改由标签页自己给 */
+.apane.bz-pane{padding-top:clamp(44px,7vh,76px)}
+/* ---------- 索引卡组件：业务领域 business.html + 产品中心 products.html 共用（V132 建，V159 产品页并入）
+   图 + 标题 + 三行小字，分块靠留白、不用分割线；整卡可点，hover 标题转蓝、图微放大 ---------- */
+.bizgrid-sec{padding:clamp(32px,4.6vh,56px) 0 clamp(40px,5.4vh,64px)}
+
+/* ---------- 业务领域索引页（V169）：直接复用首页 .bcard 渐变融合卡，放大成 2×2 宫格
+   比例不能用首页的 3/4——索引页卡宽约 638px，3/4 就是 851 高、两行 1700+，整页像一堵墙。
+   V203 用户指令：normal 不展示业务说明、hover 再展示（交互与首页 .bcard 完全一致），
+   比例随之从 3/2 压到 16/9（527 宽 → 高 351→296），窄屏不再需要 min-height 兜底 ---------- */
+.bizmap{padding:clamp(32px,4.6vh,56px) 0 clamp(40px,5.4vh,64px)}
+/* V195 用户指令：卡偏大，宫格限宽 1080 居中——卡从 ~638 缩到 ~527 宽（3/2 比例不变） */
+.biz2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(18px,1.8vw,26px);
+  max-width:min(1080px,100%);margin-inline:auto}
+.biz2 .bcard{--cp:clamp(24px,2.2vw,34px);aspect-ratio:16/9}
+.biz2 .bcard :is(h2,h3){font-size:clamp(1.375rem,1.9vw,1.75rem)}
+/* 大卡上文字块占到卡高 38%，原来的薄雾压不住摘要：遮罩提前、压深，白字才立得住 */
+.biz2 .bcard::after{background:linear-gradient(180deg,transparent 34%,color-mix(in srgb,var(--t3) 46%,transparent) 62%,color-mix(in srgb,var(--t3) 82%,transparent) 100%)}
+.biz2 .bcard .bfig img{-webkit-mask-image:linear-gradient(180deg,#000 0%,#000 26%,rgba(0,0,0,.5) 52%,rgba(0,0,0,0) 72%);
+  mask-image:linear-gradient(180deg,#000 0%,#000 26%,rgba(0,0,0,.5) 52%,rgba(0,0,0,0) 72%)}
+/* V207 用户指令：hover 只留「标题上升」一个动作，不要升完再坠的微动；移出直接下落。
+   旧方案 btags 收起 + bsum 展开两个 max-height 并跑，max-height 超过实际内容高度时
+   会先停住再动，两段时序错开 → 标题出现「先升后回落」。索引页改为：
+   ① 关键词条 hover 不再收起（静态，不参与动画）；② 摘要用 grid-template-rows 0fr→1fr
+   等比展开，高度严格跟缓动曲线走、无停顿段，升降都是一条单调直线 */
+.biz2 .bcard .btags{transition:none}
+.biz2 .bcard:hover .btags,.biz2 .bcard:focus-visible .btags{max-height:70px;opacity:1;margin-top:12px}
+.biz2 .bcard .bsum{max-height:none;display:grid;grid-template-rows:0fr;
+  transition:grid-template-rows .45s var(--ease),opacity .35s var(--ease),margin-top .45s var(--ease)}
+.biz2 .bcard .bsum>span{display:block;overflow:hidden;min-height:0;text-wrap:balance}
+.biz2 .bcard:hover .bsum,.biz2 .bcard:focus-visible .bsum{grid-template-rows:1fr;opacity:1;margin-top:12px}
+@media (max-width:860px){
+  .biz2{grid-template-columns:1fr}
+  .biz2 .bcard{--cp:22px}
+}
+
+/* ---------- 业务详情页：两大板块（V183） ----------
+   原来「概览 / 服务内容 / 平台架构 / 垂直平台 / 成功案例 / 典型项目」六段并列，
+   每段都挂一条 border-top，层级全平。改成「业务介绍」「成功案例」两大板块：
+   板块标题 h2（V202 起 28–30px）、板块内小节一律 h3（18–20px），板块之间只用留白分区、不再加线——
+   两级关系靠字号差说清楚，不靠分割线堆。V202 用户「标题缩小，能和正文对比就行，一屏多展示信息」。 */
+.dpanel{padding:clamp(46px,6.6vh,84px) 0;border-top:0}
+.dpanel-h{margin-bottom:clamp(18px,2.4vh,26px);font-size:clamp(1.375rem,2.35vw,1.875rem);font-weight:600;line-height:1.36;letter-spacing:.02em}
+/* h3 与上一段正文之间留 36px（段落之间才 24px），分组才看得出来。
+   下限 18px：窄屏正文是 17px，靠 600 字重撑层级；再往下就与正文混同 */
+.dsub-h{margin-top:clamp(24px,3.4vh,36px);font-size:clamp(1.125rem,1.35vw,1.25rem);font-weight:600;line-height:1.5;letter-spacing:.02em}
+
+/* ---------- 业务详情页内容块（V127：只服务四个 area 页，内容全部来自宣传册） ---------- */
+/* 概览只有正文段落、没有大号导语时：首段去掉上边距，「概览」压回正文墨迹顶 */
+.dbody--plain p.dtext:first-child{margin-top:0}
+.dgrid:has(.dbody--plain) .rno.cn{margin-top:.27em}
+
+/* 段内小标题：中文标签 + 细线 */
+.bmod-t{display:flex;align-items:center;gap:14px;font-size:0.8125rem;font-weight:600;letter-spacing:.14em;color:var(--ink)}
+.dbody .bmod-t{margin-top:clamp(22px,3vh,32px)}
+
+/* 图：整幅、直角、无遮罩
+   ⚠ 必须限定 figure.bfig：卡片里的 div.bfig 是同名不同物（position:absolute 铺满卡面），
+   这条 margin-top 会把整张图往下推 25px、卡顶露出卡片底色（V173 修） */
+figure.bfig{margin-top:clamp(20px,2.8vh,30px);max-width:1040px}
+figure.bfig img{width:100%;height:auto}
+/* V252：图幅收窄居中——满宽 1040 时五机图视觉过重，用户要求缩小 */
+figure.bfig--mid{max-width:min(800px,100%);margin-inline:auto}
+/* V268：源图只有 459px 宽的照片，800 显示会放糊，单独收到 620 */
+figure.bfig--narrow{max-width:min(620px,100%);margin-inline:auto}
+/* 图注比图宽时不挤在 620 里断成两行：单独一段，居中 800，13px 灰 */
+.bfig-cap{margin:12px auto 0;max-width:800px;font-size:0.8125rem;line-height:1.75;
+  letter-spacing:.02em;color:var(--mut);text-align:center}
+figure.bfig figcaption{margin-top:12px;font-size:0.8125rem;line-height:1.7;letter-spacing:.02em;color:var(--mut)}
+
+/* 项目 / 案例清单：编号两列 */
+.bproj{margin-top:20px;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:0 clamp(24px,3vw,44px)}
+.bproj li{display:flex;gap:12px;padding:10px 0;font-size:0.9375rem;line-height:1.75;color:var(--ink2)}
+.bproj li i{flex:none;font-style:normal;font-family:var(--num);font-size:0.8125rem;color:var(--mut);padding-top:3px}
+.bproj--one{grid-template-columns:1fr}
+
+/* 成功案例里没有配图的两条：并列排，不用编号 */
+.bcases{margin-top:clamp(18px,2.4vh,26px);display:grid;grid-template-columns:1fr;gap:0}
+.bcases-i{padding:11px 0}
+.bcases-i b{display:block;font-size:0.9375rem;font-weight:500;line-height:1.8;color:var(--ink2)}
+
+/* 垂直平台：三栏，手机截图在上 */
+.bplat3{margin-top:clamp(20px,2.6vh,28px);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0}
+.bpl{display:flex;flex-direction:column;align-items:center;text-align:center;min-width:0;padding-inline:clamp(18px,2.4vw,34px)}
+/* V235：三栏之间用 8% 黑竖向细线分栏（用户指定） */
+.bpl+.bpl{border-left:1px solid rgba(0,0,0,.08)}
+.bpl-fig img{width:100%;max-width:248px;margin:0}
+.bpl h3{margin-top:16px;font-size:1.125rem;font-weight:600;letter-spacing:.01em}
+.bpl-meta{margin-top:8px;display:flex;flex-wrap:wrap;justify-content:center;gap:4px 14px;font-size:0.8125rem;line-height:1.7;color:var(--mut)}
+/* V234：平台卡只留标题 + 发起信息 + 「了解更多」，正文与数据行删除 */
+.bpl .bpl-more{margin-top:auto;padding-top:clamp(14px,2vh,18px);align-self:center}
+
+/* V257：紧凑化——标题与正文之间原被 align-items:center 拉开（手机图 280 高、文字块仅 ~160 高，
+   居中后正文上浮出 ~60px 空白）；改为顶对齐，条间改用 8% 黑细分隔线（用户指定要线） */
+.pvert{max-width:1040px;margin-inline:auto}
+.pv+.pv{margin-top:clamp(30px,3.8vh,46px);padding-top:clamp(30px,3.8vh,46px);
+  border-top:1px solid rgba(0,0,0,.08)}
+.pv-hd{display:flex;align-items:baseline;gap:clamp(10px,1.2vw,16px)}
+.pv-hd h3{font-size:1.3125rem;font-weight:600;letter-spacing:.01em;color:var(--ink)}
+.pv-time{font-size:0.8125rem;letter-spacing:.02em;color:var(--mut)}
+.pv-in{margin-top:12px;display:grid;
+  grid-template-columns:minmax(0,1fr) clamp(150px,19vw,216px) clamp(112px,14vw,152px);
+  gap:clamp(18px,2.4vw,32px);align-items:start}
+.pv-txt p{font-size:0.9375rem;line-height:1.9;color:var(--ink2)}
+.pv-kpi{margin-top:clamp(10px,1.3vh,14px);font-size:0.9375rem;line-height:1.85;color:var(--mut)}
+.pv-kpi b{font-weight:600;font-family:var(--num);color:var(--ink)}
+/* figure 默认 margin:1em 40px 会把图片向内缩 80px（V257 排查发现的真 bug），必须清掉 */
+.pv-photo,.pv-phone{margin:0}
+.pv-photo img,.pv-phone img{display:block;width:100%;height:auto}
+/* 无现场照的条目（林易通）：两列，手机仍贴右边缘与上两条对齐 */
+.pv--one .pv-in{grid-template-columns:minmax(0,1fr) clamp(112px,14vw,152px)}
+@media (max-width:860px){
+  .pv-in{grid-template-columns:minmax(0,1fr);gap:18px}
+  .pv-photo,.pv-phone{max-width:320px}
+  .pv-phone{margin-inline:auto}
+}
+
+/* V259：产品页累计数据带（茧易通 / 陈皮通）
+   只靠字号与字重分层，不加色块；上方一条 8% 细线划分区块，列间细线分隔。
+   不画比例条/环形图——除 100% 外没有可比基数，画出来等于编数据 */
+.pstat{margin-top:clamp(26px,3.4vh,38px)}
+.pstat-cap{font-size:0.8125rem;line-height:1.7;letter-spacing:.02em;color:var(--mut)}
+.pstat-grid{margin-top:clamp(14px,1.8vh,20px);display:grid;align-items:start}
+.pstat--2 .pstat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.pstat--3 .pstat-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.pstat-i{padding-inline:clamp(14px,2.6vw,44px);min-width:0}
+.pstat-i:first-child{padding-left:0}
+.pstat-i:last-child{padding-right:0}
+.pstat-i b{display:flex;align-items:baseline;gap:4px;font-family:var(--num);
+  font-size:clamp(2.125rem,3.3vw,3rem);font-weight:700;line-height:1.06;letter-spacing:-.02em;color:var(--ink)}
+.pstat-i b i{font-style:normal;font-family:var(--font);font-size:1rem;font-weight:600;letter-spacing:0}
+.pstat-i span{display:block;margin-top:10px;font-size:0.8125rem;line-height:1.7;color:var(--mut)}
+@media (max-width:860px){
+  .pstat--2 .pstat-grid,.pstat--3 .pstat-grid{grid-template-columns:minmax(0,1fr);gap:20px}
+  .pstat-i{padding-inline:0}
+  .pstat-i+.pstat-i{padding-top:20px}
+}
+
+/* V254：产品页小程序码（四页统一，横排：码 + 说明）
+   源图仅 104~152px，按 112 显示，不放大以免点阵发虚 */
+.p-qr{margin-top:clamp(26px,3.4vh,40px);max-width:1040px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px}
+.p-qr img{display:block;width:112px;height:112px;flex:none}
+.p-qr figcaption{font-size:0.8125rem;line-height:1.8;letter-spacing:.02em;color:var(--mut)}
+
+/* 成功案例：文左图右 */
+.bcase{margin-top:clamp(26px,3.6vh,40px);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.04fr);gap:clamp(24px,3.2vw,46px);align-items:start}
+.bcase-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px}
+.bcase-h h3{font-size:1.125rem;font-weight:600;line-height:1.55}
+.bcase-h .bdate{font-family:var(--num);font-size:0.8125rem;letter-spacing:.14em;color:var(--mut);white-space:nowrap}
+.bcase p{margin-top:13px;font-size:0.9375rem;line-height:1.95;color:var(--ink2);text-align:justify}
+.bcase-fig img{width:100%;height:auto}
+
+/* 累计数据：不加底色不加框，只靠字重与字号 */
+.bnums{margin-top:clamp(20px,2.8vh,30px);display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(16px,2vw,30px)}
+.bnums-i{padding-top:17px}
+.bnums-i b{display:flex;align-items:baseline;gap:3px;font-family:var(--num);font-size:clamp(1.75rem,2.6vw,2.375rem);font-weight:700;line-height:1.15;letter-spacing:-.01em}
+.bnums-i b i{font-style:normal;font-family:var(--font);font-size:0.9375rem;font-weight:600;letter-spacing:0}
+.bnums-i span{display:block;margin-top:9px;font-size:0.8125rem;line-height:1.7;color:var(--mut)}
+
+/* 典型客户 */
+.bclients{margin-top:20px;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:0 clamp(24px,3vw,44px)}
+.bclients li{padding:8px 0;font-size:0.9375rem;line-height:1.7;color:var(--ink2)}
+
+@media (max-width:1100px){
+  .bcase{grid-template-columns:1fr}
+  /* 单列后图直接贴在正文末行下面，6px 会糊成一段；留出一段呼吸 */
+  .bcase-fig{margin-top:clamp(16px,2.4vh,22px)}
+}
+@media (max-width:860px){
+  .bsvc,.bnums,.bclients{grid-template-columns:1fr 1fr}
+  .bproj{grid-template-columns:1fr}
+  .bplat3{grid-template-columns:1fr;gap:0}
+  .bpl{display:grid;grid-template-columns:140px minmax(0,1fr);gap:0 20px;align-items:start;
+    text-align:left;padding:26px 0}
+  .bpl:first-child{padding-top:0}
+  .bpl+.bpl{border-left:0;border-top:1px solid rgba(0,0,0,.08)}
+  .bpl-meta{justify-content:flex-start}
+  .bpl .bpl-more{align-self:flex-start}
+  .bpl-fig{grid-row:1/span 3}
+  .bpl-fig img{max-width:152px;margin:0}
+  .bpl h3{margin-top:2px}
+}
+@media (max-width:600px){
+  .bnums{grid-template-columns:1fr 1fr}
+  .bclients{grid-template-columns:1fr}
+  .bpl p,.bcase p,.beco-g div,.blay-r div{text-align:left}
+}
+
+/* 「查看XX →」文本链：四处出口同一规格（V96） */
+.olink{display:inline-flex;align-self:flex-start;align-items:center;gap:10px;margin-top:clamp(20px,3vh,28px);font-size:0.9375rem;letter-spacing:.18em;color:var(--ink);transition:color .3s,gap .3s}
+.olink i{font-style:normal;transition:transform .35s var(--ease)}
+.olink:hover{color:var(--accent)}
+.olink:hover i{transform:translateX(6px)}
+.osfeat-t .olink:hover{color:var(--accent)}
+.osfeat-t .k{font-family:var(--num);font-size:0.8125rem;letter-spacing:.26em;color:rgba(255,255,255,.62)}
+.osfeat-t .olink{color:#fff}
+@media (max-width:860px){
+  .dhero{min-height:300px}
+  .dhero-in{padding-top:calc(var(--nav-h) + 2vh + 20px);padding-bottom:calc(34px + 12px)}
+  .dhero h1{font-size:clamp(1.875rem,8.4vw,2.25rem)}
+  .dhero-sub{font-size:1rem;letter-spacing:.08em;padding-left:.08em}
+  .dserv-i .sn{grid-area:sn;padding-top:4px}
+  .dpn a{padding:24px 0}
+  .dpn b{font-size:1rem}
+}
+@media (max-width:600px){
+  .dpn{grid-template-columns:1fr}
+  .dpn a+a{text-align:left;padding-left:0}
+}
+.dpn .sp{display:block;padding:clamp(26px,4vh,42px) 0}
+.dpn-sec{padding-top:0}
+/* 产品案例卡：文案常显（不靠 hover 才出字），留白更小 */
+.pcase .scene .tag{letter-spacing:.2em;color:rgba(255,255,255,.78);opacity:1;transform:none}
+
+/* ⑤ 产品中心（V182）：图 + 压在图上的实心铭牌（不再是 business 那套 .bizcard）
+   —— 铭牌底边越过图框（卡片底部留出 clamp(38,4.6vh,52) 的空档），打破图框是这套版式的关键；
+      hover 铭牌填充品牌蓝、并向上长出标签行（标签容器 max-height 0→120，牌底固定所以只往上长）。
+      牌内四层：标题 / 品类小字 / 18px 短横 / 标签。5 张卡排 3+2 三列 */
+.pgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(34px,4.8vh,56px) clamp(22px,2.4vw,34px)}
+@media (max-width:860px){
+  .pgrid{grid-template-columns:1fr;gap:38px}
+}
+.pcard{position:relative;display:block;min-width:0;padding-bottom:clamp(38px,4.6vh,52px)}
+.pcard-fig{aspect-ratio:16/9;overflow:hidden;background:#f4f6f9;border-radius:4px}
+.pcard-fig img{width:100%;height:100%;object-fit:cover;transition:transform .7s var(--ease)}
+.pcard-plate{position:absolute;left:clamp(18px,2.2vw,32px);right:clamp(20px,2.4vw,34px);bottom:0;
+  background:#fff;color:var(--ink);padding:clamp(16px,2vh,22px) clamp(16px,1.7vw,24px) clamp(14px,1.8vh,20px);
+  text-align:center;border-radius:4px;
+  box-shadow:0 10px 24px rgba(20,30,60,.07);
+  transition:background-color .38s var(--ease),color .38s var(--ease)}
+.pplate-h{font-size:clamp(1.1875rem,1.55vw,1.5rem);font-weight:600;line-height:1.35;letter-spacing:.01em}
+.pplate-k{margin-top:6px;font-size:0.8125rem;line-height:1.6;color:var(--mut);transition:color .38s var(--ease)}
+.pplate-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;max-height:0;overflow:hidden;opacity:0;margin-top:0;
+  transition:max-height .42s var(--ease),opacity .3s var(--ease),margin-top .42s var(--ease)}
+.pplate-tags li{padding:4px 10px;border:1px solid color-mix(in srgb,currentColor 26%,transparent);
+  border-radius:4px;font-size:0.8125rem;line-height:1.6;white-space:nowrap}
+/* V194：hover 铭牌色按各卡配图取主色（压深到白字可读档），不再统一品牌蓝 */
+.pcard:hover .pcard-plate,.pcard:focus-visible .pcard-plate{background:var(--accent);color:#fff}
+.pcard--nongyi:hover .pcard-plate,.pcard--nongyi:focus-visible .pcard-plate{background:#586e16}
+.pcard--cocoon:hover .pcard-plate,.pcard--cocoon:focus-visible .pcard-plate{background:#3a5c3a}
+.pcard--chenpi:hover .pcard-plate,.pcard--chenpi:focus-visible .pcard-plate{background:#854200}
+.pcard--forest:hover .pcard-plate,.pcard--forest:focus-visible .pcard-plate{background:#216321}
+.pcard--house:hover .pcard-plate,.pcard--house:focus-visible .pcard-plate{background:#2f4d72}
+.pcard:hover .pplate-k,.pcard:focus-visible .pplate-k{color:rgba(255,255,255,.76)}
+.pcard:hover .pplate-tags,.pcard:focus-visible .pplate-tags{max-height:120px;opacity:1;margin-top:clamp(10px,1.4vh,14px)}
+.pcard:hover .pcard-fig img,.pcard:focus-visible .pcard-fig img{transform:scale(1.03)}
+/* 601–860 是单列大卡（卡宽 600–860），铭牌若跟着卡宽走就成一条扁横条、不像「牌」了，
+   这一段把图改 16:9、铭牌收成固定宽度，牌才立得起来 */
+@media (min-width:601px) and (max-width:860px){
+  .pcard-fig{aspect-ratio:16/9}
+  .pcard-plate{right:auto;width:min(360px,62%)}
+}
+/* 触屏没有 hover：标签常显，铭牌保持白底（蓝色是 hover 反馈，不该常驻） */
+@media (hover:none){
+  .pplate-tags{max-height:none;overflow:visible;opacity:1;margin-top:clamp(10px,1.4vh,14px)}
+}
+/* 1279 以下三列单卡只剩 300 上下，铭牌展开后占卡高比例过大，把越界量收一档 */
+@media (max-width:1279px){
+  .pcard{padding-bottom:34px}
+}
+
+/* V272b：更多案例板块标题与卡片标题均居中 */
+.dsub-h--c{text-align:center}
+
+/* V271：产品详情页底部「更多案例」——四列图片 + 标题，无底框，只有图与字 */
+.pmore{margin-top:clamp(20px,2.6vh,28px);display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(16px,1.8vw,26px)}
+.pmore-i{display:block;color:var(--ink);min-width:0}
+.pmore-i figure{margin:0;overflow:hidden;border-radius:4px}
+.pmore-i img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;
+  transition:transform .55s var(--ease)}
+.pmore-i b{display:block;margin-top:12px;font-size:0.9375rem;font-weight:600;
+  line-height:1.55;letter-spacing:.01em;color:var(--ink);transition:color .3s;text-align:center}
+@media (hover:hover){
+  .pmore-i:hover img{transform:scale(1.035)}
+  .pmore-i:hover b{color:var(--accent)}
+}
+@media (max-width:860px){
+  .pmore{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 14px}
+  .pmore-i b{font-size:0.875rem;margin-top:9px}
+}

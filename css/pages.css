@@ -1,0 +1,257 @@
+/* ============================================================
+   页级样式：各页面一次性排版微调
+   （对应原来写在 HTML 上的行内样式，统一收敛到这里）
+   ============================================================ */
+
+/* 首页 · 合作伙伴区块 */
+.sec-partners{padding-bottom:var(--sec-pad)}
+.gap-18{height:18px}
+
+/* 子页 · 头部英文水印 */
+
+/* 通用间距微调 */
+.sec-tight{padding-top:clamp(40px,6vh,70px)}
+.sec-tight-top{padding-top:0}
+.cards-gap{margin-top:44px}
+.cards-gap-sm{margin-top:26px}
+
+/* 关于我们 */
+.note-muted{margin-top:30px;color:var(--mut);font-size:0.9375rem}
+/* 关于我们 · 信息公开（V90）：公文式网格表 → 发丝线规格表，与子页「发丝线列表」同一套语言。
+   去掉单元格全描边与灰底标签列，只留行间 1px 细线；标签列用 13px 辅助灰 + 字距，值用墨色；
+   公司名称一行加重做表头锚点；经营范围两条法务长文降到 15px/半调墨，避免变成一堵字墙。 */
+.ipane{max-width:none}
+.ipane-hd{margin-bottom:clamp(22px,3vh,34px);text-align:center}
+.ipane-h{font-size:clamp(1.5rem,2.4vw,2rem);font-weight:600;line-height:1.4;letter-spacing:.02em}
+.ipane-hd-gap{margin-top:clamp(56px,8vh,88px)}
+
+.info-tbl{width:100%;border-collapse:separate;border-spacing:0;border:1px solid rgba(0,0,0,.08);border-radius:4px;padding:clamp(18px,2.6vh,28px) clamp(22px,2.2vw,30px)}
+.info-tbl th,.info-tbl td{padding:clamp(8px,1.1vh,11px) 0;border-top:1px solid var(--line);text-align:left;vertical-align:baseline}
+.info-tbl tr:first-child th,.info-tbl tr:first-child td{padding-top:0;border-top:0}
+.info-tbl th{width:216px;padding-right:40px;font-size:0.8125rem;font-weight:400;line-height:1.7;letter-spacing:.14em;color:var(--mut)}
+.info-tbl td{padding-left:4px;padding-right:0;font-size:1.0625rem;line-height:1.75;color:var(--ink)}
+.info-tbl tr:first-child td{font-size:1.3125rem;font-weight:600;letter-spacing:.01em}
+.info-tbl td.long{font-size:0.9375rem;line-height:1.9;color:var(--ink2)}
+/* V208 用户「基本信息高度缩到现有 40%」：经营范围（许可+一般合并一行）默认收起 2 行，
+   底部渐隐，按钮叠在渐隐区右下（不占行高），内容一字未删 */
+
+/* ---------- 信息公开 · 公司组织架构（V208，按 gxci.com.cn 官网原图重绘，纯灰线框、无色块） ---------- */
+.org{--oln:#c7cedb;--ogap:clamp(24px,3vw,48px);max-width:960px;margin-inline:auto;
+  font-size:.9375rem;color:var(--ink)}
+.org-box{display:inline-block;padding:9px 18px;border:1px solid var(--oln);border-radius:4px;
+  background:#fff;line-height:1.6;text-align:center;letter-spacing:.02em}
+.org-box--leaf{padding:8px 13px;font-size:.8125rem;white-space:nowrap;position:relative}
+.org-top{display:grid;grid-template-columns:1fr 1fr;justify-items:center;gap:24px}
+.org-merge,.org-split{position:relative;height:34px}
+/* 两大股东：竖线落到底 → 横线汇中 → 中线接股东会（⊔） */
+.org-merge::before{content:"";position:absolute;left:calc((100% - 24px)/4);right:calc((100% - 24px)/4);
+  top:0;bottom:12px;border-left:1px solid var(--oln);border-right:1px solid var(--oln);border-bottom:1px solid var(--oln)}
+.org-merge::after{content:"";position:absolute;left:50%;bottom:0;height:12px;border-left:1px solid var(--oln)}
+.org-node{display:flex;justify-content:center}
+.org-drop{width:0;height:24px;border-left:1px solid var(--oln);margin-inline:auto}
+/* 党支部 — 董事会 横向相连；中列网格保证董事会严格居中 */
+.org-row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center}
+.org-side{display:flex;align-items:center;justify-self:end}
+.org-link{width:56px;border-top:1px solid var(--oln)}
+/* 经理层分两支：中线落 12px → 横线 → 两端竖线（⊓），端点对齐两支列中线 */
+.org-split::before{content:"";position:absolute;left:calc((100% - var(--ogap))/4);right:calc((100% - var(--ogap))/4);
+  top:12px;bottom:0;border-left:1px solid var(--oln);border-right:1px solid var(--oln);border-top:1px solid var(--oln)}
+.org-split::after{content:"";position:absolute;left:50%;top:0;height:12px;border-left:1px solid var(--oln)}
+.org-branch{display:grid;grid-template-columns:1fr 1fr;gap:var(--ogap)}
+.org-b{display:flex;flex-direction:column;align-items:center}
+/* 五部门扇形：中线落 34 → 横杆（10%–90% 恰为五等分列的中点）→ 每列短竖线接框 */
+.org-depts{position:relative;margin-top:34px;padding-top:12px;width:100%;
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));justify-items:center;gap:8px}
+.org-depts::before{content:"";position:absolute;top:0;left:10%;right:10%;border-top:1px solid var(--oln)}
+.org-depts::after{content:"";position:absolute;left:50%;top:-34px;height:34px;border-left:1px solid var(--oln)}
+.org-box--leaf::before{content:"";position:absolute;left:50%;top:-12px;height:12px;border-left:1px solid var(--oln)}
+/* 对外投资单支：只留一根中线，无横杆 */
+.org-depts--solo{margin-top:24px;padding-top:0;grid-template-columns:auto;justify-content:center}
+.org-depts--solo::before,.org-depts--solo .org-box--leaf::before{display:none}
+.org-depts--solo::after{top:-24px;height:24px}
+.org-depts--solo .org-box--leaf{white-space:normal;max-width:300px}
+@media (max-width:700px){
+  .org-top{grid-template-columns:1fr;gap:8px}
+  .org-merge::before{display:none}
+  .org-merge::after{height:100%}
+  .org-branch{grid-template-columns:1fr;gap:30px}
+  .org-split::before{display:none}
+  .org-link{width:32px}
+  .org-depts{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding-top:0;margin-top:12px}
+  .org-depts::before,.org-depts::after,.org-box--leaf::before{display:none}
+  .org-box--leaf{white-space:normal}
+  .org-depts--solo{margin-top:12px}
+  .org-depts--solo::after{display:none}
+}
+
+.gov-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(24px,4vw,64px)}
+.gov-i{border:1px solid rgba(0,0,0,.08);border-radius:4px;padding:clamp(24px,3vh,32px) clamp(22px,2.2vw,30px)}
+.gov-i .cn{display:block;font-size:0.8125rem;letter-spacing:.18em;color:var(--mut)}
+.gov-i h3{margin-top:16px;font-size:1.125rem;font-weight:600;line-height:1.5;letter-spacing:.02em}
+.gov-i p{margin-top:10px;font-size:1rem;line-height:2;color:var(--ink2)}
+@media (max-width:1000px){
+  /* 中等宽度：版心变窄后 300px 的右侧留白会把值列挤成一条，收回留白、同时收窄标签列 */
+  .info-tbl th{width:170px;padding-right:24px}
+  .info-tbl td{padding-right:0}
+}
+@media (max-width:760px){
+  /* 窄屏表格拆成「标签一行 + 值一段」的上下排，避免窄列把法务长文挤成竖条 */
+  .ipane{max-width:none}
+  .info-tbl,.info-tbl tbody,.info-tbl tr,.info-tbl th,.info-tbl td{display:block;width:auto}
+  .info-tbl tr{padding:18px 0;border-top:1px solid var(--line)}
+  .info-tbl tr:first-child{padding-top:0;border-top:0}
+  .info-tbl th,.info-tbl td{padding:0;border:0}
+  .info-tbl th{margin-bottom:8px;line-height:1.7}
+  .info-tbl tr:first-child td{font-size:1.25rem}
+  .gov-grid{grid-template-columns:1fr;gap:30px}
+  .gov-i{padding:20px}
+}
+
+/* 公司简介（V205 重构）：沿革段 → 发展定位 → 愿景/使命/价值观独立一栏（水平 3 列等高、无标题栏）；
+   V198 的关键信息四条、SINCE 1986 slogan 块、双栏结构均已删除（用户指定）。
+   正文限宽 880：全宽 1040 时沿革/定位段落每行约 60 字，超阅读舒适区 */
+.prof-intro{padding-top:clamp(36px,5vh,56px)}
+.prof-lead{font-size:1.0625rem;line-height:2.3;color:var(--ink2);text-indent:2em}
+.prof-body .pb-h{font-size:1.25rem;font-weight:600;line-height:1.5;letter-spacing:.2em;color:var(--ink);margin:0 0 22px}
+.prof-body p{font-size:1.0625rem;line-height:2.3;color:var(--ink2);margin-bottom:1.6em;text-indent:2em}
+.prof-body p:last-child{margin-bottom:0}
+.prof-cols{margin-top:clamp(52px,7.5vh,84px)}
+/* 愿景/使命/价值观：独立一栏、水平 3 列，grid stretch 三卡自动等高；
+   无容器标题，与发展定位共同构成公司定位信息 */
+.vmv-row{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,1.6vw,22px);margin-top:clamp(52px,7.5vh,84px)}
+.vmv-row .vm{border-radius:4px;padding:clamp(24px,3vh,32px) clamp(22px,2.2vw,30px);color:#fff}
+.vmv-row .vm--1{background:color-mix(in srgb,var(--accent) 82%,#fff)}
+.vmv-row .vm--2{background:var(--accent)}
+.vmv-row .vm--3{background:#1e2a70}
+.vmv-row .vm h4{font-size:1.75rem;font-weight:700;line-height:1.5;letter-spacing:.14em;text-align:center;margin:0}
+.vmv-row .vm p{margin-top:10px;font-size:1.0625rem;font-weight:400;line-height:1.9;letter-spacing:.04em;text-align:center;color:rgba(255,255,255,.88)}
+@media (max-width:860px){
+  .vmv-row{grid-template-columns:1fr}
+}
+
+/* 发展历程 · 纵向时间轴：年份右对齐贴轴 · 节点 · 内容三列，轴线垂直贯穿 */
+.hist-head{margin-top:56px}
+.hist-head .hh-tag{font-family:var(--num);font-size:0.8125rem;letter-spacing:.3em;color:var(--mut);margin-bottom:18px}
+.hist-head .hh-title{font-size:clamp(1.625rem,3vw,2.5rem);font-weight:700;letter-spacing:.04em}
+.htl{margin-top:20px;--rowpad:clamp(36px,4.5vw,56px)}
+.hist-y{display:grid;grid-template-columns:clamp(92px,9vw,140px) 40px 1fr;grid-template-areas:"yr axis es";column-gap:clamp(18px,2.4vw,36px);padding:var(--rowpad) 0}
+.hist-yr{grid-area:yr;font-family:var(--num);font-size:clamp(1.875rem,3.2vw,2.75rem);font-weight:600;line-height:1.15;color:var(--ink);margin:6px 0 0;text-align:right;font-variant-numeric:tabular-nums}
+.hist-axis{grid-area:axis;position:relative;align-self:stretch;display:flex;justify-content:center}
+.hist-axis::before{content:"";position:absolute;left:50%;top:calc(-1*var(--rowpad));bottom:calc(-1*var(--rowpad));width:2px;margin-left:-1px;background:var(--line)}
+.hist-y:first-child .hist-axis::before{top:24px}
+.hist-y:last-child .hist-axis::before{bottom:auto;height:calc(var(--rowpad) + 24px)}
+.hist-axis i{position:relative;z-index:1;width:12px;height:12px;border-radius:50%;background:#fff;border:2px solid var(--accent);margin-top:16px;transform:scale(0);transition:transform .5s var(--ease) .15s}
+.hist-y.in .hist-axis i{transform:scale(1)}
+.hist-es{grid-area:es;display:grid;gap:26px;min-width:0;padding-top:9px}
+.hist-e{display:grid;align-items:start;opacity:0;transform:translateY(26px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.hist-y.in .hist-e{opacity:1;transform:none}
+.hist-y.in .hist-e:nth-child(2){transition-delay:.12s}
+.hist-y.in .hist-e:nth-child(3){transition-delay:.24s}
+.hist-e p{font-size:1.0625rem;line-height:2.1;color:var(--ink2);margin:0;padding-top:7px;max-width:760px}
+.hist-e.has-fig{grid-template-columns:1fr 250px;gap:clamp(28px,3.5vw,64px)}
+.hist-fig{width:250px;margin:15px 0 0}
+.hist-fig img{width:100%;height:176px;object-fit:cover;border-radius:4px;display:block}
+.hist-fig figcaption{margin-top:10px;font-size:0.8125rem;letter-spacing:.08em;color:var(--mut)}
+@media (prefers-reduced-motion:reduce){
+  .hist-e,.hist-axis i{transition:none;opacity:1;transform:none}
+}
+@media (max-width:900px){
+  .hist-head{margin-top:36px}
+  .htl{--rowpad:34px}
+  .hist-y{grid-template-columns:30px 1fr;grid-template-areas:"axis yr" "axis es";row-gap:16px;padding:34px 0}
+  .hist-yr{font-size:1.875rem;text-align:left;margin:2px 0 0}
+  .hist-axis::before{margin-left:0}
+  .hist-y:first-child .hist-axis::before{top:12px}
+  .hist-y:last-child .hist-axis::before{height:calc(var(--rowpad) + 12px)}
+  .hist-axis i{margin-top:8px}
+  .hist-e.has-fig{grid-template-columns:1fr;gap:14px}
+  .hist-fig{width:100%}
+  .hist-fig img{height:200px}
+}
+
+/* 新闻详情 */
+#art-app{min-height:50vh}
+
+/* 招聘信息 · 卡片网格 */
+.job-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,1.8vw,26px);margin-top:clamp(32px,4vw,48px)}
+.job-card{position:relative;display:flex;flex-direction:column;min-height:268px;padding:clamp(26px,2.4vw,34px);background:#fff;border:1px solid var(--line);border-radius:4px;overflow:hidden;transition:transform .5s var(--ease),box-shadow .5s var(--ease),border-color .5s var(--ease)}
+.job-card::before{content:"";position:absolute;left:-1px;right:-1px;top:-1px;height:2px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease)}
+.job-card:hover{transform:translateY(-6px);box-shadow:0 26px 52px rgba(15,25,45,.09);border-color:var(--accent)}
+.job-card:hover::before{transform:scaleX(1)}
+.jc-tag{position:absolute;top:clamp(26px,2.4vw,34px);right:clamp(26px,2.4vw,34px);font-size:0.8125rem;letter-spacing:.18em;color:var(--accent)}
+.job-card h4{margin:clamp(30px,3.2vw,44px) 0 auto;font-size:clamp(1.125rem,1.55vw,1.3125rem);font-weight:600;line-height:1.7;letter-spacing:.01em;color:var(--ink);transition:color .3s}
+.job-card:hover h4{color:var(--accent)}
+.jc-meta{display:flex;align-items:center;justify-content:space-between;margin-top:clamp(26px,3vw,36px);padding-top:18px;border-top:1px solid var(--line);font-family:var(--num);font-size:0.8125rem;letter-spacing:.04em;color:var(--mut)}
+.jc-arrow{font-family:var(--font);font-size:1.0625rem;color:var(--accent);transition:transform .45s var(--ease)}
+.job-card:hover .jc-arrow{transform:translateX(6px)}
+@media (max-width:900px){
+  .job-grid{grid-template-columns:1fr}
+  .job-card{min-height:0}
+  .job-card h4{margin-top:26px}
+}
+
+/* 联系方式 · 图标 + 分栏（参考部门联系卡版式） */
+.ct-row{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,4.5vw,64px);align-items:start;padding-top:clamp(36px,5vh,56px)}
+.ct-lead{display:flex;gap:22px;align-items:flex-start}
+.ct-lead-body small{display:block;font-size:0.8125rem;letter-spacing:.22em;color:var(--mut);margin-bottom:8px}
+.ct-lead-body b{font-family:var(--num);font-size:clamp(1.1875rem,1.9vw,1.5625rem);font-weight:600;letter-spacing:.02em}
+.ct-lead-body p{margin-top:4px;font-size:1rem;color:var(--ink2)}
+.ct-grid{display:grid;gap:0}
+.ct-card{display:flex;gap:18px;align-items:flex-start}
+.ct-card-body h4{font-size:1.125rem;font-weight:600;letter-spacing:.05em}
+.ct-card-body p{margin-top:8px;font-size:1rem;line-height:1.9;color:var(--ink2)}
+.ct-card-body .ct-sub{margin-top:10px;font-size:0.8125rem;line-height:1.9;color:var(--mut)}
+.ct-ico{flex:none;width:42px;height:42px;border-radius:50%;background:var(--dark);color:#fff;display:flex;align-items:center;justify-content:center}
+.ct-ico svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+@media (max-width:900px){
+  .ct-row{grid-template-columns:1fr;gap:30px}
+}
+
+/* 页脚二维码 */
+.ft-qr{margin:0}
+
+/* 动态列表中的小标记 */
+.ext-mark{color:var(--mut);font-size:0.8125rem;letter-spacing:.04em}
+.list-count{text-align:center;margin-top:18px;font-size:0.8125rem;color:var(--mut)}
+.link-ac{color:var(--accent)}
+.art-crumb{color:rgba(255,255,255,.65)}
+
+/* ===== 首页新闻中心：左固定头条 + 右列(标签+列表) ===== */
+.news-col{display:flex;flex-direction:column;min-width:0}
+.news-col .nlist{flex:1}
+/* 标签栏紧贴列表上方（下划线样式，不换行） */
+.news-tabs{display:flex;flex-wrap:nowrap;gap:clamp(16px,2vw,34px);border-bottom:1px solid var(--line);margin:0 0 clamp(18px,2.2vh,26px);overflow:hidden}
+.news-tabs button{position:relative;flex:none;display:block;padding:0 0 14px;border:0;background:none;appearance:none;-webkit-appearance:none;cursor:pointer;text-align:left;font-size:1rem;letter-spacing:.04em;color:var(--mut);white-space:nowrap;transition:color .3s var(--ease)}
+.news-tabs button:last-child{margin-right:2px}
+.news-tabs button::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease),opacity .3s var(--ease);opacity:0}
+.news-tabs button:hover{color:var(--accent)}
+.news-tabs button:hover::after{transform:scaleX(1);opacity:.4}
+.news-tabs button.act{color:var(--accent);font-weight:600}
+.news-tabs button.act::after{transform:scaleX(1);opacity:1}
+/* 标签栏与「更多新闻」同处一行：入口占右端，下划线仍贯穿整列 */
+.news-bar{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;border-bottom:1px solid var(--line);margin:0 0 clamp(18px,2.2vh,26px)}
+.news-bar .news-tabs{flex:1;min-width:0;border-bottom:0;margin:0}
+.news-bar .smore{flex:none;padding-bottom:13px;white-space:nowrap}
+/* 窄屏标签栏本来就贴着列宽，再挤一个入口会把「主题教育」裁掉；手机端入口由列表与卡片承担 */
+@media (max-width:700px){
+  .news-bar .smore{display:none}
+}
+@media (max-width:600px){
+  .news-tabs{gap:12px}
+  .news-tabs button{font-size:0.9375rem;letter-spacing:.02em;padding-bottom:12px}
+}
+/* 首条：标题 2 行 + 摘要 2 行 + 右侧日期 */
+.news-col .nlist .lead a{align-items:flex-start;gap:clamp(20px,2.2vw,36px);padding:2px 4px 22px}
+.news-col .nlist .lead .lmain{flex:1;min-width:0;display:flex;flex-direction:column;gap:9px}
+/* 标题/摘要都锁定为 2 行高度：短标题与无摘要的稿件也占满 2 行，
+   切换标签时右列高度恒定，左侧焦点图（stretch）不会被重新拉伸 */
+.news-col .nlist .lead .t{flex:none;white-space:normal;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:3.2em;font-size:clamp(1rem,1.35vw,1.125rem);font-weight:600;line-height:1.6}
+.news-col .nlist .lead .sum{min-height:3.5em;font-size:0.8125rem;line-height:1.8;color:var(--mut);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.news-col .nlist .lead .fd{align-self:flex-start}
+.news-col .nlist .lead a:hover .t{color:var(--accent)}
+
+/* ===== 新闻中心下方 3 卡（V186 用户要求删除）：.nm3 与 .ncard* 样式一并清掉 ===== */
+
+@media (max-width:900px){
+  .news-col .nlist .lead a{gap:14px}
+}

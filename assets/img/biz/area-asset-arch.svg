@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 1920 1080" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
+    <g transform="matrix(1.02126,0,0,1.39703,-307.066,-1660.59)">
+        <g transform="matrix(1,0,0,1,0,19.3311)">
+            <g transform="matrix(6.77885,0,0,2.03909,-3758.19,-1583.71)">
+                <path d="M873.834,1439.39L873.834,1501.26C873.834,1503.16 873.2,1504.7 872.419,1504.7L629.705,1504.7C628.924,1504.7 628.291,1503.16 628.291,1501.26L628.291,1439.39C628.291,1437.49 628.924,1435.95 629.705,1435.95L872.419,1435.95C873.2,1435.95 873.834,1437.49 873.834,1439.39Z" style="fill:none;stroke:rgb(0,82,156);stroke-width:0.39px;stroke-dasharray:1.57,1.57,0,0,0,0;"/>
+            </g>
+            <g transform="matrix(1.32931,0,0,0.83139,-189.837,214.861)">
+                <g transform="matrix(0.736612,0,0,0.860973,416.846,-170.279)">
+                    <text x="216.863px" y="1844.14px" style="font-family:'MiSans-Bold', 'MiSans';font-weight:630;font-size:25px;fill:rgb(0,82,156);">资产建账</text>
+                    <text x="216.863px" y="1885.81px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">资产梳理</text>
+                    <g transform="matrix(25,0,0,25,316.863,1927.48)">
+                    </g>
+                    <text x="216.863px" y="1927.48px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">空间管理</text>
+                </g>
+                <g transform="matrix(0.736612,0,0,0.860973,1028.09,-170.279)">
+                    <text x="216.863px" y="1844.14px" style="font-family:'MiSans-Bold', 'MiSans';font-weight:630;font-size:25px;fill:rgb(0,82,156);">设备能耗</text>
+                    <text x="216.863px" y="1885.81px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">设备台账</text>
+                    <g transform="matrix(25,0,0,25,316.863,1927.48)">
+                    </g>
+                    <text x="216.863px" y="1927.48px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">表计监测</text>
+                </g>
+                <g transform="matrix(0.736612,0,0,0.860973,722.468,-170.279)">
+                    <text x="216.863px" y="1844.14px" style="font-family:'MiSans-Bold', 'MiSans';font-weight:630;font-size:25px;fill:rgb(0,82,156);">合同收缴</text>
+                    <text x="216.863px" y="1885.81px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">合同审批</text>
+                    <g transform="matrix(25,0,0,25,316.863,1927.48)">
+                    </g>
+                    <text x="216.863px" y="1927.48px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">应收催收</text>
+                </g>
+                <g transform="matrix(0.736612,0,0,0.860973,1333.71,-170.279)">
+                    <text x="216.863px" y="1844.14px" style="font-family:'MiSans-Bold', 'MiSans';font-weight:630;font-size:25px;fill:rgb(0,82,156);">交易协同</text>
+                    <text x="216.863px" y="1885.81px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">挂牌申请</text>
+                    <g transform="matrix(25,0,0,25,316.863,1927.48)">
+                    </g>
+                    <text x="216.863px" y="1927.48px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">结果回传</text>
+                </g>
+                <g transform="matrix(0.736612,0,0,0.860973,569.657,-170.279)">
+                    <text x="216.863px" y="1844.14px" style="font-family:'MiSans-Bold', 'MiSans';font-weight:630;font-size:25px;fill:rgb(0,82,156);">招商租赁</text>
+                    <text x="216.863px" y="1885.81px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">项目资料</text>
+                    <g transform="matrix(25,0,0,25,316.863,1927.48)">
+                    </g>
+                    <text x="216.863px" y="1927.48px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">客户跟进</text>
+                </g>
+                <g transform="matrix(0.736612,0,0,0.860973,1180.9,-170.279)">
+                    <text x="216.863px" y="1844.14px" style="font-family:'MiSans-Bold', 'MiSans';font-weight:630;font-size:25px;fill:rgb(0,82,156);">盘活管理</text>
+                    <text x="216.863px" y="1885.81px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">一资一策</text>
+                    <g transform="matrix(25,0,0,25,316.863,1927.48)">
+                    </g>
+                    <text x="216.863px" y="1927.48px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">项目推进</text>
+                </g>
+                <g transform="matrix(0.736612,0,0,0.860973,875.279,-170.279)">
+                    <text x="216.863px" y="1844.14px" style="font-family:'MiSans-Bold', 'MiSans';font-weight:630;font-size:25px;fill:rgb(0,82,156);">物业服务</text>
+                    <text x="216.863px" y="1885.81px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">工单报修</text>
+                    <g transform="matrix(25,0,0,25,316.863,1927.48)">
+                    </g>
+                    <text x="216.863px" y="1927.48px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">巡检维保</text>
+                </g>
+                <g transform="matrix(0.736612,0,0,0.860973,1486.52,-170.279)">
+                    <text x="216.863px" y="1844.14px" style="font-family:'MiSans-Bold', 'MiSans';font-weight:630;font-size:25px;fill:rgb(0,82,156);">经营分析</text>
+                    <text x="216.863px" y="1885.81px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">出租收缴</text>
+                    <g transform="matrix(25,0,0,25,316.863,1927.48)">
+                    </g>
+                    <text x="216.863px" y="1927.48px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">收益分析</text>
+                </g>
+            </g>
+        </g>
+        <g transform="matrix(1,0,0,1,-199.616,19.8263)">
+            <g transform="matrix(0.979184,0,0,0.715805,720.461,-67.2)">
+                <text x="205.039px" y="1843.47px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">动态核验</text>
+                <g transform="matrix(25,0,0,25,305.039,1889.3)">
+                </g>
+                <text x="205.039px" y="1889.3px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">风险预警</text>
+            </g>
+            <g transform="matrix(0.979184,0,0,0.715805,900.438,-67.2)">
+                <text x="205.039px" y="1843.47px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">统计分析</text>
+                <g transform="matrix(25,0,0,25,305.039,1889.3)">
+                </g>
+                <text x="205.039px" y="1889.3px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">盘活督办</text>
+            </g>
+            <g transform="matrix(0.979184,0,0,0.715805,540.483,-67.2)">
+                <text x="205.039px" y="1843.47px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">资产底账</text>
+                <g transform="matrix(25,0,0,25,292.539,1889.3)">
+                </g>
+                <text x="217.539px" y="1889.3px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">驾驶舱</text>
+            </g>
+            <g transform="matrix(2.19856,0,0,1.85165,-681.014,-1465.36)">
+                <path d="M873.834,1439.39L873.834,1501.26C873.834,1503.16 872.059,1504.7 869.874,1504.7L632.251,1504.7C630.065,1504.7 628.291,1503.16 628.291,1501.26L628.291,1439.39C628.291,1437.49 630.065,1435.95 632.251,1435.95L869.874,1435.95C872.059,1435.95 873.834,1437.49 873.834,1439.39Z" style="fill:none;stroke:rgb(0,82,156);stroke-width:0.86px;"/>
+            </g>
+            <g transform="matrix(0.670916,0,0,1,206.345,-708.904)">
+                <g transform="matrix(0.832886,0,0,2.34771,108.842,-2543.88)">
+                    <rect x="1090.44" y="1884.16" width="291.823" height="19.458" style="fill:white;"/>
+                </g>
+                <g transform="matrix(1.45947,0,0,0.715805,123.313,882.789)">
+                    <g transform="matrix(33.3333,0,0,33.3333,762.307,1437.24)">
+                    </g>
+                    <text x="628.974px" y="1437.24px" style="font-family:'MiSans-Bold', 'MiSans';font-weight:630;font-size:33.333px;fill:rgb(0,82,156);">监管应用</text>
+                </g>
+            </g>
+        </g>
+        <g transform="matrix(3.08332,0,0,1,-1658.41,488.134)">
+            <g transform="matrix(2.19856,0,0,1.98295,-681.014,-1653.91)">
+                <path d="M873.834,1439.39L873.834,1501.26C873.834,1503.16 873.217,1504.7 872.458,1504.7L629.666,1504.7C628.907,1504.7 628.291,1503.16 628.291,1501.26L628.291,1439.39C628.291,1437.49 628.907,1435.95 629.666,1435.95L872.458,1435.95C873.217,1435.95 873.834,1437.49 873.834,1439.39Z" style="fill:none;stroke:rgb(0,82,156);stroke-width:0.4px;"/>
+            </g>
+            <g transform="matrix(0.985233,0,0,0.753045,14.3354,308.566)">
+                <g transform="matrix(0.322335,0,0,0.950547,655.233,-493.683)">
+                    <text x="194.718px" y="1844.14px" style="font-family:'MiSans-Bold', 'MiSans';font-weight:630;font-size:25px;fill:rgb(0,82,156);">资产主档</text>
+                    <g transform="matrix(20.8333,0,0,20.8333,307.218,1881.64)">
+                    </g>
+                    <text x="182.218px" y="1881.64px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:20.833px;fill:rgb(0,82,156);">资产基本信息</text>
+                </g>
+                <g transform="matrix(0.322335,0,0,0.950547,865.602,-493.683)">
+                    <text x="194.718px" y="1844.14px" style="font-family:'MiSans-Bold', 'MiSans';font-weight:630;font-size:25px;fill:rgb(0,82,156);">客户租户</text>
+                    <g transform="matrix(20.8333,0,0,20.8333,296.801,1881.64)">
+                    </g>
+                    <text x="192.634px" y="1881.64px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:20.833px;fill:rgb(0,82,156);">客户与租户</text>
+                </g>
+                <g transform="matrix(0.322335,0,0,0.950547,760.418,-493.683)">
+                    <text x="194.718px" y="1844.14px" style="font-family:'MiSans-Bold', 'MiSans';font-weight:630;font-size:25px;fill:rgb(0,82,156);">权属信息</text>
+                    <g transform="matrix(20.8333,0,0,20.8333,296.801,1881.64)">
+                    </g>
+                    <text x="192.634px" y="1881.64px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:20.833px;fill:rgb(0,82,156);">权属与证照</text>
+                </g>
+                <g transform="matrix(0.322335,0,0,0.950547,970.787,-493.683)">
+                    <text x="194.718px" y="1844.14px" style="font-family:'MiSans-Bold', 'MiSans';font-weight:630;font-size:25px;fill:rgb(0,82,156);">设备台账</text>
+                    <g transform="matrix(20.8333,0,0,20.8333,296.801,1881.64)">
+                    </g>
+                    <text x="192.634px" y="1881.64px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:20.833px;fill:rgb(0,82,156);">设备与设施</text>
+                </g>
+                <g transform="matrix(0.322335,0,0,0.950547,1075.97,-493.683)">
+                    <text x="194.718px" y="1844.14px" style="font-family:'MiSans-Bold', 'MiSans';font-weight:630;font-size:25px;fill:rgb(0,82,156);">盘活项目</text>
+                    <g transform="matrix(20.8333,0,0,20.8333,296.801,1881.64)">
+                    </g>
+                    <text x="192.634px" y="1881.64px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:20.833px;fill:rgb(0,82,156);">项目全流程</text>
+                </g>
+                <g transform="matrix(0.322335,0,0,0.950547,707.825,-493.683)">
+                    <text x="194.718px" y="1844.14px" style="font-family:'MiSans-Bold', 'MiSans';font-weight:630;font-size:25px;fill:rgb(0,82,156);">组织主体</text>
+                    <g transform="matrix(20.8333,0,0,20.8333,307.218,1881.64)">
+                    </g>
+                    <text x="182.218px" y="1881.64px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:20.833px;fill:rgb(0,82,156);">组织架构信息</text>
+                </g>
+                <g transform="matrix(0.322335,0,0,0.950547,918.195,-493.683)">
+                    <text x="194.718px" y="1844.14px" style="font-family:'MiSans-Bold', 'MiSans';font-weight:630;font-size:25px;fill:rgb(0,82,156);">合同账单</text>
+                    <g transform="matrix(20.8333,0,0,20.8333,296.801,1881.64)">
+                    </g>
+                    <text x="192.634px" y="1881.64px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:20.833px;fill:rgb(0,82,156);">合同与账务</text>
+                </g>
+                <g transform="matrix(0.322335,0,0,0.950547,813.01,-493.683)">
+                    <text x="194.718px" y="1844.14px" style="font-family:'MiSans-Bold', 'MiSans';font-weight:630;font-size:25px;fill:rgb(0,82,156);">空间资源</text>
+                    <g transform="matrix(20.8333,0,0,20.8333,296.801,1881.64)">
+                    </g>
+                    <text x="192.634px" y="1881.64px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:20.833px;fill:rgb(0,82,156);">位置与空间</text>
+                </g>
+                <g transform="matrix(0.322335,0,0,0.950547,1023.38,-493.683)">
+                    <text x="194.718px" y="1844.14px" style="font-family:'MiSans-Bold', 'MiSans';font-weight:630;font-size:25px;fill:rgb(0,82,156);">能耗数据</text>
+                    <g transform="matrix(20.8333,0,0,20.8333,296.801,1881.64)">
+                    </g>
+                    <text x="192.634px" y="1881.64px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:20.833px;fill:rgb(0,82,156);">能耗与表计</text>
+                </g>
+                <g transform="matrix(0.322335,0,0,0.950547,1128.56,-493.683)">
+                    <text x="194.718px" y="1844.14px" style="font-family:'MiSans-Bold', 'MiSans';font-weight:630;font-size:25px;fill:rgb(0,82,156);">交易结果</text>
+                    <g transform="matrix(20.8333,0,0,20.8333,296.801,1881.64)">
+                    </g>
+                    <text x="192.634px" y="1881.64px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:20.833px;fill:rgb(0,82,156);">交易与评价</text>
+                </g>
+            </g>
+            <g transform="matrix(0.414904,0,0,1,497.836,-708.904)">
+                <g transform="matrix(0.832886,0,0,2.34771,108.842,-2543.88)">
+                    <rect x="1090.44" y="1884.16" width="291.823" height="19.458" style="fill:white;"/>
+                </g>
+                <g transform="matrix(0.765417,0,0,0.715805,550.626,882.789)">
+                    <g transform="matrix(33.3333,0,0,33.3333,901.484,1437.24)">
+                    </g>
+                    <text x="634.817px" y="1437.24px" style="font-family:'MiSans-Bold', 'MiSans';font-weight:630;font-size:33.333px;fill:rgb(0,82,156);">统一资产数据底座</text>
+                </g>
+            </g>
+        </g>
+        <g transform="matrix(1,0,0,1,362.81,19.8263)">
+            <g transform="matrix(0.979184,0,0,0.715805,683.09,-67.2)">
+                <text x="178.171px" y="1843.47px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">招商租赁</text>
+                <g transform="matrix(25,0,0,25,278.171,1889.3)">
+                </g>
+                <text x="178.171px" y="1889.3px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">设备能耗</text>
+            </g>
+            <g transform="matrix(0.979184,0,0,0.715805,810.449,-67.2)">
+                <text x="178.171px" y="1843.47px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">合同管理</text>
+                <g transform="matrix(25,0,0,25,278.171,1889.3)">
+                </g>
+                <text x="178.171px" y="1889.3px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">经营分析</text>
+            </g>
+            <g transform="matrix(0.979184,0,0,0.715805,937.809,-67.2)">
+                <text x="178.171px" y="1843.47px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">环境监测</text>
+                <g transform="matrix(25,0,0,25,278.171,1889.3)">
+                </g>
+                <text x="178.171px" y="1889.3px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">盘活管理</text>
+            </g>
+            <g transform="matrix(0.979184,0,0,0.715805,555.73,-67.2)">
+                <text x="178.171px" y="1843.47px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">资产台账</text>
+                <g transform="matrix(25,0,0,25,278.171,1889.3)">
+                </g>
+                <text x="178.171px" y="1889.3px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">收缴管理</text>
+            </g>
+            <g transform="matrix(2.19856,0,0,1.85165,-681.014,-1465.36)">
+                <path d="M873.834,1439.39L873.834,1501.26C873.834,1503.16 872.059,1504.7 869.874,1504.7L632.251,1504.7C630.065,1504.7 628.291,1503.16 628.291,1501.26L628.291,1439.39C628.291,1437.49 630.065,1435.95 632.251,1435.95L869.874,1435.95C872.059,1435.95 873.834,1437.49 873.834,1439.39Z" style="fill:none;stroke:rgb(0,82,156);stroke-width:0.86px;"/>
+            </g>
+            <g transform="matrix(0.670916,0,0,1,206.345,-708.904)">
+                <g transform="matrix(0.832886,0,0,2.34771,108.842,-2543.88)">
+                    <rect x="1090.44" y="1884.16" width="291.823" height="19.458" style="fill:white;"/>
+                </g>
+                <g transform="matrix(1.45947,0,0,0.715805,123.313,882.789)">
+                    <g transform="matrix(33.3333,0,0,33.3333,762.307,1437.24)">
+                    </g>
+                    <text x="628.974px" y="1437.24px" style="font-family:'MiSans-Bold', 'MiSans';font-weight:630;font-size:33.333px;fill:rgb(0,82,156);">资产经营</text>
+                </g>
+            </g>
+        </g>
+        <g transform="matrix(1,0,0,1,925.236,19.8263)">
+            <g transform="matrix(0.979184,0,0,0.715805,683.041,-67.2)">
+                <g transform="matrix(25,0,0,25,278.196,1843.47)">
+                </g>
+                <text x="178.196px" y="1843.47px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">项目申报</text>
+            </g>
+            <g transform="matrix(0.979184,0,0,0.715805,733.53,-24.4617)">
+                <g transform="matrix(25,0,0,25,291.692,1843.47)">
+                </g>
+                <text x="191.692px" y="1843.47px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">结果反馈</text>
+            </g>
+            <g transform="matrix(0.979184,0,0,0.715805,810.449,-67.2)">
+                <g transform="matrix(25,0,0,25,278.196,1843.47)">
+                </g>
+                <text x="178.196px" y="1843.47px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">挂牌管理</text>
+            </g>
+            <g transform="matrix(0.979184,0,0,0.715805,937.857,-67.2)">
+                <g transform="matrix(25,0,0,25,278.196,1843.47)">
+                </g>
+                <text x="178.196px" y="1843.47px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">竞价管理</text>
+            </g>
+            <g transform="matrix(0.979184,0,0,0.715805,887.369,-24.4617)">
+                <g transform="matrix(25,0,0,25,291.692,1843.47)">
+                </g>
+                <text x="191.692px" y="1843.47px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">需求对接</text>
+            </g>
+            <g transform="matrix(0.979184,0,0,0.715805,555.633,-67.2)">
+                <g transform="matrix(25,0,0,25,278.196,1843.47)">
+                </g>
+                <text x="178.196px" y="1843.47px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">项目展示</text>
+            </g>
+            <g transform="matrix(0.979184,0,0,0.715805,579.691,-24.4617)">
+                <g transform="matrix(25,0,0,25,291.692,1843.47)">
+                </g>
+                <text x="191.692px" y="1843.47px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">成交确认</text>
+            </g>
+            <g transform="matrix(2.19856,0,0,1.85165,-681.014,-1465.36)">
+                <path d="M873.834,1439.39L873.834,1501.26C873.834,1503.16 872.059,1504.7 869.874,1504.7L632.251,1504.7C630.065,1504.7 628.291,1503.16 628.291,1501.26L628.291,1439.39C628.291,1437.49 630.065,1435.95 632.251,1435.95L869.874,1435.95C872.059,1435.95 873.834,1437.49 873.834,1439.39Z" style="fill:none;stroke:rgb(0,82,156);stroke-width:0.86px;"/>
+            </g>
+            <g transform="matrix(0.670916,0,0,1,206.345,-708.904)">
+                <g transform="matrix(0.832886,0,0,2.34771,108.842,-2543.88)">
+                    <rect x="1090.44" y="1884.16" width="291.823" height="19.458" style="fill:white;"/>
+                </g>
+                <g transform="matrix(1.45947,0,0,0.715805,123.313,882.789)">
+                    <g transform="matrix(33.3333,0,0,33.3333,762.307,1437.24)">
+                    </g>
+                    <text x="628.974px" y="1437.24px" style="font-family:'MiSans-Bold', 'MiSans';font-weight:630;font-size:33.333px;fill:rgb(0,82,156);">交易协同</text>
+                </g>
+            </g>
+        </g>
+        <g transform="matrix(1.3241,0,0,1,-426.68,356.183)">
+            <g transform="matrix(0.739511,0,0,0.715805,696.504,-74.358)">
+                <g transform="matrix(25,0,0,25,282.143,1843.47)">
+                </g>
+                <text x="182.143px" y="1843.47px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">设备监测</text>
+            </g>
+            <g transform="matrix(0.739511,0,0,0.715805,798.565,-74.358)">
+                <g transform="matrix(25,0,0,25,282.143,1843.47)">
+                </g>
+                <text x="182.143px" y="1843.47px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">门禁道闸</text>
+            </g>
+            <g transform="matrix(0.739511,0,0,0.715805,900.626,-74.358)">
+                <g transform="matrix(25,0,0,25,282.143,1843.47)">
+                </g>
+                <text x="182.143px" y="1843.47px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">视频联动</text>
+            </g>
+            <g transform="matrix(0.739511,0,0,0.715805,1002.69,-74.358)">
+                <g transform="matrix(25,0,0,25,282.143,1843.47)">
+                </g>
+                <text x="182.143px" y="1843.47px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">环境监测</text>
+            </g>
+            <g transform="matrix(0.739511,0,0,0.715805,594.443,-74.358)">
+                <g transform="matrix(25,0,0,25,282.143,1843.47)">
+                </g>
+                <text x="182.143px" y="1843.47px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">表计接入</text>
+            </g>
+            <g transform="matrix(2.19856,0,0,1.25222,-681.014,-604.611)">
+                <path d="M873.834,1439.39L873.834,1501.26C873.834,1503.16 872.927,1504.7 871.811,1504.7L630.313,1504.7C629.197,1504.7 628.291,1503.16 628.291,1501.26L628.291,1439.39C628.291,1437.49 629.197,1435.95 630.313,1435.95L871.811,1435.95C872.927,1435.95 873.834,1437.49 873.834,1439.39Z" style="fill:none;stroke:rgb(0,82,156);stroke-width:0.85px;"/>
+            </g>
+            <g transform="matrix(0.525612,0,0,1,371.786,-708.904)">
+                <g transform="matrix(0.832886,0,0,2.34771,108.842,-2543.88)">
+                    <rect x="1090.44" y="1884.16" width="291.823" height="19.458" style="fill:white;"/>
+                </g>
+                <g transform="matrix(1.40695,0,0,0.715805,155.648,882.789)">
+                    <g transform="matrix(33.3333,0,0,33.3333,765.292,1437.24)">
+                    </g>
+                    <text x="631.959px" y="1437.24px" style="font-family:'MiSans-Bold', 'MiSans';font-weight:630;font-size:33.333px;fill:rgb(0,82,156);">物联感知</text>
+                </g>
+            </g>
+        </g>
+        <g transform="matrix(1.72349,0,0,1,27.9982,352.755)">
+            <g transform="matrix(0.568141,0,0,0.715805,708.947,-74.358)">
+                <g transform="matrix(25,0,0,25,287.329,1843.47)">
+                </g>
+                <text x="187.329px" y="1843.47px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">风险预警</text>
+            </g>
+            <g transform="matrix(0.568141,0,0,0.715805,793.25,-74.358)">
+                <g transform="matrix(25,0,0,25,287.329,1843.47)">
+                </g>
+                <text x="187.329px" y="1843.47px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">收益预测</text>
+            </g>
+            <g transform="matrix(0.568141,0,0,0.715805,877.553,-74.358)">
+                <g transform="matrix(25,0,0,25,287.329,1843.47)">
+                </g>
+                <text x="187.329px" y="1843.47px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">闲置识别</text>
+            </g>
+            <g transform="matrix(0.568141,0,0,0.715805,961.855,-74.358)">
+                <g transform="matrix(25,0,0,25,287.329,1843.47)">
+                </g>
+                <text x="187.329px" y="1843.47px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">智能问答</text>
+            </g>
+            <g transform="matrix(0.568141,0,0,0.715805,1046.16,-74.358)">
+                <g transform="matrix(25,0,0,25,287.329,1843.47)">
+                </g>
+                <text x="187.329px" y="1843.47px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">辅助决策</text>
+            </g>
+            <g transform="matrix(0.568141,0,0,0.715805,624.644,-74.358)">
+                <g transform="matrix(25,0,0,25,287.329,1843.47)">
+                </g>
+                <text x="187.329px" y="1843.47px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">智能分析</text>
+            </g>
+            <g transform="matrix(2.19856,0,0,1.25222,-681.014,-604.611)">
+                <path d="M873.834,1439.39L873.834,1501.26C873.834,1503.16 873.137,1504.7 872.28,1504.7L629.844,1504.7C628.987,1504.7 628.291,1503.16 628.291,1501.26L628.291,1439.39C628.291,1437.49 628.987,1435.95 629.844,1435.95L872.28,1435.95C873.137,1435.95 873.834,1437.49 873.834,1439.39Z" style="fill:none;stroke:rgb(0,82,156);stroke-width:0.69px;"/>
+            </g>
+            <g transform="matrix(0.387297,0,0,1,529.269,-708.904)">
+                <g transform="matrix(0.832886,0,0,2.34771,108.842,-2543.88)">
+                    <rect x="1090.44" y="1884.16" width="291.823" height="19.458" style="fill:white;"/>
+                </g>
+                <g transform="matrix(1.46694,0,0,0.715805,118.715,882.789)">
+                    <g transform="matrix(33.3333,0,0,33.3333,751.483,1437.24)">
+                    </g>
+                    <text x="638.983px" y="1437.24px" style="font-family:'MiSans-Bold', 'MiSans';font-weight:630;font-size:33.333px;fill:rgb(0,82,156);">AI 智能</text>
+                </g>
+            </g>
+        </g>
+        <g transform="matrix(1,0,0,1,0,-31.5213)">
+            <g transform="matrix(3.08332,0,0,0.930627,-1658.41,751.332)">
+                <g transform="matrix(0.317575,0,0,0.769164,764.545,-180.489)">
+                    <g transform="matrix(25,0,0,25,1365.16,1851.57)">
+                    </g>
+                    <text x="163.137px" y="1851.57px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">标准接口    主数据映射    数据报送与回传    Io<tspan x="667.637px " y="1851.57px ">T</tspan>平台    AI引擎    工作流引擎    消息中心    GIS服务    异常处理</text>
+                </g>
+                <g transform="matrix(2.19856,0,0,0.925132,-681.014,-123.686)">
+                    <path d="M873.834,1439.39L873.834,1501.26C873.834,1503.16 873.566,1504.7 873.236,1504.7L628.888,1504.7C628.558,1504.7 628.291,1503.16 628.291,1501.26L628.291,1439.39C628.291,1437.49 628.558,1435.95 628.888,1435.95L873.236,1435.95C873.566,1435.95 873.834,1437.49 873.834,1439.39Z" style="fill:none;stroke:rgb(0,82,156);stroke-width:0.29px;stroke-dasharray:1.17,1.17,0,0,0,0;"/>
+                </g>
+                <g transform="matrix(0.387297,0,0,1,317.552,-665.864)">
+                    <g transform="matrix(0.832886,0,0,2.34771,108.842,-2543.88)">
+                        <rect x="1090.44" y="1884.16" width="291.823" height="19.458" style="fill:white;"/>
+                    </g>
+                    <g transform="matrix(0.819978,0,0,0.769164,517.034,808.41)">
+                        <g transform="matrix(29.1667,0,0,29.1667,819.841,1433.52)">
+                        </g>
+                        <text x="615.675px" y="1433.52px" style="font-family:'MiSans-Bold', 'MiSans';font-weight:630;font-size:29.167px;fill:rgb(0,82,156);">接口与平台能力</text>
+                    </g>
+                </g>
+            </g>
+            <g transform="matrix(3.08332,0,0,0.930627,-1658.41,810.515)">
+                <g transform="matrix(0.317575,0,0,0.769164,764.545,-180.489)">
+                    <g transform="matrix(25,0,0,25,924.137,1851.57)">
+                    </g>
+                    <text x="163.137px" y="1851.57px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:25px;fill:rgb(0,82,156);">身份认证         分级授权         操作审计         数据校验         安全防护</text>
+                </g>
+                <g transform="matrix(2.19856,0,0,0.925132,-681.014,-123.686)">
+                    <path d="M873.834,1439.39L873.834,1501.26C873.834,1503.16 873.566,1504.7 873.236,1504.7L628.888,1504.7C628.558,1504.7 628.291,1503.16 628.291,1501.26L628.291,1439.39C628.291,1437.49 628.558,1435.95 628.888,1435.95L873.236,1435.95C873.566,1435.95 873.834,1437.49 873.834,1439.39Z" style="fill:none;stroke:rgb(0,82,156);stroke-width:0.29px;stroke-dasharray:1.17,1.17,0,0,0,0;"/>
+                </g>
+                <g transform="matrix(0.387297,0,0,1,317.552,-665.864)">
+                    <g transform="matrix(0.832886,0,0,2.34771,108.842,-2543.88)">
+                        <rect x="1090.44" y="1884.16" width="291.823" height="19.458" style="fill:white;"/>
+                    </g>
+                    <g transform="matrix(0.819978,0,0,0.769164,517.034,808.41)">
+                        <g transform="matrix(29.1667,0,0,29.1667,732.341,1433.52)">
+                        </g>
+                        <text x="615.675px" y="1433.52px" style="font-family:'MiSans-Bold', 'MiSans';font-weight:630;font-size:29.167px;fill:rgb(0,82,156);">安全支撑</text>
+                    </g>
+                </g>
+            </g>
+        </g>
+        <g transform="matrix(0.979184,0,0,0.715805,58.2675,335.137)">
+            <text x="262.157px" y="1304.87px" style="font-family:'MiSans-Bold', 'MiSans';font-weight:630;font-size:41.667px;fill:rgb(35,31,32);">01</text>
+            <g transform="matrix(33.3333,0,0,33.3333,428.824,1354.87)">
+            </g>
+            <text x="262.157px" y="1354.87px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:33.333px;fill:rgb(35,31,32);">业务应用层</text>
+        </g>
+        <g transform="matrix(0.979184,0,0,0.715805,58.2675,505.702)">
+            <text x="262.157px" y="1294.26px" style="font-family:'MiSans-Bold', 'MiSans';font-weight:630;font-size:41.667px;fill:rgb(35,31,32);">0<tspan x="289.699px " y="1294.26px ">2</tspan></text>
+            <g transform="matrix(33.3333,0,0,33.3333,428.824,1344.26)">
+            </g>
+            <text x="262.157px" y="1344.26px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:33.333px;fill:rgb(35,31,32);">核心功能层</text>
+        </g>
+        <g transform="matrix(0.979184,0,0,0.715805,58.2675,673.072)">
+            <text x="262.157px" y="1280.75px" style="font-family:'MiSans-Bold', 'MiSans';font-weight:630;font-size:41.667px;fill:rgb(35,31,32);">0<tspan x="289.241px " y="1280.75px ">3</tspan></text>
+            <g transform="matrix(29.1667,0,0,29.1667,437.157,1326.59)">
+            </g>
+            <text x="262.157px" y="1326.59px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:29.167px;fill:rgb(35,31,32);">智能与物联层</text>
+        </g>
+        <g transform="matrix(0.979184,0,0,0.715805,58.2675,806.032)">
+            <text x="262.157px" y="1315.33px" style="font-family:'MiSans-Bold', 'MiSans';font-weight:630;font-size:41.667px;fill:rgb(35,31,32);">04</text>
+            <g transform="matrix(33.3333,0,0,33.3333,428.824,1365.33)">
+            </g>
+            <text x="262.157px" y="1365.33px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:33.333px;fill:rgb(35,31,32);">数据底座层</text>
+        </g>
+        <g transform="matrix(0.979184,0,0,0.715805,58.2675,963.13)">
+            <text x="262.157px" y="1301.58px" style="font-family:'MiSans-Bold', 'MiSans';font-weight:630;font-size:41.667px;fill:rgb(35,31,32);">05</text>
+            <g transform="matrix(33.3333,0,0,33.3333,428.824,1351.58)">
+            </g>
+            <text x="262.157px" y="1351.58px" style="font-family:'MiSans-Regular', 'MiSans';font-weight:330;font-size:33.333px;fill:rgb(35,31,32);">技术支撑层</text>
+        </g>
+    </g>
+</svg>
