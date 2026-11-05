@@ -384,7 +384,8 @@ body.dark-hero .nav:not(.on) .burger i{background:#fff}
 .hacc-item{--fg:1;position:relative;flex:var(--fg) 1 0;min-width:0;overflow:hidden;background:transparent;border-radius:4px;transition:flex-grow .7s var(--ease),flex-basis .7s var(--ease),background .45s}
 .hacc-item:not(.on):hover{background:rgba(255,255,255,.055)}
 .hacc-item.on{--fg:0;flex:0 0 clamp(260px,27vw,380px);background:transparent}
-.hacc-item.on::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;z-index:2;background:linear-gradient(90deg,var(--gold),var(--gold-d))}
+/* V308 展开卡片底色归零后不再画顶线：卡片已是纯文字，一条 2px 金线孤悬在
+   文字上方只会读成装饰分割线。激活态改由「大号白字年份 + 展开正文」交代。 */
 /* 折叠态：只留年份。年份上移挂在轴线上方，轴线与节点贯通整条时间轴 */
 .hacc-btn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:0;text-align:center;color:rgba(255,255,255,.72);transition:color .3s,opacity .3s}
 .hacc-btn::before{content:"";position:absolute;top:50%;left:0;right:0;height:1px;background:rgba(255,255,255,.26)}
@@ -432,7 +433,6 @@ body.dark-hero .nav:not(.on) .burger i{background:#fff}
   .hacc-item{--fg:0;flex:none;background:transparent;overflow:visible}
   .hacc-item:not(.on):hover{background:rgba(255,255,255,.045)}
   .hacc-item.on{flex:none;background:rgba(255,255,255,.055)}
-  .hacc-item.on::before{display:none}
   .hacc-btn{position:relative;inset:auto;display:flex;align-items:center;justify-content:flex-start;padding:13px 0 13px 24px;width:100%;opacity:1;pointer-events:auto}
   .hacc-btn::before{display:none}
   .hacc-btn::after{top:50%;left:5.5px;margin:-2.5px 0 0 0}
