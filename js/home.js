@@ -4,8 +4,10 @@
 (function () {
   'use strict';
 
-  /* 与新闻页 site.js 的 CATS 口径一致（按 cat_id 过滤） */
-  var CATS = { 0: '全部', 3: '公司动态', 5: '党建工作', 4: '行业资讯', 17: '主题教育' };
+  /* 与新闻页 site.js 的 CATS 口径一致（按 cat_id 过滤）
+     V297：党建工作(5) 与主题教育(17) 已移入独立模块 party.html，首页新闻不再收这两类 */
+  var CATS = { 0: '全部', 3: '公司动态', 4: '行业资讯' };
+  var PARTY_CATS = { 5: 1, 17: 1 };
   var DEFAULT_COVER = 'assets/img/_img_index_news-header-bg.png?v=96';
   var LIST_MAX = 5; /* 右侧列表总条数（含带摘要的首条）；V144 由 6 收到 5，压新闻区高度 */
 
@@ -99,9 +101,11 @@
       });
     };
 
-    window.__loadData('data/news-index.js')
+    window.__loadNews()
       .then(function () {
-        dataAll = (window.NEWS_INDEX || []).filter(function (x) { return !x.external; });
+        dataAll = (window.NEWS_INDEX || []).filter(function (x) {
+          return !x.external && !PARTY_CATS[x.cat_id];
+        });
         if (!dataAll.length) {
           listEl.innerHTML = '<li><span class="t">新闻数据加载失败，请稍后重试。</span></li>';
           return;
@@ -135,4 +139,5 @@
     row(mq1, names.slice(0, 13));
     row(mq2, names.slice(13));
   }
+
 })();

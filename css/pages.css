@@ -110,7 +110,10 @@
 /* 公司简介（V205 重构）：沿革段 → 发展定位 → 愿景/使命/价值观独立一栏（水平 3 列等高、无标题栏）；
    V198 的关键信息四条、SINCE 1986 slogan 块、双栏结构均已删除（用户指定）。
    正文限宽 880：全宽 1040 时沿革/定位段落每行约 60 字，超阅读舒适区 */
-.prof-intro{padding-top:clamp(36px,5vh,56px)}
+/* V293 用户指令：首段与上方标签栏之间太空。原来 .apane 的 54px + 这里的 45px 叠成 99px，
+   是下面「首段 → 发展定位」间距（.prof-cols 67px）的 1.5 倍。
+   收到 13px 左右，两处间距对齐，段落上下节奏一致。 */
+.prof-intro{padding-top:clamp(10px,1.5vh,18px)}
 .prof-lead{font-size:1.0625rem;line-height:2.3;color:var(--ink2);text-indent:2em}
 .prof-body .pb-h{font-size:1.25rem;font-weight:600;line-height:1.5;letter-spacing:.2em;color:var(--ink);margin:0 0 22px}
 .prof-body p{font-size:1.0625rem;line-height:2.3;color:var(--ink2);margin-bottom:1.6em;text-indent:2em}
@@ -201,7 +204,7 @@
 .ct-card-body h4{font-size:1.125rem;font-weight:600;letter-spacing:.05em}
 .ct-card-body p{margin-top:8px;font-size:1rem;line-height:1.9;color:var(--ink2)}
 .ct-card-body .ct-sub{margin-top:10px;font-size:0.8125rem;line-height:1.9;color:var(--mut)}
-.ct-ico{flex:none;width:42px;height:42px;border-radius:50%;background:var(--dark);color:#fff;display:flex;align-items:center;justify-content:center}
+.ct-ico{flex:none;width:42px;height:42px;border-radius:4px;background:var(--dark);color:#fff;display:flex;align-items:center;justify-content:center}
 .ct-ico svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 @media (max-width:900px){
   .ct-row{grid-template-columns:1fr;gap:30px}

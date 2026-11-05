@@ -43,6 +43,11 @@ img{display:block;max-width:100%}
 a{color:inherit;text-decoration:none}
 ul{list-style:none}
 button{font-family:inherit;border:0;background:none;cursor:pointer}
+/* V293 用户指令：全站不许随便折行。正文段落统一用 pretty——浏览器会把最后一行
+   少于 2 个词的断点往前挪，消掉「末行只剩一两个字」的孤字；短标题与卡片文案
+   用 balance 把两行均分（Chromium 支持到 6 行）。 */
+p,li,dd{text-wrap:pretty}
+.acase h3,.vval,.bcase h3,.scene h3,figcaption,.svc h3,.arch-n span{text-wrap:balance}
 ::selection{background:var(--accent);color:#fff}
 /* 容器规范：正文栅格 —— 所有板块 / 页脚共用同一 max-width 与左右内边距，左缘必须同线 */
 .wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:var(--pad)}
@@ -57,12 +62,20 @@ button{font-family:inherit;border:0;background:none;cursor:pointer}
 .logo{display:flex;align-items:center;gap:clamp(12px,1.2vw,18px)}
 .logo img{width:clamp(50px,4.3vw,62px);height:clamp(50px,4.3vw,62px);transition:width .3s,height .3s}
 .nav.on .logo img{width:clamp(40px,3.4vw,48px);height:clamp(40px,3.4vw,48px)}
+/* 反白 logo（V299 用户指令）：党建工作模块的页头浮在深红 banner 上，
+   彩色 logo 压不住底图，换白色版本。两个 img 叠在同一位置、按状态切换 ——
+   .lg-w 默认 display:none，只有 party 页页头处于深色态（未滚动 / 未展开 mega）时替换。
+   滚动后页头转白底、或展开子菜单面板，必须换回彩色版，否则白 logo 看不见。 */
+.logo .lg-w{display:none}
+.logo .lg-c{display:block}
+body.party .nav:not(.on):not(.mega-on) .logo .lg-c{display:none}
+body.party .nav:not(.on):not(.mega-on) .logo .lg-w{display:block}
 .logo-t{font-size:clamp(1.25rem,1.62vw,1.625rem);line-height:1.3;font-weight:600;letter-spacing:.04em}
 .logo-t small{display:block;font-size:0.8125rem;font-weight:400;color:var(--mut);letter-spacing:.1em}
 .menu{display:flex;align-items:stretch;align-self:stretch;gap:clamp(30px,4.1vw,70px)}
 .menu>li{position:relative;display:flex;align-items:center}
 .menu>li.has-mega{position:static;padding:0 10px;margin:0 -10px}
-.menu a.m{display:flex;align-items:center;height:100%;padding:0 2px;font-size:clamp(1.0625rem,1.3vw,1.1875rem);letter-spacing:.06em;color:var(--ink);position:relative;transition:color .3s}
+.menu a.m{display:flex;align-items:center;height:100%;padding:0 2px;font-size:clamp(1.0625rem,1.3vw,1.1875rem);letter-spacing:.06em;color:var(--ink);position:relative;transition:color .3s;white-space:nowrap}
 /* 激活 / 悬停下划线：落到页头底边，压住 1px 分隔线 */
 .menu a.m::after{content:"";position:absolute;left:0;bottom:-1px;width:0;height:3px;background:var(--gold-d);transition:width .35s var(--ease)}
 .menu>li:hover a.m::after,.menu a.m.act::after{width:100%}
@@ -88,13 +101,31 @@ body.dark-hero .nav.mega-on .menu>li:hover a.m{color:var(--accent)}
    注意：这不能消除「在标签高度带内横移」的误触（那由 site.js 的 180ms 停留判定解决），
    作用只是让人更自然地从标签垂直下移到内容区 */
 .mega-cards{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:clamp(8px,1vw,12px);padding:clamp(52px,5.6vw,76px) 0 clamp(44px,4.6vw,60px)}
-.ml{display:flex;flex-direction:column;padding:clamp(16px,1.7vw,22px) clamp(14px,1.5vw,20px);background:none;border:1px solid rgba(0,0,0,.05);border-radius:4px;transition:border-color .3s,transform .35s var(--ease)}
-.ml-ic{width:32px;height:32px;flex:none;color:var(--ink);transition:color .3s}
-.ml b{margin-top:clamp(12px,1.4vw,16px);font-size:clamp(0.9375rem,1.15vw,1.0625rem);font-weight:600;letter-spacing:.02em;line-height:1.45;color:var(--ink);transition:color .3s}
-.ml small{margin-top:9px;font-size:0.8125rem;line-height:1.65;color:var(--mut)}
-/* V200：normal 与 hover 都不铺底色（色块撤掉），hover 改用标准色 1px 描边 + 标准色文字 */
-.ml:hover{border-color:var(--accent);transform:translateY(-2px)}
-.ml:hover .ml-ic,.ml:hover b,.ml:hover small{color:var(--accent)}
+/* V283：子菜单项常态 = 浅蓝底 + 0%（全透明）蓝描边——描边保留 1px 占位但不显示，
+   靠浅蓝底界定块面；hover 时描边升到 50% 蓝、图标由线性换成面性（见下方 .ml-ico 说明）。
+   V286 用户指令：常态底色由 8% 收到 5%（更淡，仍能读出块面）。
+   V287 再收到 4%。
+   透明度全部走 color-mix，主色一改整套跟着变。 */
+.ml{display:flex;flex-direction:column;padding:clamp(16px,1.7vw,22px) clamp(14px,1.5vw,20px);
+  background:color-mix(in srgb,var(--accent) 4%,transparent);
+  border:1px solid color-mix(in srgb,var(--accent) 0%,transparent);border-radius:4px;
+  transition:background-color .3s var(--ease),border-color .3s var(--ease),transform .35s var(--ease)}
+/* 图标位：线性 / 面性两个 svg 绝对定位叠在同一个 32×32 盒子里，hover 交叉淡入。
+   面性版是独立 symbol（id 加 -f），靠 evenodd 挖孔表达细节，不是给线性版填色
+   —— 线性 symbol 上写了 fill="none"，继承填不进去，硬填只会得到黑块。 */
+.ml-ico{position:relative;display:block;width:32px;height:32px;flex:none;color:var(--accent)}
+.ml-ic,.ml-ic-f{position:absolute;inset:0;width:32px;height:32px;transition:opacity .26s var(--ease)}
+.ml-ic-f{opacity:0}
+.ml b{margin-top:clamp(12px,1.4vw,16px);font-size:clamp(0.9375rem,1.15vw,1.0625rem);font-weight:600;letter-spacing:.02em;line-height:1.45;color:var(--accent);transition:color .3s}
+/* V293：1200 以下每张卡只剩 140–150px 内容宽，「信息化规划与咨询服务」10 个字刚好放不下，
+   折成两行后同排卡的图标/说明整体错位。这里统一预留两行标题位：
+   该折的折、不该折的也不会把下面顶上去，五张卡永远对齐。 */
+@media (max-width:1200px){.ml b{min-height:2.9em}}
+.ml small{margin-top:9px;font-size:0.8125rem;line-height:1.65;color:var(--accent)}
+.ml:hover{border-color:color-mix(in srgb,var(--accent) 50%,transparent);transform:translateY(-2px)}
+.ml:hover .ml-ic{opacity:0}
+.ml:hover .ml-ic-f{opacity:1}
+.ml:focus-visible{border-color:color-mix(in srgb,var(--accent) 50%,transparent);outline:2px solid var(--accent);outline-offset:2px}
 /* 图标 sprite 只做定义，不占位 */
 .ico-sprite{position:absolute;width:0;height:0;overflow:hidden}
 /* 子菜单展开时页头转白，保证深色首屏上文字可读 */
@@ -115,6 +146,17 @@ body.dark-hero .nav.mega-on .burger i{background:var(--ink)}
 body.dark-hero .nav:not(.on) .menu a.m.act{color:var(--gold)}
 body.dark-hero .nav:not(.on) .menu a.m.act:not(:hover)::after{background:var(--gold)}
 body.dark-hero .nav:not(.on):not(.mega-on) .menu>li:hover a.m::after{background:var(--accent2)}
+/* V296 用户指令：滚到发展历程这种深色区块时，页头要透出底色、文字泛白、logo 同色处理。
+   只换颜色，不动尺寸——滚动后的紧凑高度和小 logo 保持不变，避免经过这一屏时页头忽然长高。
+   .dark-clear 由 site.js 判定「深色块是否盖住页头」后加/撤。 */
+body.dark-hero .nav.dark-clear:not(.mega-on){background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;border-color:transparent;box-shadow:none}
+body.dark-hero .nav.dark-clear:not(.mega-on) .logo-t,
+body.dark-hero .nav.dark-clear:not(.mega-on) .menu a.m{color:#fff}
+body.dark-hero .nav.dark-clear:not(.mega-on) .logo-t small{color:rgba(255,255,255,.55)}
+body.dark-hero .nav.dark-clear:not(.mega-on) .menu a.m.act{color:var(--gold)}
+body.dark-hero .nav.dark-clear:not(.mega-on) .menu a.m.act:not(:hover)::after{background:var(--gold)}
+body.dark-hero .nav.dark-clear:not(.mega-on) .menu>li:hover a.m{color:var(--accent2)}
+body.dark-hero .nav.dark-clear .burger i{background:#fff}
 /* 汉堡 */
 .burger{display:none;width:44px;height:44px;position:relative;z-index:120}
 .burger i{position:absolute;left:10px;right:10px;height:2px;background:var(--ink);transition:all .35s var(--ease)}
@@ -160,8 +202,8 @@ body.dark-hero .nav:not(.on) .burger i{background:#fff}
 .hero .btn span{white-space:nowrap}
 .hero .btn::before{background:var(--gold-d)}
 .hero .btn:hover{color:#fff;border-color:var(--gold-d)}
-.cue{position:absolute;right:var(--pad);bottom:clamp(34px,5vh,52px);z-index:2;width:24px;height:44px;border:1px solid rgba(255,255,255,.4);border-radius:14px}
-.cue::after{content:"";position:absolute;left:50%;top:9px;width:3px;height:8px;margin-left:-1.5px;border-radius:2px;background:#fff;animation:cue 1.8s ease-in-out infinite}
+.cue{position:absolute;right:var(--pad);bottom:clamp(34px,5vh,52px);z-index:2;width:24px;height:44px;border:1px solid rgba(255,255,255,.4);border-radius:4px}
+.cue::after{content:"";position:absolute;left:50%;top:9px;width:3px;height:8px;margin-left:-1.5px;border-radius:4px;background:#fff;animation:cue 1.8s ease-in-out infinite}
 @keyframes cue{0%{transform:translateY(0);opacity:1}70%{transform:translateY(14px);opacity:0}100%{opacity:0}}
 
 /* ---------- 按钮 ---------- */
@@ -187,28 +229,13 @@ body.dark-hero .nav:not(.on) .burger i{background:#fff}
 .shead h2{font-size:clamp(1.75rem,3.6vw,3.25rem);font-weight:700;line-height:1.25;letter-spacing:.02em}
 /* 板块导语（V174）：标题下两行说明，只概括站上已有事实，不写口号
    max-width 用 em 而不是 px：字号随根字号放大，写死 720px 在 1920 会把两行各折成两行 */
-.slead{max-width:min(42em,100%);margin-top:clamp(12px,1.6vh,18px);font-size:clamp(0.9375rem,1.1vw,1.0625rem);line-height:1.85;letter-spacing:.01em;color:var(--mut);text-wrap:pretty}
+/* 导语限宽但不居中会跟居中的标题错开（V278 修正）：限宽盒必须自己水平居中
+   V293 用户指令：一句话要在一行里读完，不许随便折行。
+   原来写死 42em（≈714px）会把一行 60 字硬拆成 1.5 行、尾行只剩几个字；
+   改成不设上限——容器够宽就单行，窄屏自然折行时用 balance 均分两行，不出现孤字尾行 */
+.slead{max-width:none;margin:clamp(12px,1.6vh,18px) auto 0;font-size:clamp(0.9375rem,1.1vw,1.0625rem);line-height:1.85;letter-spacing:.01em;color:var(--mut);text-wrap:balance}
 .slead + .slead{margin-top:5px}
-/* 业务领域底纹（V176）：灰色点阵世界地图，矢量见 assets/img/deco/world-dots.svg
-   —— 地图贴在板块底部：底边与 section 底边齐平（不再上下两端都渐隐），
-      只占卡片下方的那条带（底部留白加到 --bizmap-h），上半部被卡片压住。
-      底边必须落在有陆地的纬度上（图按 lat 86..-8 生成），否则底部一片空海面 */
-.sec-biz{position:relative;overflow:hidden;--bizmap-h:clamp(120px,21vh,192px);padding-bottom:var(--bizmap-h)}
-.sec-biz::before{content:"";position:absolute;left:50%;bottom:0;width:min(1720px,124%);
-  height:var(--bizmap-h);transform:translateX(-50%);opacity:.85;pointer-events:none;
-  background:url("../assets/img/deco/world-dots.svg?v=3") center bottom/100% auto no-repeat;
-  -webkit-mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.55) 46%,#000 88%);
-  mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.55) 46%,#000 88%)}
-.sec-biz .wrap{position:relative;z-index:1}
-/* 窄屏：同一张图缩到 375 宽后点径只剩 0.6px，看着像脏点。换成点更粗的 sm 版
-   （见 tools/make_world_dots.py，pattern 7.6 / r 1.7） */
-@media (max-width:700px){
-  .sec-biz{--bizmap-h:clamp(96px,15vh,128px)}
-  .sec-biz::before{width:160%;opacity:.62;
-    background-image:url("../assets/img/deco/world-dots-sm.svg?v=3");
-    -webkit-mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.55) 46%,#000 88%);
-    mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.55) 46%,#000 88%)}
-}
+/* 业务领域区（V295）：底部点阵世界地图已按用户要求删除，区块底边不再留地图带 */
 .smore{flex-shrink:0;display:inline-flex;align-items:center;gap:10px;font-size:0.9375rem;letter-spacing:.18em;color:var(--ink2);transition:color .3s}
 .smore:hover{color:var(--accent)}
 .smore i{font-style:normal;transition:transform .3s}
@@ -228,7 +255,16 @@ body.dark-hero .nav:not(.on) .burger i{background:#fff}
    渐变色取自各自卡图主色（ent 藏蓝 / agri 橄榄绿 / asset 湖蓝 / proc 青灰），图片自上而下溶进同色深底；
    常态只有标题 + 关键词标签，hover 标签收起、摘要浮出。
    圆角只加在卡容器上（V154 铁律），图片自身 border-radius:0 */
-.biz{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(12px,1.4vw,20px)}
+/* V277 业务领域由 4 个改为 5 个（规划咨询 / 软件研发与数据 / 人工智能 / 基础设施 / 国产化）。
+   V279 首页改「2+3 错格」：3 列 2 行等高，首卡横跨两列（宽度正好是下面每张的两倍），
+   下面三张并排 —— 与业务详情页的典型场景同一种版式，五块业务一眼看全，也能分出主次。
+   卡片本身样式不变（渐变底 + 溶接图 + 居中标题 + 关键词）。 */
+.biz{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  grid-auto-rows:clamp(258px,21.5vw,338px);gap:clamp(12px,1.4vw,18px)}
+.biz .bcard{aspect-ratio:auto}
+.biz .bcard:first-child{grid-column:span 2}
+/* V293 用户指令：五张卡标题字号统一（原来首卡 20px、其余 16px，2+3 摆在一起看得出一大一小）。
+   统一档取 15–18px：五列最窄档卡宽 309，10 字标题 150px 仍单行 */
 .bcard{--cp:clamp(18px,1.5vw,22px);position:relative;display:flex;flex-direction:column;justify-content:flex-end;
   aspect-ratio:3/4;overflow:hidden;border-radius:4px;color:#fff;
   background:linear-gradient(180deg,var(--t1) 0%,var(--t2) 56%,var(--t3) 100%);
@@ -237,25 +273,38 @@ body.dark-hero .nav:not(.on) .burger i{background:#fff}
 .bcard--agri{--t1:#56653c;--t2:#384427;--t3:#222c16}
 .bcard--asset{--t1:#306c9f;--t2:#1e4b73;--t3:#123351}
 .bcard--proc{--t1:#575d67;--t2:#3b414b;--t3:#24282f}
+/* V277 五大业务领域的卡面渐变：从左到右由「服务型」走到「产品型」，
+   plan 最灰冷（咨询）→ soft/ai 偏靛蓝（研发）→ infra 青灰（工程）→ dom 湖蓝（硬件交付） */
+.bcard--plan{--t1:#2b3f5c;--t2:#1b2a42;--t3:#121d2e}
+.bcard--soft{--t1:#2e4a6d;--t2:#1d3250;--t3:#132238}
+.bcard--ai{--t1:#3a3f74;--t2:#272b54;--t3:#181b3a}
+.bcard--infra{--t1:#575d67;--t2:#3b414b;--t3:#24282f}
+.bcard--dom{--t1:#306c9f;--t2:#1e4b73;--t3:#123351}
 .bcard .bfig{position:absolute;inset:0;margin:0;max-width:none}
-/* 蒙版让照片下半段化进底色：溶接处不留硬边，底部整段是纯色，白字才稳 */
+/* 蒙版让照片下半段化进底色：溶接处不留硬边，底部整段是纯色，白字才稳
+   V293 用户指令：遮罩太深、颜色太重 → 溶接点整体下移（34/76 → 42/86），
+   半透明段从 .55 提到 .72，照片保留更多，底部仍留一段纯色托白字 */
 .bcard .bfig img{display:block;width:100%;height:100%;object-fit:cover;
-  -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 34%,rgba(0,0,0,.55) 58%,rgba(0,0,0,0) 76%);
-  mask-image:linear-gradient(180deg,#000 0%,#000 34%,rgba(0,0,0,.55) 58%,rgba(0,0,0,0) 76%);
+  -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 42%,rgba(0,0,0,.72) 66%,rgba(0,0,0,0) 86%);
+  mask-image:linear-gradient(180deg,#000 0%,#000 42%,rgba(0,0,0,.72) 66%,rgba(0,0,0,0) 86%);
   transition:transform 1.2s var(--ease)}
-/* 同色薄雾再压一层：四张图色温拉齐，溶接更匀 */
+/* 同色薄雾再压一层：四张图色温拉齐，溶接更匀（V293：30/55 → 15/32，只做色温中和，不再压暗） */
 .bcard::after{content:"";position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(180deg,transparent 38%,color-mix(in srgb,var(--t3) 30%,transparent) 66%,color-mix(in srgb,var(--t3) 55%,transparent) 100%)}
-/* hover 摘要多占 90px 高，照片区要再压暗一档——用卡片自己的深色（--t3）压，压暗同时不掉色相 */
+  background:linear-gradient(180deg,transparent 44%,color-mix(in srgb,var(--t3) 15%,transparent) 70%,color-mix(in srgb,var(--t3) 32%,transparent) 100%)}
+/* V277 国产化卡位现用浅色办公照（临时素材），底光比其它四张高一档，压一层雾拉齐
+   V293：跟着整体减淡（34/58/78 → 22/40/64），否则这张会明显比旁边重 */
+.biz .bcard--dom::after{background:linear-gradient(180deg,color-mix(in srgb,var(--t3) 22%,transparent) 0%,color-mix(in srgb,var(--t3) 40%,transparent) 56%,color-mix(in srgb,var(--t3) 64%,transparent) 100%)}
+/* hover 摘要多占 90px 高，照片区要再压暗一档——用卡片自己的深色（--t3）压，压暗同时不掉色相
+   V293：32/92 → 20/80，避免 hover 时整张卡突然黑掉 */
 .bcard .bfig::after{content:"";position:absolute;inset:0;opacity:0;
-  background:linear-gradient(180deg,color-mix(in srgb,var(--t3) 32%,transparent) 0%,color-mix(in srgb,var(--t3) 92%,transparent) 100%);
+  background:linear-gradient(180deg,color-mix(in srgb,var(--t3) 20%,transparent) 0%,color-mix(in srgb,var(--t3) 80%,transparent) 100%);
   transition:opacity .5s var(--ease)}
 .bbody{position:relative;z-index:2;display:flex;flex-direction:column;padding:0 var(--cp) var(--cp);text-align:center}
 /* 首页卡用 h3，索引页同一组件用 h2，样式共用一条 */
 .bcard :is(h2,h3){font-size:clamp(1.0625rem,1.32vw,1.25rem);font-weight:600;line-height:1.45;letter-spacing:.01em}
-/* V209 用户指令：首页业务卡标题缩小、任何宽度单行——最窄四列档 1104px 时盒宽 201px，
-   13 字标题需 ≤15.3px，下限取 14px（1101px 起四列，再窄转两列盒宽充足） */
-.biz .bcard :is(h2,h3){font-size:clamp(0.875rem,1.15vw,1.125rem)}
+/* V209 用户指令：首页业务卡标题缩小、任何宽度单行（V277 五列后再降一档）
+   V293：五张卡统一一档，取消首卡单独放大；下限 15px，10 字标题在五列最窄档仍单行 */
+.biz .bcard :is(h2,h3){font-size:clamp(0.9375rem,1.15vw,1.125rem)}
 /* 关键词标签：纯文字 + 细竖线分隔，不做色块描边（极简铁律）；文字居中，标签整行居中 */
 .btags{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 15px;margin-top:12px;max-height:70px;overflow:hidden;
   font-size:0.8125rem;line-height:1.7;color:rgba(255,255,255,.72);
@@ -285,14 +334,15 @@ body.dark-hero .nav:not(.on) .burger i{background:#fff}
    与桌面常态一致，摘要去详情页看）。所以只把图片的溶接点跟着「文字块只占底部一条」往回收一点，
    白字依然压在纯色段上；标签常显，靠它交代业务关键词。卡片比例回到 ≤860 的 4/3。 */
 @media (hover:none){
-  .bcard .bfig img{-webkit-mask-image:linear-gradient(180deg,#000 0%,#000 26%,rgba(0,0,0,.55) 52%,rgba(0,0,0,0) 70%);
-    mask-image:linear-gradient(180deg,#000 0%,#000 26%,rgba(0,0,0,.55) 52%,rgba(0,0,0,0) 70%)}
-  .bcard::after{background:linear-gradient(180deg,transparent 32%,color-mix(in srgb,var(--t3) 34%,transparent) 62%,color-mix(in srgb,var(--t3) 62%,transparent) 100%)}
+  .bcard .bfig img{-webkit-mask-image:linear-gradient(180deg,#000 0%,#000 32%,rgba(0,0,0,.72) 58%,rgba(0,0,0,0) 80%);
+    mask-image:linear-gradient(180deg,#000 0%,#000 32%,rgba(0,0,0,.72) 58%,rgba(0,0,0,0) 80%)}
+  .bcard::after{background:linear-gradient(180deg,transparent 38%,color-mix(in srgb,var(--t3) 18%,transparent) 66%,color-mix(in srgb,var(--t3) 38%,transparent) 100%)}
 }
 
+/* 3 列错格在大屏以下仍成立，只是行高跟卡片留白一起收一档 */
 @media (max-width:1100px){
-  .biz{grid-template-columns:repeat(2,1fr)}
-  .bcard{--cp:clamp(18px,2vw,24px);aspect-ratio:5/4}
+  .biz{grid-auto-rows:clamp(206px,26vw,262px);gap:clamp(10px,1.6vw,14px)}
+  .bcard{--cp:clamp(18px,2vw,24px)}
 }
 .scene.lead{grid-row:1/3;padding:32px}
 .scene .tag{font-family:var(--num);font-size:0.8125rem;letter-spacing:.24em;color:rgba(255,255,255,.6);opacity:0;transform:translateY(6px);transition:opacity .45s var(--ease),transform .45s var(--ease)}
@@ -394,16 +444,25 @@ body.dark-hero .nav:not(.on) .burger i{background:#fff}
 /* ---------- 新闻 ---------- */
 .news-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:clamp(28px,4vw,64px);align-items:stretch}
 /* 头条卡：图上 + 品牌蓝实色块（大号日期 + 标题），参考版式；随右列等高拉伸，顶/底双对齐 */
-.feat{display:flex;flex-direction:column;background:var(--dark);color:#fff}
-/* V144 图高由右列内容决定：flex-basis 归零后不再用图片固有高度撑行，
-   左右两列随列表变短同步收高，底边仍对齐 */
-.feat img{width:100%;height:0;flex:1 1 0;min-height:200px;object-fit:cover;display:block}
-.feat .cap{display:flex;gap:clamp(20px,2vw,30px);align-items:center;padding:clamp(20px,2.2vw,30px) clamp(22px,2.4vw,32px)}
+/* V291 用户指令：焦点图改成业务卡那套「图溶进底色 + 文字压在图上」的渐变遮罩，
+   与上方业务领域五张卡同一版式语言。做法同 .bcard：图片绝对定位铺满、底部蒙版淡出，
+   再叠一层同色薄雾；文字块进流落在底部纯色段，白字才立得住 */
+.feat{position:relative;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;
+  border-radius:4px;color:#fff;min-height:clamp(320px,36vh,420px);
+  background:linear-gradient(180deg,#243056 0%,#1b2450 54%,var(--dark) 100%)}
+.feat img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 34%,rgba(0,0,0,.55) 58%,rgba(0,0,0,0) 78%);
+  mask-image:linear-gradient(180deg,#000 0%,#000 34%,rgba(0,0,0,.55) 58%,rgba(0,0,0,0) 78%);
+  transition:transform 1.2s var(--ease),opacity .4s var(--ease)}
+.feat::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,transparent 38%,color-mix(in srgb,var(--dark) 32%,transparent) 66%,color-mix(in srgb,var(--dark) 58%,transparent) 100%)}
+.feat .cap{position:relative;z-index:2;display:flex;gap:clamp(20px,2vw,30px);align-items:center;
+  padding:clamp(20px,2.2vw,30px) clamp(22px,2.4vw,32px)}
 .feat .fd{flex:none;text-align:center;font-family:var(--num);min-width:64px}
 .feat .fd b{display:block;font-size:clamp(1.875rem,2.8vw,2.625rem);font-weight:600;line-height:1;letter-spacing:.02em}
 .feat .fd span{display:block;margin-top:7px;font-size:0.8125rem;letter-spacing:.1em;color:rgba(255,255,255,.55)}
 .feat .cap-txt b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:clamp(1rem,1.4vw,1.125rem);line-height:1.75;font-weight:600;letter-spacing:.01em}
-.feat:hover img{opacity:.9}
+.feat:hover img,.feat:focus-visible img{transform:scale(1.05)}
 .nlist li{border-bottom:1px solid var(--line)}
 .nlist li:last-child{border-bottom:0}
 .nlist a{display:flex;justify-content:space-between;gap:20px;align-items:baseline;padding:16px 4px;transition:padding .3s var(--ease)}
@@ -634,9 +693,13 @@ footer{background:#f4f6f9;color:var(--ink);border-top:1px solid var(--line)}
   .scene.lead{grid-row:auto;min-height:320px;padding:24px}
   .scene h3,.scene.lead h3{font-size:1.25rem}
   .scene .tag,.scene p,.scene-go{opacity:1;transform:none}
-  /* 业务卡片：单列（V160 图片渐变卡，高度另按 4/3 收，避免单列时过于瘦长） */
-  .biz{grid-template-columns:1fr}
-  .bcard{--cp:20px;aspect-ratio:4/3}
+  /* 业务卡片：单列（V160 图片渐变卡，高度另按 4/3 收，避免单列时过于瘦长）
+     V279：单列时首卡不能再跨两列，行高交回 aspect-ratio 决定 */
+  .biz{grid-template-columns:1fr;grid-auto-rows:auto}
+  .biz .bcard:first-child{grid-column:auto}
+  .biz .bcard,.biz .bcard:first-child{aspect-ratio:4/3}
+  .biz .bcard:first-child :is(h2,h3){font-size:clamp(1.0625rem,1.32vw,1.25rem)}
+  .bcard{--cp:20px}
   .cue{display:none}
   .hero-tag{font-size:0.8125rem;letter-spacing:.16em;white-space:nowrap}
   .hero-tag::before{width:26px}
@@ -668,4 +731,152 @@ img{border-radius:4px}
 .qrcode,
 .row{border-radius:4px}
 .nsearch{overflow:hidden}
-.nsearch button{border-radius:0 4px 4px 0}
+/* 按钮圆角由 .nsearch 的 4px + overflow:hidden 统一处理，自身不再单独声明 */
+
+/* ---------- 首屏整屏滚动 · 右侧指示器（V293） ----------
+   一次滚轮走一屏由 js/home-scroll.js 负责（业务区 1064 > 一屏 900，不能靠 CSS snap）。
+   这里只做指示器：竖排小圆点，悬停出名称；深色区块（首屏 / 发展历程）自动反白。
+   不做轨道连线、不加底板，仍然只靠点位本身表达进度。 */
+html.pg-on{scroll-behavior:auto}
+.pg-rail{position:fixed;right:clamp(14px,1.7vw,28px);top:50%;transform:translateY(-50%);
+  z-index:80;display:flex;flex-direction:column;align-items:flex-end;gap:15px}
+.pg-dot{position:relative;display:flex;align-items:center;justify-content:flex-end;
+  width:26px;height:14px;padding:0;border:0;background:none;cursor:pointer}
+.pg-dot i{display:block;width:7px;height:7px;border-radius:50%;
+  border:1px solid rgba(20,30,60,.34);background:transparent;
+  transition:width .3s var(--ease),height .3s var(--ease),background .3s,border-color .3s}
+.pg-dot.act i{width:10px;height:10px;background:var(--accent);border-color:var(--accent)}
+.pg-dot:hover i{border-color:var(--accent)}
+.pg-lab{position:absolute;right:20px;top:50%;transform:translateY(-50%) translateX(6px);
+  white-space:nowrap;font-size:0.8125rem;line-height:1;letter-spacing:.06em;color:var(--ink2);
+  opacity:0;pointer-events:none;transition:opacity .25s var(--ease),transform .25s var(--ease)}
+.pg-dot:hover .pg-lab,.pg-dot:focus-visible .pg-lab{opacity:1;transform:translateY(-50%)}
+.pg-dot:focus-visible{outline:none}
+.pg-dot:focus-visible i{outline:2px solid color-mix(in srgb,var(--accent) 55%,transparent);outline-offset:3px}
+.pg-rail.on-dark .pg-dot i{border-color:rgba(255,255,255,.5)}
+.pg-rail.on-dark .pg-dot.act i{background:#fff;border-color:#fff}
+.pg-rail.on-dark .pg-dot:hover i{border-color:#fff}
+.pg-rail.on-dark .pg-lab{color:rgba(255,255,255,.86)}
+@media (max-width:899px),(hover:none){.pg-rail{display:none}}
+
+/* ---------- V295 首页满屏板块 ----------
+   用户指令：首页每次滚动一屏，每个板块高度 100vh，标题位置固定，下方内容区垂直居中。
+   做法：section 变 flex column；标题壳（.shead 所在 wrap）取 auto 高度、不被拉伸，
+   各板块都从同一个 padding-top 起排，标题 y 因此完全一致；
+   内容容器 flex:1 吃掉剩余高度，再用 margin auto / justify-content:center 居中。
+   只在 ≥900px 生效 —— 与整屏滚动（home-scroll.js 的 min-width:900 + pointer:fine）同一条线。
+   用 min-height 而不是 height：内容天然超过一屏时（1024 的新闻列表）区块自己撑高，
+   由 home-scroll.js 给超高的块补一个底部停靠点，不会把内容裁掉。 */
+@media (min-width:900px){
+  body[data-page="index"] :is(.sec-biz,.sec-news,.hist,.sec-partners){
+    min-height:100vh;height:auto;box-sizing:border-box;
+    display:flex;flex-direction:column;
+    padding-top:clamp(76px,11.1vh,100px);
+    padding-bottom:clamp(36px,6vh,54px)}
+  /* 标题壳：只按标题自身高度站位，不参与内容居中
+     width:100% 必须有：.wrap 自带 margin-inline:auto，在 flex 交叉轴上会把 auto 外边距变成
+     「按内容宽度自适应」，历史区第二个 wrap 因此塌到 343px（时间轴被压成一张卡）。 */
+  body[data-page="index"] :is(.sec-biz,.sec-news) > .wrap{
+    flex:1 1 auto;display:flex;flex-direction:column;min-height:0}
+  body[data-page="index"] .hist > .wrap,
+  body[data-page="index"] .sec-partners > .wrap{flex:0 0 auto;width:100%}
+  body[data-page="index"] .hist > .wrap:last-child{flex:1 1 auto}
+  body[data-page="index"] :is(.sec-biz,.sec-news,.hist,.sec-partners) .shead{margin-bottom:0}
+  /* 内容区：在标题以下的剩余高度里垂直居中 */
+  body[data-page="index"] .biz,
+  body[data-page="index"] .news-grid{margin-top:auto;margin-bottom:auto}
+  body[data-page="index"] .hist > .wrap:last-child{
+    flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;min-height:0}
+  body[data-page="index"] .pbody{
+    flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;min-height:0}
+  /* V299 用户指令（V298 做反了）：最后一屏顶对齐 —— 先合作伙伴、再接页脚，
+     页脚允许超出屏幕外。不能为了「露出完整页脚」把合作区压扁，那是拿合作伙伴的信息去换。
+     做法：合作区高度 = 100vh − 页脚自然高；页脚自然高由 home-scroll.js 实测写进 --footh
+     （页脚高度随宽度变，写死 433 会在大屏/窄屏错位），CSS 里的 433 只是 JS 未跑时的兜底。
+     内容顶对齐、不再垂直居中；页脚恢复自然高度、不裁不压。
+     内容比剩余空间高时合作区自己撑高（shrink 也是 0），页脚被推到屏外 —— 符合预期。
+     窄屏（<900）不进这套规则，仍是自然文档流。 */
+  body[data-page="index"]{--footh:433px}
+  body[data-page="index"] .sec-partners{
+    flex-shrink:0;min-height:calc(100vh - var(--footh));
+    padding-bottom:clamp(36px,6vh,54px)}
+  body[data-page="index"] .pbody{
+    flex:0 0 auto;justify-content:flex-start;padding-top:clamp(28px,4.2vh,44px)}
+  /* 页脚恢复自然高度（不再压成 102 的版权条），超出屏幕的部分留在视口外。
+     这里不要再给 footer 设 display:flex —— 它会变成 flex 容器，
+     内部两条 .wrap 的 margin-inline:auto 会按内容宽度自适应、整块缩到中间。
+     页脚保持 block，.wrap 才是正常满宽。 */
+  body[data-page="index"] footer{height:auto;overflow:visible}
+  /* 业务卡行高原本按 vw 算（21.5vw），1920 视口会顶到 338 上限，两行 694 再加标题
+     就把这一屏撑到 919 —— 大屏上会露出下一屏的边。这里用 min() 给它加一条 vh 上限：
+     1440 不变（309 < 331），1920 落到 331，整块正好 900。 */
+  body[data-page="index"] .biz{
+    grid-auto-rows:min(clamp(258px,21.5vw,338px),calc((100vh - 250px) / 2))}
+}
+
+/* ============================================================
+   V297 党建工作模块（从新闻中心独立出来）
+   用户指令：党建与主题教育单独成模块，页面用「关于我们」那种标签栏切两个子模块，
+   banner 用红绸图，模块颜色取偏深的红、不刺眼。
+   ============================================================ */
+/* 模块专色：深砖红。取 9a2026 —— 正红（#e60012 一类）在浅底上发烫、白字压上去对比也不够，
+   往暗里收两档才有「深红」的沉着感。只在 party.html 与党建稿件详情页生效
+   （site.js 给 body 加 .party），其余页面 --accent 仍是标准蓝，不受影响。 */
+body.party{
+  --accent:#9a2026;
+  --accent2:#e6a8a8;
+  --party:#8d1b21;
+}
+/* 标签栏当前态（V299 用户指令）：党建模块与「关于我们」一致用金色，
+   这里不再覆盖成模块专色 —— 删掉原先的 --party 覆写，回落到主站 --gold-d。 */
+/* banner：底图本身就是红绸渐变，遮罩换成同色系深红压暗 ——
+   原来的蓝遮罩压在红图上会泛紫。透明度比主站再低一档，绸带氛围留得住 */
+body.party .dhero{background:#3f0d11}
+body.party .dhero-shade{background:
+  linear-gradient(90deg,rgba(59,11,15,.48) 0%,rgba(59,11,15,.40) 38%,rgba(59,11,15,.34) 70%,rgba(59,11,15,.28) 100%),
+  linear-gradient(180deg,rgba(48,9,12,.24) 0%,rgba(48,9,12,.12) 28%,rgba(48,9,12,.22) 62%,rgba(48,9,12,.50) 100%)}
+/* 原图 1920×1078，红绸带集中在下半部；banner 窗口只有 300 高，
+   焦点压到 62% 才让绸带落在下沿，而不是只剩一片纯红 */
+.dhero-media img.dhero-img--party{object-position:50% 62%}
+/* 党建稿件详情页：正文页复用新闻详情模板，深蓝 hero 也换成红绸，
+   否则从红色模块点进正文会突然跳回蓝色 */
+body.party .phero{background:#7d1519 url("../assets/img/banners/party.webp?v=296") center/cover}
+body.party .phero::before{background:linear-gradient(110deg,rgba(50,8,12,.92) 0%,rgba(96,15,20,.86) 55%,rgba(140,26,32,.72) 100%)}
+/* 党建模块没有分类按钮（标签栏已承担分类），筛选栏只剩搜索框：靠右与列表对齐 */
+body.party .nfilter{justify-content:flex-end}
+/* V301 用户指令：党建页的两个子模块标签改成「新闻中心」那种实心按钮，
+   配色走模块红（--accent 在这里已是 #9a2026），不再用关于我们的金色下划线。
+   结构仍是 .atabs/.apane（切换逻辑不动），只把外观换成与 .ntabs 同一套数值 ——
+   42 高、0 22 内距、1px 线框、当前态实底白字。
+   页面原本用 .sec-tight-top（padding-top:0）是为了让通栏标签线贴着 banner，
+   换成实心按钮后需要回到正常留白，否则按钮直接顶在 banner 下沿。 */
+body.party .sec-tight-top{padding-top:clamp(40px,6vh,70px)}
+body.party .atabs.pair{display:flex;flex-wrap:wrap;gap:8px;border-bottom:0}
+body.party .atabs.pair button{height:42px;padding:0 22px;font-size:1.0625rem;letter-spacing:.06em;
+  border:1px solid var(--line);color:var(--ink2);display:inline-flex;align-items:center;
+  transition:background-color .3s var(--ease),border-color .3s var(--ease),color .3s}
+body.party .atabs.pair button::after{display:none}
+body.party .atabs.pair button.act{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+body.party .atabs.pair button:hover:not(.act){border-color:var(--accent);color:var(--accent)}
+
+/* 菜单面板项数少时同样均分铺满（V301 用户指令）：新闻中心、党建各 2 项。
+   V297 曾把 2 项菜单的列宽写死成 clamp(220px,17.5vw,260px)，不管视口多大都是 220–260，
+   用户原话「尺寸要自适应啊，现在固定尺寸了」—— 这里删掉定宽，回到基础规则的
+   grid-auto-columns:minmax(0,1fr)：卡片宽度 = 面板宽 ÷ 项数，跟着视口走。 */
+
+/* 党建模块的子菜单用模块专色（V301 用户指令）：只有「党建工作」这一栏是红，
+   其余菜单仍是标准蓝。变量只下到 .mega 面板内，不影响导航项本身（a.m 的当前态仍是金色）。 */
+.menu>li.mega-party .mega{--accent:#9a2026;--accent2:#e6a8a8}
+
+/* 首页业务领域加浅灰底（V297 用户指令）：与新闻板块的白底分开一档明度。
+   只作用于首页；business.html 索引页的同一网格保持白底。 */
+body[data-page="index"] .sec-biz{background:var(--panel)}
+
+/* V297：导航加到 6 项（首页/业务领域/产品中心/新闻中心/党建工作/关于我们）后，
+   861–1120 这个区间原来的 gap（4.1vw）与 logo 字号会把页头撑爆 ——
+   实测 900 宽时 logo 与每个菜单项都被压成两行。这里收 gap、logo 降一档，
+   配合上面给 .menu a.m 加的 white-space:nowrap，菜单恒为单行。 */
+@media (min-width:861px) and (max-width:1120px){
+  .menu{gap:clamp(16px,2.2vw,30px)}
+  .logo-t{font-size:1.0625rem}
+}

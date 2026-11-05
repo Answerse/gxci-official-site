@@ -19,6 +19,20 @@
   }
   window.__loadData = loadScript;
 
+  /* 新闻列表数据源（V293）：正式域名下先取云数据库，失败再拉本地 data/news-index.js。
+     两条路径写入的是同一个 window.NEWS_INDEX，页面逻辑不用区分来源。 */
+  window.__loadNews = function () {
+    /* V297：党建模块一页要挂两个列表，__loadNews 会被调用多次；
+       缓存同一个 Promise，避免「data/news-index.js」被重复插入 <script> 请求多遍 */
+    if (window.__newsOnce) return window.__newsOnce;
+    var cloud = (window.WBNews && window.WBNews.index)
+      ? window.WBNews.index().then(function (rows) { window.NEWS_INDEX = rows; })
+      : Promise.reject(new Error('cloud off'));
+    window.__newsOnce = cloud.catch(function () { return loadScript('data/news-index.js'); })
+      .catch(function (e) { window.__newsOnce = null; throw e; });
+    return window.__newsOnce;
+  };
+
   /* ---------- 导航 & 页脚 ---------- */
   /* 线形图标集（V184）：24×24 / 1.4 描边 / 圆头圆角，颜色一律 currentColor。
      只定义一次，子菜单卡片用 <use href="#id"> 引用。 */
@@ -66,16 +80,99 @@
     + '<rect x="3.4" y="5.2" width="17.2" height="13.6" rx="1.4"/><rect x="6.6" y="8.6" width="5.6" height="3.8" rx=".6"/><path d="M14.9 8.6h2.5M14.9 12.4h2.5M6.6 15.8h10.8"/></symbol>'
     + '<symbol id="ic-pen" viewBox="1.8 1.8 20.4 20.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
     + '<path d="M16.8 3.4 20.6 7.2 8.9 18.9l-4.9 1.2 1.2-4.9L16.8 3.4Z"/><path d="M14.4 5.8l3.8 3.8"/><path d="M5.6 15.6l2.6 2.6"/></symbol>'
+    /* V279 业务详情页「具体服务内容」卡图标：同一套 24×24 / 1.6 描边，
+       按语义给五个领域共 25 条服务项各配一个，同页内不重复 */
+    + '<symbol id="ic-search" viewBox="1.8 1.8 20.4 20.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
+    + '<circle cx="10.6" cy="10.6" r="6.6"/><path d="M15.4 15.4 20.4 20.4"/></symbol>'
+    + '<symbol id="ic-layers" viewBox="1.8 1.8 20.4 20.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
+    + '<path d="M12 2.6 3.2 7 12 11.4 20.8 7 12 2.6Z"/><path d="M3.2 11.6 12 16l8.8-4.4"/><path d="M3.2 16 12 20.4 20.8 16"/></symbol>'
+    + '<symbol id="ic-route" viewBox="1.8 1.8 20.4 20.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
+    + '<circle cx="5.8" cy="5.8" r="2.6"/><circle cx="18.2" cy="18.2" r="2.6"/><path d="M8.4 5.8h4.8a3.4 3.4 0 0 1 0 6.8h-2a3.4 3.4 0 0 0 0 6.8h4.4"/></symbol>'
+    + '<symbol id="ic-check" viewBox="1.8 1.8 20.4 20.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
+    + '<circle cx="12" cy="12" r="8.8"/><path d="M7.8 12.2l2.9 2.9 5.6-6"/></symbol>'
+    + '<symbol id="ic-code" viewBox="1.8 1.8 20.4 20.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
+    + '<path d="M8.8 6.6 3.4 12l5.4 5.4"/><path d="M15.2 6.6 20.6 12l-5.4 5.4"/><path d="M13.6 4 10.4 20"/></symbol>'
+    + '<symbol id="ic-module" viewBox="1.8 1.8 20.4 20.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
+    + '<rect x="3.2" y="3.2" width="7.4" height="7.4" rx="1.4"/><rect x="13.4" y="3.2" width="7.4" height="7.4" rx="1.4"/><rect x="3.2" y="13.4" width="7.4" height="7.4" rx="1.4"/><rect x="13.4" y="13.4" width="7.4" height="7.4" rx="1.4"/></symbol>'
+    + '<symbol id="ic-data" viewBox="1.8 1.8 20.4 20.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
+    + '<ellipse cx="12" cy="6" rx="7.4" ry="3.2"/><path d="M4.6 6v12c0 1.77 3.31 3.2 7.4 3.2s7.4-1.43 7.4-3.2V6"/><path d="M4.6 12c0 1.77 3.31 3.2 7.4 3.2s7.4-1.43 7.4-3.2"/></symbol>'
+    + '<symbol id="ic-chart" viewBox="1.8 1.8 20.4 20.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
+    + '<path d="M3.2 20.6h17.6"/><path d="M6.4 20.6v-5.8M11.4 20.6V9.8M16.4 20.6V4.8"/></symbol>'
+    + '<symbol id="ic-loop" viewBox="1.8 1.8 20.4 20.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
+    + '<path d="M4.2 12a7.8 7.8 0 0 1 13.3-5.5"/><path d="M17.9 2.8v4.2h-4.2"/><path d="M19.8 12a7.8 7.8 0 0 1-13.3 5.5"/><path d="M6.1 21.2v-4.2h4.2"/></symbol>'
+    + '<symbol id="ic-book" viewBox="1.8 1.8 20.4 20.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
+    + '<path d="M12 6.6C10.1 4.9 7 4.3 3.6 4.7v13.1c3.4-.4 6.5.2 8.4 1.9 1.9-1.7 5-2.3 8.4-1.9V4.7c-3.4-.4-6.5.2-8.4 1.9Z"/><path d="M12 6.6v13.1"/></symbol>'
+    + '<symbol id="ic-shield" viewBox="1.8 1.8 20.4 20.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
+    + '<path d="M12 2.8 4.4 5.9v6.1c0 4.2 3.2 7.5 7.6 9.2 4.4-1.7 7.6-5 7.6-9.2V5.9L12 2.8Z"/><path d="M8.9 11.9l2.4 2.4 4.2-4.6"/></symbol>'
+    + '<symbol id="ic-tag" viewBox="1.8 1.8 20.4 20.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
+    + '<path d="M11.4 3.4H20v8.6l-8.4 8.4a1.8 1.8 0 0 1-2.5 0l-6.1-6.1a1.8 1.8 0 0 1 0-2.5l8.4-8.4Z"/><circle cx="16.2" cy="7.4" r="1.5"/></symbol>'
+    + '<symbol id="ic-chat" viewBox="1.8 1.8 20.4 20.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
+    + '<path d="M20.4 12.4c0 4-3.8 7.2-8.4 7.2-1.2 0-2.4-.2-3.4-.6l-4.6 1.6 1.5-4.2a6.8 6.8 0 0 1-1.5-4C3.6 8.4 7.4 5.2 12 5.2s8.4 3.2 8.4 7.2Z"/><path d="M8.4 12h1.2M11.4 12h1.2M14.4 12h1.2"/></symbol>'
+    + '<symbol id="ic-rack" viewBox="1.8 1.8 20.4 20.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
+    + '<rect x="5.6" y="2.8" width="12.8" height="18.4" rx="1.6"/><path d="M8.4 7.2h8M8.4 11.6h8M8.4 16h8"/></symbol>'
+    + '<symbol id="ic-server" viewBox="1.8 1.8 20.4 20.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
+    + '<rect x="3" y="4" width="18" height="6.2" rx="1.4"/><rect x="3" y="13.8" width="18" height="6.2" rx="1.4"/><path d="M6.6 7.1h2M6.6 16.9h2M15.4 7.1h2M15.4 16.9h2"/></symbol>'
+    + '<symbol id="ic-net" viewBox="1.8 1.8 20.4 20.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
+    + '<circle cx="12" cy="12" r="2.6"/><circle cx="4.6" cy="5" r="1.7"/><circle cx="19.4" cy="5" r="1.7"/><circle cx="4.6" cy="19" r="1.7"/><circle cx="19.4" cy="19" r="1.7"/><path d="M6 6.4 10.2 10.2M18 6.4 13.8 10.2M6 17.6 10.2 13.8M18 17.6 13.8 13.8"/></symbol>'
+    + '<symbol id="ic-monitor" viewBox="1.8 1.8 20.4 20.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
+    + '<rect x="2.8" y="4" width="18.4" height="12.2" rx="1.6"/><path d="M8.6 20.4h6.8M12 16.2v4.2"/></symbol>'
+    + '<symbol id="ic-box" viewBox="1.8 1.8 20.4 20.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
+    + '<path d="M12 2.8 3.4 7.1v9.8L12 21.2l8.6-4.3V7.1L12 2.8Z"/><path d="M3.4 7.1 12 11.4l8.6-4.3M12 11.4v9.8"/></symbol>'
+    + '<symbol id="ic-truck" viewBox="1.8 1.8 20.4 20.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
+    + '<path d="M2.8 6.2h10.4v11.2H2.8z"/><path d="M13.2 9.8h3.9l3.5 3.5v4.1h-7.4z"/><circle cx="6.8" cy="19.2" r="1.7"/><circle cx="17.4" cy="19.2" r="1.7"/></symbol>'
+    /* V283 面性图标（hover 用）：与线性版同 viewBox、同外轮廓定位，靠 fill-rule=evenodd
+       把内部细节挖成孔（负空间），不做描边。命名规则 =「线性 id + -f」。
+       注意：挖孔必须写在**同一个 path 的 d 里**——分成两个 <path> 只会同色叠加，
+       evenodd 只在单条 path 的多段子路径之间生效。 */
+    + '<symbol id="ic-doc-f" viewBox="1.8 1.8 20.4 20.4" fill="currentColor" fill-rule="evenodd" stroke="none">'
+    + '<path d="M5.6 2.8h8.2L18.4 7.4V21.2H5.6zM13.8 2.8 18.4 7.4H13.8zM8.8 11.4h6v1.7h-6zM8.8 15.2h4v1.7h-4z"/></symbol>'
+    + '<symbol id="ic-pen-f" viewBox="1.8 1.8 20.4 20.4" fill="currentColor" fill-rule="evenodd" stroke="none">'
+    + '<path d="M16.8 3.4 20.6 7.2 8.9 18.9 4 20.1 5.2 15.2z"/></symbol>'
+    + '<symbol id="ic-cap-f" viewBox="1.8 1.8 20.4 20.4" fill="currentColor" fill-rule="evenodd" stroke="none">'
+    + '<path d="M12 2.6 2.2 7.6 12 12.6 21.8 7.6zM6.8 9.8v4.4c0 1.9 2.4 3.2 5.2 3.2s5.2-1.3 5.2-3.2V9.8L12 12.6z"/></symbol>'
+    + '<symbol id="ic-build-f" viewBox="1.8 1.8 20.4 20.4" fill="currentColor" fill-rule="evenodd" stroke="none">'
+    + '<path d="M3.6 21V8.2l5.4-3.2V21zM6.2 11h1.6v1.6H6.2zM6.2 14.6h1.6v1.6H6.2zM10.4 21V11.4l8.4-2.6V21zM13.4 13.4h1.6v1.6h-1.6zM13.4 17h1.6v1.6h-1.6z"/></symbol>'
+    + '<symbol id="ic-chip-f" viewBox="1.8 1.8 20.4 20.4" fill="currentColor" fill-rule="evenodd" stroke="none">'
+    + '<path d="M6.6 6.6h10.8v10.8H6.6zM9.4 2.6h1.6v4H9.4zM13 2.6h1.6v4H13zM9.4 17.4h1.6v4H9.4zM13 17.4h1.6v4H13zM2.6 9.4h4v1.6h-4zM2.6 13h4v1.6h-4zM17.4 9.4h4v1.6h-4zM17.4 13h4v1.6h-4z"/></symbol>'
+    + '<symbol id="ic-leaf-f" viewBox="1.8 1.8 20.4 20.4" fill="currentColor" fill-rule="evenodd" stroke="none">'
+    + '<path d="M12 2.6c4 1.2 6.6 4.6 6.6 9.2 0 4.2-2.4 7.6-6.6 9.6-4.2-2-6.6-5.4-6.6-9.6 0-4.6 2.6-8 6.6-9.2zM11.15 6.6h1.7v11.4h-1.7z"/></symbol>'
+    + '<symbol id="ic-cocoon-f" viewBox="1.8 1.8 20.4 20.4" fill="currentColor" fill-rule="evenodd" stroke="none">'
+    + '<path d="M12 3.4c3.9 0 7 3.85 7 8.6s-3.1 8.6-7 8.6-7-3.85-7-8.6 3.1-8.6 7-8.6zM6.2 8.6h11.6v1.5H6.2zM6.2 13.9h11.6v1.5H6.2z"/></symbol>'
+    + '<symbol id="ic-orange-f" viewBox="1.8 1.8 20.4 20.4" fill="currentColor" fill-rule="evenodd" stroke="none">'
+    + '<path d="M12 6.2a7.4 7.4 0 1 1 0 14.8 7.4 7.4 0 0 1 0-14.8zM11.6 4.4h1.4v1.8h-1.4zM15.2 2c1.9-.2 3.2.9 3.5 2.8-2 .3-3.2-.8-3.5-2.8z"/></symbol>'
+    + '<symbol id="ic-tree-f" viewBox="1.8 1.8 20.4 20.4" fill="currentColor" fill-rule="evenodd" stroke="none">'
+    + '<path d="M12 2.8 4.6 12.4h3.7L3.6 18.6h16.8l-4.7-6.2h3.7zM11.2 18.6h1.6v2.8h-1.6z"/></symbol>'
+    + '<symbol id="ic-house-f" viewBox="1.8 1.8 20.4 20.4" fill="currentColor" fill-rule="evenodd" stroke="none">'
+    + '<path d="M12 2.4 22 10.4H2zM5.8 10.4h12.4v10.4H5.8zM9.9 20.8v-5.6h4.2v5.6z"/></symbol>'
+    + '<symbol id="ic-news-f" viewBox="1.8 1.8 20.4 20.4" fill="currentColor" fill-rule="evenodd" stroke="none">'
+    + '<path d="M3.4 5.2h17.2v13.6H3.4zM6.6 8.6h5.6v3.8H6.6zM14.9 8.6h2.5v1.2h-2.5zM14.9 11.9h2.5v1.2h-2.5zM6.6 15.6h10.8v1.2H6.6z"/></symbol>'
+    + '<symbol id="ic-paper-f" viewBox="1.8 1.8 20.4 20.4" fill="currentColor" fill-rule="evenodd" stroke="none">'
+    + '<path d="M3.2 4.4h17.6v15.2H3.2zM7.4 8.6h4.8v1.4H7.4zM7.4 12.2h9.2v1.4H7.4zM7.4 15.8h6.4v1.4H7.4z"/></symbol>'
+    + '<symbol id="ic-flag-f" viewBox="1.8 1.8 20.4 20.4" fill="currentColor" fill-rule="evenodd" stroke="none">'
+    + '<path d="M4.6 2.6h1.4v18.6H4.6zM5.4 3.6h12.4l-2.1 4.2 2.1 4.2H5.4z"/></symbol>'
+    + '<symbol id="ic-clock-f" viewBox="1.8 1.8 20.4 20.4" fill="currentColor" fill-rule="evenodd" stroke="none">'
+    + '<path d="M12 3.4a8.6 8.6 0 1 1 0 17.2 8.6 8.6 0 0 1 0-17.2zM11.15 6.6h1.7v6.1h-1.7zM12 11.2h4.2v1.7H12z"/></symbol>'
+    + '<symbol id="ic-user-f" viewBox="1.8 1.8 20.4 20.4" fill="currentColor" fill-rule="evenodd" stroke="none">'
+    + '<path d="M12 3.8a4 4 0 1 1 0 8 4 4 0 0 1 0-8zM4.4 20.8a7.6 7.6 0 0 1 15.2 0z"/></symbol>'
+    + '<symbol id="ic-pin-f" viewBox="1.8 1.8 20.4 20.4" fill="currentColor" fill-rule="evenodd" stroke="none">'
+    + '<path d="M12 21.2c4.3-5 7.2-8.8 7.2-11.6A7.2 7.2 0 0 0 4.8 9.6c0 2.8 2.9 6.6 7.2 11.6zM12 6.8a2.8 2.8 0 1 1 0 5.6 2.8 2.8 0 0 1 0-5.6z"/></symbol>'
     + '</svg>';
 
   /* 通栏子菜单（V184）：一行卡片 —— 线形图标 + 子模块标题 + 一行说明。
      左侧「模块名 + 简介 + 查看全部」整块已撤：一级导航项本身就是模块索引页入口，
      面板里再放一遍标题和「查看全部」是把同一件事说两遍。 */
   function mega(items) {
-    var h = '<div class="mega"><div class="wrap"><div class="mega-cards">';
+    /* data-n 只作钩子保留：V297 曾据此给 2 项菜单收窄列宽，V301 用户要求「尺寸自适应」，
+       已改回 1fr 均分，列宽跟着面板走。 */
+    var h = '<div class="mega"><div class="wrap"><div class="mega-cards" data-n="' + items.length + '">';
     items.forEach(function (it) {
+      /* V283：线性 / 面性两个 svg 叠在同一个 32×32 盒子里，hover 时交叉淡入淡出。
+         用 opacity 而不是 display，才有过渡；两个都留在 DOM 里也不会多占位。 */
       h += '<a class="ml" href="' + it[1] + '">'
+        + '<span class="ml-ico">'
         + '<svg class="ml-ic" aria-hidden="true" focusable="false"><use href="#' + it[3] + '"></use></svg>'
+        + '<svg class="ml-ic-f" aria-hidden="true" focusable="false"><use href="#' + it[3] + '-f"></use></svg>'
+        + '</span>'
         + '<b>' + it[0] + '</b><small>' + it[2] + '</small></a>';
     });
     return h + '</div></div></div>';
@@ -85,16 +182,20 @@
     + '<div class="pbar"></div>'
     + '<nav class="nav"><div class="nav-in">'
     + '<a class="logo" href="index.html">'
-    + '<img src="assets/img/_img_index_bbw-logo.png?v=75" alt="logo">'
+    + '<img class="lg-c" src="assets/img/_img_index_bbw-logo.png?v=75" alt="logo">'
+    + '<img class="lg-w" src="assets/img/logo-white.svg?v=1" alt="" aria-hidden="true">'
     + '<span class="logo-t">广西计算机有限责任公司<small>GUANGXI COMPUTER INC.</small></span></a>'
     + '<ul class="menu">'
     + '<li><a class="m" data-nav="index" href="index.html">首页</a></li>'
     + '<li class="has-mega"><a class="m" data-nav="business" href="business.html">业务领域</a>'
+    /* V277 业务领域由「按平台分」改为「按能力域分」五大领域：
+       桂农易通 / 桂资通 仍保留独立页面（business.html 的「重点平台」入口进入），只是不再进菜单一级 */
     + mega([
-      ['集团型企业数字化转型', 'area-enterprise.html', '全周期数字化建设与运维', 'ic-org'],
-      ['桂农易通产业服务平台', 'area-agri.html', '特色农业产业互联网平台', 'ic-leaf'],
-      ['桂资通资产运营平台', 'area-asset.html', '国有资产数字化管理运营', 'ic-build'],
-      ['国产软硬件产品集采服务平台', 'area-procure.html', '正版化 · 国产化 · 降本增效', 'ic-chip']
+      ['信息化规划与咨询服务', 'area-planning.html', '规划咨询与方案设计', 'ic-doc'],
+      ['软件研发与数据服务', 'area-software.html', '定制研发与数据治理', 'ic-pen'],
+      ['人工智能与智能应用', 'area-ai.html', '大模型与智能审核', 'ic-cap'],
+      ['信息基础设施服务', 'area-infra.html', '机房、网络与云资源', 'ic-build'],
+      ['国产化产品与服务', 'area-domestic.html', '国产终端与基础软件', 'ic-chip']
     ])
     + '</li>'
     + '<li class="has-mega"><a class="m" data-nav="products" href="products.html">产品中心</a>'
@@ -109,11 +210,17 @@
     ])
     + '</li>'
     + '<li class="has-mega"><a class="m" data-nav="news" href="news.html">新闻中心</a>'
+    /* V297：党建工作、主题教育已从新闻中心移出，成为独立模块（party.html），
+       新闻中心只保留公司动态与行业资讯 */
     + mega([
       ['公司动态', 'news.html?cat=3', '经营与项目进展', 'ic-news'],
-      ['行业资讯', 'news.html?cat=4', '政策与产业观察', 'ic-paper'],
-      ['党建工作', 'news.html?cat=5', '党建活动与学习', 'ic-flag'],
-      ['主题教育', 'news.html?cat=17', '专题教育成果', 'ic-cap']
+      ['行业资讯', 'news.html?cat=4', '政策与产业观察', 'ic-paper']
+    ])
+    + '</li>'
+    + '<li class="has-mega mega-party"><a class="m" data-nav="party" href="party.html">党建工作</a>'
+    + mega([
+      ['党建工作', 'party.html?s=party', '党建活动与支部建设', 'ic-flag'],
+      ['主题教育', 'party.html?s=theme', '专题学习与教育成果', 'ic-cap']
     ])
     + '</li>'
     + '<li class="has-mega"><a class="m" data-nav="about" href="about.html">关于我们</a>'
@@ -133,6 +240,7 @@
     + '<a href="business.html">业务领域</a>'
     + '<a href="products.html">产品中心</a>'
     + '<a href="news.html">新闻中心</a>'
+    + '<a href="party.html">党建工作</a>'
     + '<a href="about.html">关于我们</a>'
     + '</div>'
     + '<button id="top" aria-label="回到顶部">↑</button>';
@@ -326,9 +434,21 @@
   var darkHero = document.body.classList.contains('dark-hero');
   var heroEl = $('.hero') || $('.dhero') || $('.phero');
   var navFlip = heroEl ? Math.max(heroEl.offsetHeight - nav.offsetHeight - 8, 60) : 40;
+  /* V296 用户指令：滚到发展历程这类深色区块时，页头要透出底色、文字泛白。
+     判据是「深色块已经盖住页头那一整条」，所以一定是滚到底才开始变，
+     不会出现页头上半截还压在浅底上、白字看不见的中间态。 */
+  var darkBlocks = $$('.hist, .sec.dark');
+  function overDark(navH) {
+    for (var i = 0; i < darkBlocks.length; i++) {
+      var r = darkBlocks[i].getBoundingClientRect();
+      if (r.top <= 0 && r.bottom >= navH) return true;
+    }
+    return false;
+  }
   function onScroll() {
     var y = window.scrollY;
     nav.classList.toggle('on', darkHero ? y > navFlip : y > 40);
+    nav.classList.toggle('dark-clear', overDark(nav.offsetHeight || 70));
     topBtn.classList.toggle('on', y > 600);
     var h = document.documentElement.scrollHeight - window.innerHeight;
     pbar.style.width = (h > 0 ? (y / h) * 100 : 0) + '%';
@@ -440,21 +560,38 @@
     hGo(0);
   }
 
-  /* ---------- 新闻中心 tabs / 搜索 / 分页 ---------- */
-  var nlApp = $('#news-app');
-  if (nlApp) {
-    var CATS = { 0: '全部', 3: '公司动态', 5: '党建工作', 4: '行业资讯', 17: '主题教育' };
-    var state = { cat: 0, q: '', page: 1, per: 12 };
-    loadScript('data/news-index.js').then(function () {
-      window.__NEWS = window.NEWS_INDEX || []; render();
-      var q = new URLSearchParams(location.search).get('cat');
-      if (q) { state.cat = +q; render(); }
+  /* ---------- 新闻列表（新闻中心 / 党建模块共用） ---------- */
+  /* V297 用户指令：党建工作与主题教育从新闻中心移出，单列党建模块（party.html，
+     两个标签页）。两处列表是同一套「标题行 + 搜索 + 分页」，抽成 mountList(app, opts)：
+       opts.cats      分类筛选表（不传 = 只留标题搜索，不显示分类按钮）
+       opts.fixedCat  固定分类 id（党建模块每个标签页只看一个分类）
+       opts.hideCat   行内分类标签不输出（整页只有一个分类，标签是废话）
+       opts.per       每页条数，默认 12 */
+  var PARTY_CATS = { 5: 'party', 17: 'theme' };   /* 分类 id → 党建模块标签页 key */
+
+  function mountList(app, opts) {
+    opts = opts || {};
+    var CATS = opts.cats || null;
+    var hideCat = !!opts.hideCat;
+    /* 新闻中心已不含党建 / 主题教育，没有把这两类列进 CATS 时，全部列表也要滤掉 */
+    var skipParty = !!CATS && !CATS[5] && !CATS[17];
+    var state = { cat: opts.fixedCat || 0, q: '', page: 1, per: opts.per || 12 };
+
+    window.__loadNews().then(function () {
+      window.__NEWS = window.NEWS_INDEX || [];
+      if (CATS) {
+        var q = new URLSearchParams(location.search).get('cat');
+        if (q && CATS[+q]) state.cat = +q;
+      }
+      render();
     }).catch(function () {
-      nlApp.innerHTML = '<div class="empty">新闻数据加载失败，请稍后重试。</div>';
+      app.innerHTML = '<div class="empty">新闻数据加载失败，请稍后重试。</div>';
     });
+
     function filtered() {
       return window.__NEWS.filter(function (x) {
-        return !x.external && (state.cat === 0 || x.cat_id === state.cat) &&
+        return !x.external && (!skipParty || !PARTY_CATS[x.cat_id]) &&
+          (state.cat === 0 || x.cat_id === state.cat) &&
           (!state.q || x.title.toLowerCase().indexOf(state.q) > -1);
       });
     }
@@ -476,11 +613,15 @@
       var pages = Math.max(1, Math.ceil(list.length / state.per));
       state.page = Math.min(state.page, pages);
       var slice = list.slice((state.page - 1) * state.per, state.page * state.per);
-      var h = '<div class="nfilter"><div class="ntabs">';
-      Object.keys(CATS).forEach(function (k) {
-        h += '<button data-cat="' + k + '" class="' + (+k === state.cat ? 'act' : '') + '">' + CATS[k] + '</button>';
-      });
-      h += '</div><div class="nsearch"><input id="nq" placeholder="搜索标题关键字" value="' + state.q.replace(/"/g, '&quot;') + '">'
+      var h = '<div class="nfilter">';
+      if (CATS) {
+        h += '<div class="ntabs">';
+        Object.keys(CATS).forEach(function (k) {
+          h += '<button data-cat="' + k + '" class="' + (+k === state.cat ? 'act' : '') + '">' + CATS[k] + '</button>';
+        });
+        h += '</div>';
+      }
+      h += '<div class="nsearch"><input id="nq" placeholder="搜索标题关键字" value="' + state.q.replace(/"/g, '&quot;') + '">'
         + '<span class="nacts"><button type="button" class="nclear" id="nqclr" aria-label="清空搜索条件" title="清空"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button>'
         + '<button type="button" id="nqbtn" aria-label="搜索"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="16.2" y1="16.2" x2="21" y2="21"/></svg></button></span></div></div>';
       h += '<div class="rows">';
@@ -489,9 +630,10 @@
         var href = x.external ? x.url : ('news-detail.html?id=' + x.id);
         var ext = x.external ? ' <small class="ext-mark">↗微信</small>' : '';
         var d = x.date || '';
-        h += '<a class="row" href="' + href + '"' + (x.external ? ' target="_blank" rel="noopener"' : '') + '>'
+        h += '<a class="row' + (hideCat ? ' tuck' : '') + '" href="' + href + '"' + (x.external ? ' target="_blank" rel="noopener"' : '') + '>'
           + '<span class="rmain"><span class="t">' + markTitle(x.title) + ext + '</span>'
-          + '<span class="cat">' + x.cat + '</span></span>'
+          + (hideCat ? '' : '<span class="cat">' + x.cat + '</span>')
+          + '</span>'
           + '<span class="d">' + d + '</span></a>';
       });
       h += '</div><div class="pager">';
@@ -505,35 +647,35 @@
       }
       h += '<button data-p="next"' + (state.page === pages ? ' disabled' : '') + '>›</button></div>';
       h += '<p class="list-count">共 ' + list.length + ' 条 · 第 ' + state.page + '/' + pages + ' 页</p>';
-      nlApp.innerHTML = h;
+      app.innerHTML = h;
       fitCats();
 
-      $$('.ntabs button', nlApp).forEach(function (b) {
+      $$('.ntabs button', app).forEach(function (b) {
         b.addEventListener('click', function () { state.cat = +b.dataset.cat; state.page = 1; render(); });
       });
-      var q = $('#nq');
+      var q = $('#nq', app);
       function resetSearch() {
         state.q = ''; state.page = 1; render();
-        var n = $('#nq'); if (n) n.focus();
+        var n = $('#nq', app); if (n) n.focus();
       }
       q.addEventListener('keydown', function (e) {
         if (e.key === 'Enter') { state.q = q.value.trim().toLowerCase(); state.page = 1; render(); }
         else if (e.key === 'Escape') { e.preventDefault(); resetSearch(); }
       });
-      $('#nqbtn').addEventListener('click', function () { state.q = q.value.trim().toLowerCase(); state.page = 1; render(); });
-      $('#nqclr').addEventListener('click', resetSearch);
-      $$('.pager button', nlApp).forEach(function (b) {
+      $('#nqbtn', app).addEventListener('click', function () { state.q = q.value.trim().toLowerCase(); state.page = 1; render(); });
+      $('#nqclr', app).addEventListener('click', resetSearch);
+      $$('.pager button', app).forEach(function (b) {
         b.addEventListener('click', function () {
           var v = b.dataset.p;
           if (v === 'prev') state.page--; else if (v === 'next') state.page++; else state.page = +v;
           render();
-          window.scrollTo({ top: nlApp.offsetTop - 90, behavior: 'smooth' });
+          window.scrollTo({ top: app.getBoundingClientRect().top + window.pageYOffset - 120, behavior: 'smooth' });
         });
       });
     }
     /* V192：标题+分类标签同一行；横向放不下时整枚标签隐藏（标题保持完整不截断） */
     function fitCats() {
-      $$('.row', nlApp).forEach(function (r) {
+      $$('.row', app).forEach(function (r) {
         var m = $('.rmain', r), c = $('.cat', r);
         if (!m || !c) return;
         r.classList.remove('tuck');
@@ -545,32 +687,75 @@
     window.addEventListener('load', fitCats);
   }
 
+  var nlApp = $('#news-app');
+  if (nlApp) mountList(nlApp, { cats: { 0: '全部', 3: '公司动态', 4: '行业资讯' } });
+
+  /* 党建模块：两个标签页各挂一个固定分类的列表（党建工作 5 / 主题教育 17） */
+  $$('[data-news-cat]').forEach(function (el) {
+    mountList(el, { fixedCat: +el.getAttribute('data-news-cat'), hideCat: true });
+  });
+
   /* ---------- 新闻详情 ---------- */
   var art = $('#art-app');
   if (art) {
     var id = new URLSearchParams(location.search).get('id');
-    loadScript('data/articles/map.js').then(function () {
-      var map = window.ART_MAP || {};
-      if (!map[id]) { art.innerHTML = '<div class="empty">文章不存在，<a class="link-ac" href="news.html">返回新闻中心</a></div>'; art.style.opacity = 1; return; }
-      return loadScript('data/articles/a' + map[id] + '.js').then(function () {
-        var shard = (window.ART_SHARDS || {})['a' + map[id]] || {};
-        var x = shard[id];
-        if (!x) { art.innerHTML = '<div class="empty">文章不存在</div>'; art.style.opacity = 1; return; }
-        var idx = window.__NEWS ? null : null;
-        document.title = x.title + ' - 广西计算机有限责任公司';
-        art.innerHTML =
-          '<div class="art">'
-          + '<div class="crumb art-crumb"><a href="index.html">首页</a> / <a href="news.html">新闻中心</a> / <a href="news.html?cat=' + x.cat_id + '">' + x.cat + '</a></div>'
-          + '<div class="art-head"><h1>' + x.title + '</h1>'
-          + '<div class="art-meta"><span class="cat">' + x.cat + '</span><span>' + x.date + '</span><span>浏览 ' + x.views + ' 次</span>'
-          + (x.source ? '<span>来源：' + x.source + '</span>' : '') + '</div></div>'
-          + '<div class="art-body">' + x.html + '</div>'
-          + (x.source ? '<p class="art-src">（来源：' + x.source + '）</p>' : '')
-          + '</div>'
-          + '<div class="art-nav"><a class="pv" href="news.html"><small>← 返回列表</small><b>新闻中心</b></a>'
-          + '<a class="nx" href="news.html?cat=' + x.cat_id + '"><small>更多' + x.cat + ' →</small><b>查看同类新闻</b></a></div>';
-        art.style.opacity = 1;
+    /* V297：党建 / 主题教育稿件已从新闻中心移入党建模块，
+       正文页仍复用本页，但面包屑、返回按钮、模块专色都要跟着归属走 */
+    var CAT_MODULE = {
+      5: { page: 'party.html?s=party', name: '党建工作' },
+      17: { page: 'party.html?s=theme', name: '主题教育' }
+    };
+    var showArt = function (x) {
+      var mod = CAT_MODULE[x.cat_id];
+      if (mod) {
+        document.body.classList.add('party');
+        /* 顶部 phero 是静态写的「新闻中心」，党建稿件进来要换成本模块的名字，
+           否则页面标题写着新闻中心、下面却是党建内容 */
+        var ph1 = $('.phero h1'); if (ph1) ph1.textContent = '党建工作';
+        var pcr = $('.phero .crumb'); if (pcr) pcr.textContent = mod.name;
+        /* 导航当前项也跟着归属走：news-detail.html 的 data-page 是 news，
+           党建稿件进来后要让「党建工作」亮起、「新闻中心」熄灭 */
+        var oldAct = $('.menu a.m.act');
+        if (oldAct) oldAct.classList.remove('act');
+        var pnav = $('.menu a.m[data-nav="party"]');
+        if (pnav) pnav.classList.add('act');
+      }
+      var crumb = mod
+        /* 分类名与模块名同名（党建工作）时不重复列两级 */
+        ? '<a href="' + mod.page + '">党建工作</a>'
+          + (mod.name === '党建工作' ? '' : ' / <a href="' + mod.page + '">' + mod.name + '</a>')
+        : '<a href="news.html">新闻中心</a> / <a href="news.html?cat=' + x.cat_id + '">' + x.cat + '</a>';
+      var back = mod || { page: 'news.html', name: '新闻中心' };
+      document.title = x.title + ' - 广西计算机有限责任公司';
+      art.innerHTML =
+        '<div class="art">'
+        + '<div class="crumb art-crumb"><a href="index.html">首页</a> / ' + crumb + '</div>'
+        + '<div class="art-head"><h1>' + x.title + '</h1>'
+        + '<div class="art-meta"><span class="cat">' + x.cat + '</span><span>' + x.date + '</span><span>浏览 ' + x.views + ' 次</span>'
+        + (x.source ? '<span>来源：' + x.source + '</span>' : '') + '</div></div>'
+        + '<div class="art-body">' + x.html + '</div>'
+        + (x.source ? '<p class="art-src">（来源：' + x.source + '）</p>' : '')
+        + '</div>'
+        + '<div class="art-nav"><a class="pv" href="' + back.page + '"><small>← 返回列表</small><b>' + back.name + '</b></a>'
+        + '<a class="nx" href="' + back.page + '"><small>更多' + x.cat + ' →</small><b>查看同类新闻</b></a></div>';
+      art.style.opacity = 1;
+    };
+    /* V293：先取云端正文，取不到再走本地分片（map.js + aN.js），保证离线/本地预览不受影响 */
+    var fromLocal = function () {
+      return loadScript('data/articles/map.js').then(function () {
+        var map = window.ART_MAP || {};
+        if (!map[id]) { art.innerHTML = '<div class="empty">文章不存在，<a class="link-ac" href="news.html">返回新闻中心</a></div>'; art.style.opacity = 1; return; }
+        return loadScript('data/articles/a' + map[id] + '.js').then(function () {
+          var shard = (window.ART_SHARDS || {})['a' + map[id]] || {};
+          var x = shard[id];
+          if (!x) { art.innerHTML = '<div class="empty">文章不存在</div>'; art.style.opacity = 1; return; }
+          showArt(x);
+        });
       });
+    };
+    var fromCloud = (window.WBNews && window.WBNews.article) ? window.WBNews.article(id) : Promise.reject(new Error('cloud off'));
+    fromCloud.then(showArt).catch(function () {
+      return fromLocal();
     }).catch(function () {
       art.innerHTML = '<div class="empty">文章数据加载失败，<a class="link-ac" href="news.html">返回新闻中心</a></div>';
       art.style.opacity = 1;

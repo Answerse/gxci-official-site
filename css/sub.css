@@ -12,19 +12,26 @@
 .dhero-media img{width:100%;height:100%;object-fit:cover;object-position:58% 46%;border-radius:0;transform:scale(1.015)}
 /* V273：原本写在 <img style> 里的构图焦点，按「HTML 不含行内样式」的约定移到这里 */
 /* 必须带上 .dhero-media img 才压得过上面那条同属性规则（特异性 0,2,1 > 0,1,1） */
+/* V290：规划/软件/AI 三页换成实景图后按各自构图补竖向焦点 */
+.dhero-media img.dhero-img--plan{object-position:50% 20%}
+.dhero-media img.dhero-img--soft{object-position:58% 50%}
+.dhero-media img.dhero-img--ai{object-position:50% 26%}
 .dhero-media img.dhero-img--agri{object-position:60% 66%}
 .dhero-media img.dhero-img--jyt{object-position:58% 70%}
 .dhero-media img.dhero-img--nongyi{object-position:58% 66%}
 /* V139 标题改为居中，遮罩由「左深右浅」改成横向均匀压深：
    原来的 90° 渐变到右侧只剩 .02，居中标题的右半会落在亮图上读不清 */
+/* V291 用户指令：蓝色遮罩太重，背景图只剩一团深蓝、没有场景氛围。
+   横向 .86→.60 收到 .52→.26，竖向 .34→.68 收到 .18→.46；标题区（中段）落点仍在 .4 左右，
+   白字对亮图仍有支撑，但会议室、机房、产线这些场景重新透得出来 */
 .dhero-shade{position:absolute;inset:0;background:
-  linear-gradient(90deg,rgba(18,28,86,.86) 0%,rgba(18,28,86,.77) 38%,rgba(18,28,86,.70) 70%,rgba(18,28,86,.60) 100%),
-  linear-gradient(180deg,rgba(16,26,78,.34) 0%,rgba(16,26,78,.04) 30%,rgba(16,26,78,.28) 60%,rgba(16,26,78,.68) 100%)}
+  linear-gradient(90deg,rgba(18,28,86,.52) 0%,rgba(18,28,86,.42) 38%,rgba(18,28,86,.34) 70%,rgba(18,28,86,.26) 100%),
+  linear-gradient(180deg,rgba(16,26,78,.20) 0%,rgba(16,26,78,.02) 30%,rgba(16,26,78,.16) 60%,rgba(16,26,78,.46) 100%)}
 /* V193：底栏（面包屑/向下滚动）已删。标题在原 V188 位置上整体下移 20px：
    top +20、bottom -20（60→40，为已删的 60px 底栏预留位），flex 居中下移量 = (20+20)/2 = 20px */
 .dhero-in{position:relative;z-index:2;width:100%;flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center;padding-top:calc(var(--nav-h) + clamp(10px,1.4vh,16px) + 20px);padding-bottom:calc(40px + clamp(8px,1.2vh,12px))}
 /* 副标题：正文字号 + 字距，单行不换行（文案统一控制在 12 字内） */
-.dhero-sub{margin-top:clamp(12px,1.8vh,18px);padding-left:.13em;font-size:1.125rem;letter-spacing:.13em;color:rgba(255,255,255,.7);white-space:nowrap}
+.dhero-sub{margin-top:clamp(12px,1.8vh,18px);padding-left:.13em;font-size:1.125rem;letter-spacing:.13em;color:rgba(255,255,255,.82);white-space:nowrap}
 /* 标题上限收到 3.25rem（V188）：banner 压到 300 后 62px 标题压不住，且最长的
    「林易通 · 林产品交易市场线上综合平台」（19 字）在 861–1024 必须单行 —— 斜率取 4.2vw，
    861 下 36.2px 与 ≤860 的 36px 正好接上，全靠一条 clamp 维持全站等高 */
@@ -62,35 +69,10 @@
    图 + 标题 + 三行小字，分块靠留白、不用分割线；整卡可点，hover 标题转蓝、图微放大 ---------- */
 .bizgrid-sec{padding:clamp(32px,4.6vh,56px) 0 clamp(40px,5.4vh,64px)}
 
-/* ---------- 业务领域索引页（V169）：直接复用首页 .bcard 渐变融合卡，放大成 2×2 宫格
-   比例不能用首页的 3/4——索引页卡宽约 638px，3/4 就是 851 高、两行 1700+，整页像一堵墙。
-   V203 用户指令：normal 不展示业务说明、hover 再展示（交互与首页 .bcard 完全一致），
-   比例随之从 3/2 压到 16/9（527 宽 → 高 351→296），窄屏不再需要 min-height 兜底 ---------- */
-.bizmap{padding:clamp(32px,4.6vh,56px) 0 clamp(40px,5.4vh,64px)}
-/* V195 用户指令：卡偏大，宫格限宽 1080 居中——卡从 ~638 缩到 ~527 宽（3/2 比例不变） */
-.biz2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(18px,1.8vw,26px);
-  max-width:min(1080px,100%);margin-inline:auto}
-.biz2 .bcard{--cp:clamp(24px,2.2vw,34px);aspect-ratio:16/9}
-.biz2 .bcard :is(h2,h3){font-size:clamp(1.375rem,1.9vw,1.75rem)}
-/* 大卡上文字块占到卡高 38%，原来的薄雾压不住摘要：遮罩提前、压深，白字才立得住 */
-.biz2 .bcard::after{background:linear-gradient(180deg,transparent 34%,color-mix(in srgb,var(--t3) 46%,transparent) 62%,color-mix(in srgb,var(--t3) 82%,transparent) 100%)}
-.biz2 .bcard .bfig img{-webkit-mask-image:linear-gradient(180deg,#000 0%,#000 26%,rgba(0,0,0,.5) 52%,rgba(0,0,0,0) 72%);
-  mask-image:linear-gradient(180deg,#000 0%,#000 26%,rgba(0,0,0,.5) 52%,rgba(0,0,0,0) 72%)}
-/* V207 用户指令：hover 只留「标题上升」一个动作，不要升完再坠的微动；移出直接下落。
-   旧方案 btags 收起 + bsum 展开两个 max-height 并跑，max-height 超过实际内容高度时
-   会先停住再动，两段时序错开 → 标题出现「先升后回落」。索引页改为：
-   ① 关键词条 hover 不再收起（静态，不参与动画）；② 摘要用 grid-template-rows 0fr→1fr
-   等比展开，高度严格跟缓动曲线走、无停顿段，升降都是一条单调直线 */
-.biz2 .bcard .btags{transition:none}
-.biz2 .bcard:hover .btags,.biz2 .bcard:focus-visible .btags{max-height:70px;opacity:1;margin-top:12px}
-.biz2 .bcard .bsum{max-height:none;display:grid;grid-template-rows:0fr;
-  transition:grid-template-rows .45s var(--ease),opacity .35s var(--ease),margin-top .45s var(--ease)}
-.biz2 .bcard .bsum>span{display:block;overflow:hidden;min-height:0;text-wrap:balance}
-.biz2 .bcard:hover .bsum,.biz2 .bcard:focus-visible .bsum{grid-template-rows:1fr;opacity:1;margin-top:12px}
-@media (max-width:860px){
-  .biz2{grid-template-columns:1fr}
-  .biz2 .bcard{--cp:22px}
-}
+/* ---------- 业务领域索引页（V284）：用户指令「改成首页的样式」——
+   索引页不再另立宫格，直接复用首页 .sec-biz + .biz 2+3 错格（首卡跨两列）
+   与 .bcard 卡面，5 个领域与首页完全同构；原 .biz2 / .biz5 / .bizplat
+   三套索引专属规则（2×2、3+2、「重点平台」文字行）随之删除 ---------- */
 
 /* ---------- 业务详情页：两大板块（V183） ----------
    原来「概览 / 服务内容 / 平台架构 / 垂直平台 / 成功案例 / 典型项目」六段并列，
@@ -103,10 +85,136 @@
    下限 18px：窄屏正文是 17px，靠 600 字重撑层级；再往下就与正文混同 */
 .dsub-h{margin-top:clamp(24px,3.4vh,36px);font-size:clamp(1.125rem,1.35vw,1.25rem);font-weight:600;line-height:1.5;letter-spacing:.02em}
 
+/* ---------- V285 五个业务领域页的节标题统一（用户指令：40px / 加粗 / 居中） ----------
+   5 个领域页正文里「业务简介 / 具体服务内容 / 典型业务场景 / 建设成果与交付内容 /
+   客户价值 / 成功案例」六个标题字号、字重、对齐全部一致，读作一串章节标题；
+   标题下面各块内容仍左对齐，靠 40px 与 1.75 倍字号差分层，不加分割线。
+   作用域限定 body.biz-detail：产品/案例页的「更多产品」（.dsub-h--c）与 4 个平台页的
+   「成功案例」维持原样，不在本次指令范围内。
+   40px 只在 1429px 以上成立，窄屏按 2.8vw 逐级收到 28px，避免手机上一行塞不下。 */
+body.biz-detail :is(.dpanel-h,.dsub-h){font-size:clamp(1.875rem,2.8vw,2.5rem);font-weight:700;
+  line-height:1.3;letter-spacing:.02em;text-align:center}
+body.biz-detail .dpanel-h{margin-bottom:clamp(18px,2.4vh,26px)}
+/* 标题后紧跟正文时不再叠一层段落上边距（原来 20+24=44px，比标题本身还高） */
+body.biz-detail .dpanel-h + .dtext{margin-top:0}
+/* 40px 标题上方的呼吸量比 19px 小节多一档，标题才不被上面的内容挤住 */
+body.biz-detail .dsub-h{margin-top:clamp(44px,5.6vh,62px)}
+
 /* ---------- 业务详情页内容块（V127：只服务四个 area 页，内容全部来自宣传册） ---------- */
 /* 概览只有正文段落、没有大号导语时：首段去掉上边距，「概览」压回正文墨迹顶 */
 .dbody--plain p.dtext:first-child{margin-top:0}
 .dgrid:has(.dbody--plain) .rno.cn{margin-top:.27em}
+
+/* V277 业务详情页「具体服务内容」：两列，小标题 + 一段说明。
+   五个领域都正好 5 条，奇数条最后一条留在左列、右列自然留白——不加序号、不加分割线、不补第六条 */
+.dsvc{margin-top:clamp(16px,2.2vh,24px);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:clamp(22px,2.9vh,32px) clamp(28px,3.6vw,54px)}
+.dsvc-i h3{font-size:1rem;font-weight:600;line-height:1.55;letter-spacing:.01em}
+.dsvc-i p{margin-top:8px;font-size:0.9375rem;line-height:1.9;color:var(--ink2);text-wrap:pretty}
+@media (max-width:860px){
+  .dsvc{grid-template-columns:minmax(0,1fr);gap:20px}
+}
+
+/* ---------- V279 业务详情页三块内容的新形态：服务卡 / 场景卡 / 交付架构图 ---------- */
+/* 1) 具体服务内容：横向长条（V280）。
+   五项固定，原来 3+2 居中会在第二行两侧各空一格、像漏了一张；改成一条一行、左标题右说明，
+   版式与条目数脱钩，也把每条的说明压回 1～2 行。卡片只给一层浅灰底，不加描边、阴影、序号。 */
+.svcs{margin-top:clamp(18px,2.4vh,26px)}
+.svc{display:grid;grid-template-columns:clamp(240px,22vw,300px) minmax(0,1fr);
+  column-gap:clamp(26px,4vw,58px);align-items:baseline;
+  padding:clamp(20px,2.3vh,26px) clamp(22px,2.6vw,34px);background:var(--panel);
+  transition:background .3s ease}
+.svc + .svc{margin-top:9px}
+.svc:hover{background:var(--panel-2)}
+.svc-k{display:flex;align-items:center;gap:16px;min-width:0}
+.svc-ico{display:block;width:40px;height:40px;flex:none;color:var(--accent)}
+.svc h3{font-size:1rem;font-weight:600;line-height:1.55;letter-spacing:.01em}
+.svc p{font-size:0.9375rem;line-height:1.8;color:var(--ink2);text-wrap:pretty;max-width:70ch}
+@media (max-width:860px){
+  .svc{grid-template-columns:minmax(0,1fr);row-gap:10px;padding:22px 22px}
+  .svc p{max-width:none}
+}
+@media (max-width:700px){
+  .svc{padding:20px}
+  .svc-k{gap:12px}
+}
+
+/* 2) 典型业务场景：错格马赛克，文字压在图上（照参考稿版式重做）。
+   3 列 2 行：第一条横跨两列当主图，右上一条，第二行三条。错位只靠「跨列」制造，
+   两行行高必须一致 —— 行高不等时格子边长对不上，错格就读成拼错。
+   标题压在图片下沿（白色 + 底部压深渐变），整块读作一组图版。
+   没有实拍图的场景仍用 .scene-fig--ph（浅灰底）占位：此时不压渐变、标题转深色，
+   图标排进文字流里紧贴标题上方，和标题读成一个整体，不再悬在卡片正中。 */
+.scenes{margin-top:clamp(18px,2.4vh,26px);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  grid-auto-rows:clamp(238px,19vw,300px);
+  gap:clamp(12px,1.4vw,18px)}
+.scene{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;
+  min-width:0;padding:clamp(16px,1.7vw,22px);background:var(--panel)}
+.scene:first-child{grid-column:span 2}
+.scene-fig{position:absolute;inset:0;overflow:hidden}
+.scene-fig img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .7s cubic-bezier(.2,.7,.2,1)}
+.scene:hover .scene-fig img{transform:scale(1.035)}
+.scene-fig--ph{position:relative;inset:auto;display:flex;align-items:center;justify-content:center;
+  width:38px;height:38px;margin-bottom:13px}
+.scene-fig--ph svg{width:36px;height:36px;color:#b3b9c3}
+/* 压深渐变：只保证白字可读，不做装饰 */
+.scene::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(12,17,24,0) 26%,rgba(12,17,24,.34) 56%,rgba(12,17,24,.72) 82%,rgba(12,17,24,.9) 100%)}
+.scene:has(.scene-fig--ph)::after{background:none}
+.scene b{position:relative;z-index:2;font-size:0.9375rem;font-weight:600;line-height:1.6;
+  color:#fff;text-wrap:pretty}
+.scene:first-child b{font-size:clamp(1.0625rem,1.4vw,1.25rem);max-width:24ch;line-height:1.55}
+/* 长标签拆成「短标题 + 一句说明」（软件研发页），说明字号降一档、透明度退一层。
+   说明固定占两行高：同一排里有的说明一行有的两行时，标题才不会一高一低。 */
+.scene-n{position:relative;z-index:2;margin-top:5px;font-size:0.8125rem;font-weight:400;
+  line-height:1.7;min-height:3.4em;color:rgba(255,255,255,.76);text-wrap:pretty;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.scene:has(.scene-fig--ph) b{color:var(--ink)}
+.scene:has(.scene-fig--ph) .scene-n{color:var(--ink2)}
+@media (max-width:900px){
+  .scenes{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:none;
+    grid-auto-rows:clamp(180px,30vw,230px);gap:12px}
+  .scene:first-child{grid-column:span 2}
+  .scene:first-child b{max-width:none}
+}
+@media (max-width:620px){
+  .scenes{grid-template-columns:minmax(0,1fr);grid-auto-rows:clamp(210px,58vw,280px)}
+  .scene:first-child{grid-column:auto}
+}
+
+/* 3) 建设成果与交付内容：分层架构图（层名 + 节点）。
+   V287 用户指令：改成线框版——不用背景色，节点格 4px 圆角 + 标准蓝 50% 描边，
+   文字同色 50% 蓝；层与层之间仍只用留白分开，不画分隔线。
+   背景撤掉后层级全靠「层名标签 + 行距」交代，所以行距从 10px 提到 10–14px。 */
+.arch{margin-top:clamp(18px,2.4vh,26px)}
+.arch-row{display:grid;grid-template-columns:clamp(84px,8vw,108px) minmax(0,1fr);gap:clamp(16px,2vw,28px);align-items:center}
+.arch-row + .arch-row{margin-top:clamp(10px,1.3vh,14px)}
+.arch-k{font-size:0.8125rem;font-weight:600;letter-spacing:.06em;
+  color:color-mix(in srgb,var(--accent) 50%,transparent);line-height:1.6}
+.arch-n{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.arch-n span{background:none;border:1px solid color-mix(in srgb,var(--accent) 50%,transparent);border-radius:4px;
+  padding:12px 14px;font-size:0.875rem;line-height:1.55;
+  color:color-mix(in srgb,var(--accent) 50%,transparent);text-align:center}
+/* V292 用户指令：客户价值改成「公司简介 · 价值观」那种带底色的卡片。
+   沿用 .vm 的三色梯度再延一档到四张（82% 蓝 → 标准蓝 → #1e2a70 → #101a47），
+   白字居中；四张等高、一行 4 格，≤860 降 2×2。 */
+.vvals{margin-top:clamp(18px,2.4vh,26px);display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:clamp(12px,1.4vw,18px)}
+.vval{display:flex;align-items:center;justify-content:center;text-align:center;
+  min-height:clamp(92px,11vh,116px);padding:clamp(16px,2vh,22px) clamp(14px,1.4vw,20px);
+  border-radius:4px;color:#fff;font-size:1rem;font-weight:600;line-height:1.7;letter-spacing:.02em}
+.vval--1{background:color-mix(in srgb,var(--accent) 82%,#fff)}
+.vval--2{background:var(--accent)}
+.vval--3{background:#1e2a70}
+.vval--4{background:#101a47}
+@media (max-width:860px){
+  .vvals{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:700px){
+  .arch-row{grid-template-columns:minmax(0,1fr);gap:10px}
+  .arch-row + .arch-row{margin-top:20px}
+  .arch-n span{padding:9px 13px}
+}
 
 /* 段内小标题：中文标签 + 细线 */
 .bmod-t{display:flex;align-items:center;gap:14px;font-size:0.8125rem;font-weight:600;letter-spacing:.14em;color:var(--ink)}
@@ -136,6 +244,7 @@ figure.bfig figcaption{margin-top:12px;font-size:0.8125rem;line-height:1.7;lette
 .bcases{margin-top:clamp(18px,2.4vh,26px);display:grid;grid-template-columns:1fr;gap:0}
 .bcases-i{padding:11px 0}
 .bcases-i b{display:block;font-size:0.9375rem;font-weight:500;line-height:1.8;color:var(--ink2)}
+.bcases-i p{margin-top:6px;font-size:0.9375rem;line-height:1.9;color:var(--ink2)}
 
 /* 垂直平台：三栏，手机截图在上 */
 .bplat3{margin-top:clamp(20px,2.6vh,28px);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0}
@@ -197,13 +306,36 @@ figure.bfig figcaption{margin-top:12px;font-size:0.8125rem;line-height:1.7;lette
 .p-qr img{display:block;width:112px;height:112px;flex:none}
 .p-qr figcaption{font-size:0.8125rem;line-height:1.8;letter-spacing:.02em;color:var(--mut)}
 
-/* 成功案例：文左图右 */
-.bcase{margin-top:clamp(26px,3.6vh,40px);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.04fr);gap:clamp(24px,3.2vw,46px);align-items:start}
+/* V292 用户指令：成功案例改成「图片 + 文字」的卡片，父级弹性布局、一行最多四张、文字居中。
+   .bcase（图文两栏）仍被 4 个平台页使用，保留原样不动。 */
+.acases{--g:clamp(14px,1.6vw,20px);margin-top:clamp(18px,2.4vh,26px);
+  display:flex;flex-wrap:wrap;justify-content:center;gap:var(--g)}
+.acase{flex:1 1 220px;max-width:min(380px,100%);
+  display:flex;flex-direction:column;background:var(--panel);border-radius:4px;overflow:hidden;
+  transition:background .3s ease}
+.acase:hover{background:var(--panel-2)}
+.acase-fig{margin:0;flex:none;aspect-ratio:16/10;overflow:hidden}
+.acase-fig img{width:100%;height:100%;object-fit:cover;display:block}
+.acase-t{padding:clamp(14px,1.7vh,18px) clamp(14px,1.4vw,18px) clamp(16px,2vh,20px);text-align:center}
+.acase-t h3{font-size:1rem;font-weight:600;line-height:1.6;letter-spacing:.01em;text-align:center}
+.acase-d{display:block;margin-top:6px;font-family:var(--num);font-size:0.8125rem;letter-spacing:.08em;color:var(--mut)}
+.acase-t p{margin-top:8px;font-size:0.875rem;line-height:1.8;color:var(--ink2);text-align:center;text-wrap:pretty}
+@media (max-width:1100px){
+  .acase{flex-basis:calc((100% - var(--g))/2);max-width:none}
+}
+@media (max-width:620px){
+  .acase{flex-basis:100%}
+}
+
+/* 成功案例：图文两栏（默认文左图右；方形截图、竖长截图把 figure 写在前面即为图左文右） */
+.bcase{margin-top:clamp(26px,3.6vh,40px);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.04fr);gap:clamp(24px,3.2vw,46px);align-items:center}
 .bcase-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px}
 .bcase-h h3{font-size:1.125rem;font-weight:600;line-height:1.55}
 .bcase-h .bdate{font-family:var(--num);font-size:0.8125rem;letter-spacing:.14em;color:var(--mut);white-space:nowrap}
 .bcase p{margin-top:13px;font-size:0.9375rem;line-height:1.95;color:var(--ink2);text-align:justify}
 .bcase-fig img{width:100%;height:auto}
+/* 竖长截图（手机端界面）在右栏会被拉成一条：限宽并居中 */
+.bcase-fig--narrow{max-width:min(300px,100%);justify-self:center}
 
 /* 累计数据：不加底色不加框，只靠字重与字号 */
 .bnums{margin-top:clamp(20px,2.8vh,30px);display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(16px,2vw,30px)}

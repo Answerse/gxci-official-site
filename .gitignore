@@ -1,3 +1,7 @@
 .workbuddy/
 .DS_Store
 .wbapp_*.genie
+
+# 一次性数据导入工具（用完即删，内含 publishableKey，不入库）
+_cloud-import.html
+js/_cloud-import.js
