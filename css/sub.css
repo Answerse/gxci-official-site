@@ -416,21 +416,21 @@ figure.bfig figcaption{margin-top:12px;font-size:0.8125rem;line-height:1.7;lette
 .pline-intro{grid-column:span 1;align-self:center;padding-right:clamp(0px,1vw,16px)}
 .pline-base{grid-column:span 2}
 .pline-note{margin-top:clamp(14px,1.8vh,20px);font-size:0.9375rem;line-height:2;color:var(--ink2)}
-/* 底座卡宽了两格，铭牌若跟着拉满就是一条扁横条；收成定宽立在左侧，仍是「牌」 */
-.pline-base .pcard-plate{right:auto;width:min(440px,64%)}
+/* 底座卡宽了两格，铭牌若跟着拉满就是一条扁横条；收成定宽，并相对整张图居中（左右 0 + auto 外边距） */
+.pline-base .pcard-plate{left:0;right:0;margin-inline:auto;width:min(440px,64%)}
 /* 900 以下单列：文字块、主卡、各扩展卡都吃满整宽 */
 @media (max-width:900px){
   .pline-body{grid-template-columns:1fr;gap:34px}
   .pline-intro{grid-column:auto;align-self:start;padding-right:0}
   .pline-k br{display:none}
   .pline-base{grid-column:auto}
-  /* 主卡与扩展卡在单列时等宽，铭牌收窄口径也跟它们保持一致（601–900 为 360/62%） */
-  .pline-base .pcard-plate{right:auto;width:min(360px,62%)}
+  /* 主卡与扩展卡在单列时等宽，铭牌收窄口径也跟它们保持一致（601–900 为 360/62%，同样居中） */
+  .pline-base .pcard-plate{width:min(360px,62%)}
 }
 /* 手机端卡宽只剩 300 上下，主卡与扩展卡同为单列满宽，铭牌也必须同一宽度，
    否则底座那张的牌比邻居窄一截，看着像漏对齐 */
 @media (max-width:600px){
-  .pline-base .pcard-plate{right:clamp(20px,2.4vw,34px);width:auto}
+  .pline-base .pcard-plate{left:clamp(18px,2.2vw,32px);right:clamp(20px,2.4vw,34px);margin-inline:0;width:auto}
 }
 
 .pgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(34px,4.8vh,56px) clamp(22px,2.4vw,34px)}
