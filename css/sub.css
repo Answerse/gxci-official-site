@@ -403,6 +403,34 @@ figure.bfig figcaption{margin-top:12px;font-size:0.8125rem;line-height:1.7;lette
    —— 铭牌底边越过图框（卡片底部留出 clamp(38,4.6vh,52) 的空档），打破图框是这套版式的关键；
       hover 铭牌填充品牌蓝、并向上长出标签行（标签容器 max-height 0→120，牌底固定所以只往上长）。
       牌内四层：标题 / 品类小字 / 18px 短横 / 标签。5 张卡排 3+2 三列 */
+/* V302 产品中心：按两条产品线分组（用户指令）
+   原来 5 张卡平铺 3 列，排成 3+2，看不出谁是底座、谁是延伸。
+   现在：左列写产品线名，右列是卡片区；桂农易通、桂资通各为一条线的「底座」，
+   跨 2 列、并独占一行，三个「通」作为扩展各占 1 列排在下一行。
+   卡片本身样式不动（图 + 越界铭牌 + hover 变色），只改栅格与分组。 */
+.pline{display:grid;grid-template-columns:clamp(150px,13vw,190px) minmax(0,1fr);
+  gap:clamp(26px,3.4vw,44px);padding-top:clamp(36px,5vh,56px)}
+.pline+.pline{padding-top:clamp(48px,7vh,76px)}
+.pline-h{font-size:clamp(1.1875rem,1.5vw,1.4375rem);font-weight:600;letter-spacing:.04em;line-height:1.5}
+.pline-k{margin-top:12px;font-size:0.8125rem;line-height:1.9;color:var(--mut);letter-spacing:.02em}
+.pline-body{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:clamp(28px,3.6vh,44px) clamp(20px,2.2vw,32px);align-items:start}
+.pline-base{grid-column:span 2}
+.pline-note{font-size:0.9375rem;line-height:2;color:var(--ink2);align-self:start;padding-top:2px}
+/* 底座卡宽了两个列，铭牌若跟着拉满就是一条扁横条；收成定宽立在左侧，仍是「牌」 */
+.pline-base .pcard-plate{right:auto;width:min(440px,64%)}
+/* 1180 以下两栏会把卡片区压到 231 宽（铭牌挤成两行），标题改到卡片上方、正文吃满整宽 */
+@media (max-width:1180px){
+  .pline{grid-template-columns:1fr;gap:18px}
+  .pline-k br{display:none}
+}
+@media (max-width:900px){
+  .pline{grid-template-columns:1fr;gap:18px}
+  .pline-body{grid-template-columns:1fr;gap:34px}
+  .pline-base{grid-column:auto}
+  .pline-base .pcard-plate{right:auto;width:min(360px,62%)}
+}
+
 .pgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(34px,4.8vh,56px) clamp(22px,2.4vw,34px)}
 @media (max-width:860px){
   .pgrid{grid-template-columns:1fr;gap:38px}

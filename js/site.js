@@ -575,13 +575,22 @@
     var hideCat = !!opts.hideCat;
     /* 新闻中心已不含党建 / 主题教育，没有把这两类列进 CATS 时，全部列表也要滤掉 */
     var skipParty = !!CATS && !CATS[5] && !CATS[17];
-    var state = { cat: opts.fixedCat || 0, q: '', page: 1, per: opts.per || 12 };
+    /* 有分类表但表里没有 0（党建模块：5 / 17）时，默认落在第一个分类，
+       不能落 0 —— 0 在 filtered() 里表示「全部」，而那种页面没有「全部」按钮可回 */
+    var firstCat = CATS ? +Object.keys(CATS)[0] : 0;
+    var state = { cat: opts.fixedCat || firstCat, q: '', page: 1, per: opts.per || 12 };
 
     window.__loadNews().then(function () {
       window.__NEWS = window.NEWS_INDEX || [];
       if (CATS) {
-        var q = new URLSearchParams(location.search).get('cat');
-        if (q && CATS[+q]) state.cat = +q;
+        var usp = new URLSearchParams(location.search);
+        var catQ = usp.get('cat');
+        if (catQ && CATS[+catQ]) state.cat = +catQ;
+        /* 党建模块沿用 ?s=party / ?s=theme 的旧深链（导航子菜单、稿件面包屑都在用） */
+        else if (opts.catAlias) {
+          var alias = opts.catAlias[usp.get('s')];
+          if (alias && CATS[alias]) state.cat = alias;
+        }
       }
       render();
     }).catch(function () {
@@ -690,10 +699,18 @@
   var nlApp = $('#news-app');
   if (nlApp) mountList(nlApp, { cats: { 0: '全部', 3: '公司动态', 4: '行业资讯' } });
 
-  /* 党建模块：两个标签页各挂一个固定分类的列表（党建工作 5 / 主题教育 17） */
-  $$('[data-news-cat]').forEach(function (el) {
-    mountList(el, { fixedCat: +el.getAttribute('data-news-cat'), hideCat: true });
-  });
+  /* 党建模块（V303 用户指令）：标签栏与搜索栏要和新闻中心完全一致、只有配色不同，
+     所以不再自己搭一套 .atabs/.apane，直接走同一个 mountList —— 两个子模块当分类，
+     结构、尺寸、同一行「左标签右搜索」的排布全部与 news 同源，颜色只由 body.party 的
+     --accent 决定。?s=party / ?s=theme 的旧深链由 catAlias 映射到 5 / 17。 */
+  var ptApp = $('#party-app');
+  if (ptApp) {
+    mountList(ptApp, {
+      cats: { 5: '党建工作', 17: '主题教育' },
+      hideCat: true,
+      catAlias: { party: 5, theme: 17 }
+    });
+  }
 
   /* ---------- 新闻详情 ---------- */
   var art = $('#art-app');

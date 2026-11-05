@@ -8,7 +8,9 @@ import websocket
 PORT = 9336
 BASE = "http://127.0.0.1:8410/"
 PAGES = ["index.html", "business.html", "area-enterprise.html", "area-agri.html",
-         "area-asset.html", "area-procure.html", "products.html",
+         "area-asset.html", "area-procure.html", "area-ai.html", "area-domestic.html",
+         "area-infra.html", "area-planning.html", "area-software.html", "party.html",
+         "products.html",
          "product-nongyi.html", "case-jiayitong.html", "case-chenpitong.html",
          "case-linyitong.html", "case-house.html", "news.html", "news-detail.html",
          "about.html", "scene.html"]

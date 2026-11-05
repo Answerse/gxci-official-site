@@ -133,43 +133,46 @@
 }
 
 /* 发展历程 · 纵向时间轴：年份右对齐贴轴 · 节点 · 内容三列，轴线垂直贯穿 */
-.hist-head{margin-top:56px}
-.hist-head .hh-tag{font-family:var(--num);font-size:0.8125rem;letter-spacing:.3em;color:var(--mut);margin-bottom:18px}
-.hist-head .hh-title{font-size:clamp(1.625rem,3vw,2.5rem);font-weight:700;letter-spacing:.04em}
-.htl{margin-top:20px;--rowpad:clamp(36px,4.5vw,56px)}
-.hist-y{display:grid;grid-template-columns:clamp(92px,9vw,140px) 40px 1fr;grid-template-areas:"yr axis es";column-gap:clamp(18px,2.4vw,36px);padding:var(--rowpad) 0}
-.hist-yr{grid-area:yr;font-family:var(--num);font-size:clamp(1.875rem,3.2vw,2.75rem);font-weight:600;line-height:1.15;color:var(--ink);margin:6px 0 0;text-align:right;font-variant-numeric:tabular-nums}
+/* V302 用户指令：行间与行内间隔过大（15 个年份铺了 5800px），一屏读不下几条。
+   收法：行上下留白 56→32、条目间距 26→16、正文行高 2.1→1.85、年份字 44→33、
+   配图 176→150 高。信息密度上来，轴与节点位置不变（轴线用 -rowpad 自动跟）。 */
+.hist-head{margin-top:36px}
+.hist-head .hh-tag{font-family:var(--num);font-size:0.8125rem;letter-spacing:.3em;color:var(--mut);margin-bottom:12px}
+.hist-head .hh-title{font-size:clamp(1.5rem,2.6vw,2.125rem);font-weight:700;letter-spacing:.04em}
+.htl{margin-top:16px;--rowpad:clamp(18px,2vw,26px)}
+.hist-y{display:grid;grid-template-columns:clamp(76px,7.4vw,112px) 40px 1fr;grid-template-areas:"yr axis es";column-gap:clamp(16px,2.2vw,32px);padding:var(--rowpad) 0}
+.hist-yr{grid-area:yr;font-family:var(--num);font-size:clamp(1.5rem,2.4vw,2.0625rem);font-weight:600;line-height:1.15;color:var(--ink);margin:4px 0 0;text-align:right;font-variant-numeric:tabular-nums}
 .hist-axis{grid-area:axis;position:relative;align-self:stretch;display:flex;justify-content:center}
 .hist-axis::before{content:"";position:absolute;left:50%;top:calc(-1*var(--rowpad));bottom:calc(-1*var(--rowpad));width:2px;margin-left:-1px;background:var(--line)}
-.hist-y:first-child .hist-axis::before{top:24px}
-.hist-y:last-child .hist-axis::before{bottom:auto;height:calc(var(--rowpad) + 24px)}
-.hist-axis i{position:relative;z-index:1;width:12px;height:12px;border-radius:50%;background:#fff;border:2px solid var(--accent);margin-top:16px;transform:scale(0);transition:transform .5s var(--ease) .15s}
+.hist-y:first-child .hist-axis::before{top:20px}
+.hist-y:last-child .hist-axis::before{bottom:auto;height:calc(var(--rowpad) + 20px)}
+.hist-axis i{position:relative;z-index:1;width:11px;height:11px;border-radius:50%;background:#fff;border:2px solid var(--accent);margin-top:10px;transform:scale(0);transition:transform .5s var(--ease) .15s}
 .hist-y.in .hist-axis i{transform:scale(1)}
-.hist-es{grid-area:es;display:grid;gap:26px;min-width:0;padding-top:9px}
+.hist-es{grid-area:es;display:grid;gap:14px;min-width:0;padding-top:4px}
 .hist-e{display:grid;align-items:start;opacity:0;transform:translateY(26px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
 .hist-y.in .hist-e{opacity:1;transform:none}
 .hist-y.in .hist-e:nth-child(2){transition-delay:.12s}
 .hist-y.in .hist-e:nth-child(3){transition-delay:.24s}
-.hist-e p{font-size:1.0625rem;line-height:2.1;color:var(--ink2);margin:0;padding-top:7px;max-width:760px}
-.hist-e.has-fig{grid-template-columns:1fr 250px;gap:clamp(28px,3.5vw,64px)}
-.hist-fig{width:250px;margin:15px 0 0}
-.hist-fig img{width:100%;height:176px;object-fit:cover;border-radius:4px;display:block}
-.hist-fig figcaption{margin-top:10px;font-size:0.8125rem;letter-spacing:.08em;color:var(--mut)}
+.hist-e p{font-size:1rem;line-height:1.85;color:var(--ink2);margin:0;padding-top:3px;max-width:780px}
+.hist-e.has-fig{grid-template-columns:1fr 200px;gap:clamp(24px,3vw,56px)}
+.hist-fig{width:200px;margin:0}
+.hist-fig img{width:100%;height:128px;object-fit:cover;border-radius:4px;display:block}
+.hist-fig figcaption{margin-top:7px;font-size:0.8125rem;letter-spacing:.08em;color:var(--mut)}
 @media (prefers-reduced-motion:reduce){
   .hist-e,.hist-axis i{transition:none;opacity:1;transform:none}
 }
 @media (max-width:900px){
-  .hist-head{margin-top:36px}
-  .htl{--rowpad:34px}
-  .hist-y{grid-template-columns:30px 1fr;grid-template-areas:"axis yr" "axis es";row-gap:16px;padding:34px 0}
-  .hist-yr{font-size:1.875rem;text-align:left;margin:2px 0 0}
+  .hist-head{margin-top:26px}
+  .htl{--rowpad:24px}
+  .hist-y{grid-template-columns:28px 1fr;grid-template-areas:"axis yr" "axis es";row-gap:12px;padding:24px 0}
+  .hist-yr{font-size:1.625rem;text-align:left;margin:2px 0 0}
   .hist-axis::before{margin-left:0}
-  .hist-y:first-child .hist-axis::before{top:12px}
-  .hist-y:last-child .hist-axis::before{height:calc(var(--rowpad) + 12px)}
+  .hist-y:first-child .hist-axis::before{top:10px}
+  .hist-y:last-child .hist-axis::before{height:calc(var(--rowpad) + 10px)}
   .hist-axis i{margin-top:8px}
   .hist-e.has-fig{grid-template-columns:1fr;gap:14px}
   .hist-fig{width:100%}
-  .hist-fig img{height:200px}
+  .hist-fig img{height:190px}
 }
 
 /* 新闻详情 */
@@ -193,21 +196,34 @@
   .job-card h4{margin-top:26px}
 }
 
-/* 联系方式 · 图标 + 分栏（参考部门联系卡版式） */
-.ct-row{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,4.5vw,64px);align-items:start;padding-top:clamp(36px,5vh,56px)}
-.ct-lead{display:flex;gap:22px;align-items:flex-start}
-.ct-lead-body small{display:block;font-size:0.8125rem;letter-spacing:.22em;color:var(--mut);margin-bottom:8px}
-.ct-lead-body b{font-family:var(--num);font-size:clamp(1.1875rem,1.9vw,1.5625rem);font-weight:600;letter-spacing:.02em}
-.ct-lead-body p{margin-top:4px;font-size:1rem;color:var(--ink2)}
-.ct-grid{display:grid;gap:0}
-.ct-card{display:flex;gap:18px;align-items:flex-start}
-.ct-card-body h4{font-size:1.125rem;font-weight:600;letter-spacing:.05em}
-.ct-card-body p{margin-top:8px;font-size:1rem;line-height:1.9;color:var(--ink2)}
-.ct-card-body .ct-sub{margin-top:10px;font-size:0.8125rem;line-height:1.9;color:var(--mut)}
-.ct-ico{flex:none;width:42px;height:42px;border-radius:4px;background:var(--dark);color:#fff;display:flex;align-items:center;justify-content:center}
-.ct-ico svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+/* 联系方式（V302 用户指令）
+   原版：电话与地址各占半屏、地图全宽 16:9 压在下面 —— 有效信息被稀释，
+   地图反倒成了页面主角。现在改成「信息在左、地图在右且收窄」：
+   左列电话/邮箱 + 地址/公交两条纵向排，右列 3:2 小地图，一屏内读完。 */
+.ct-row{display:grid;grid-template-columns:minmax(0,1fr) clamp(288px,28vw,404px);
+  gap:clamp(44px,5.6vw,84px);align-items:start;padding-top:clamp(18px,2.6vh,30px)}
+.ct-info{display:grid;gap:clamp(26px,3.6vh,42px)}
+.ct-lead{display:flex;gap:20px;align-items:flex-start}
+.ct-lead-body small{display:block;font-size:0.8125rem;letter-spacing:.22em;color:var(--mut);margin-bottom:6px}
+.ct-lead-body b{font-family:var(--num);font-size:clamp(1.375rem,1.9vw,1.6875rem);font-weight:600;letter-spacing:.02em}
+.ct-lead-body p{margin-top:6px;font-size:1rem;color:var(--ink2)}
+.ct-card{display:flex;gap:20px;align-items:flex-start}
+.ct-card-body h4{font-size:1.0625rem;font-weight:600;letter-spacing:.05em}
+.ct-card-body p{margin-top:6px;font-size:1rem;line-height:1.85;color:var(--ink2)}
+.ct-card-body .ct-sub{margin-top:8px;font-size:0.8125rem;line-height:1.85;color:var(--mut)}
+/* 图标改圆形 + 标准蓝（原深色 4px 方块，色太重、形状太硬） */
+.ct-ico{flex:none;width:46px;height:46px;border-radius:999px;background:var(--accent);color:#fff;
+  display:flex;align-items:center;justify-content:center}
+.ct-ico svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+/* 地图收成 3:2 小卡，说明条一并压扁 */
+#pane-contact .map-card img{aspect-ratio:3/2}
+#pane-contact .map-card .mc-b{padding:12px 16px;font-size:0.9375rem;line-height:1.8}
+#pane-contact .map-card .mc-b b{font-size:1rem;margin-bottom:2px}
+/* 联系页内容少，底部不需要和别的 tab 一样的收尾留白 */
+#pane-contact{padding-bottom:clamp(16px,2.4vh,28px)}
 @media (max-width:900px){
-  .ct-row{grid-template-columns:1fr;gap:30px}
+  .ct-row{grid-template-columns:1fr;gap:30px;padding-top:20px}
+  #pane-contact .map-card img{aspect-ratio:16/9}
 }
 
 /* 页脚二维码 */

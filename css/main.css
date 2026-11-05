@@ -827,8 +827,6 @@ body.party{
   --accent2:#e6a8a8;
   --party:#8d1b21;
 }
-/* 标签栏当前态（V299 用户指令）：党建模块与「关于我们」一致用金色，
-   这里不再覆盖成模块专色 —— 删掉原先的 --party 覆写，回落到主站 --gold-d。 */
 /* banner：底图本身就是红绸渐变，遮罩换成同色系深红压暗 ——
    原来的蓝遮罩压在红图上会泛紫。透明度比主站再低一档，绸带氛围留得住 */
 body.party .dhero{background:#3f0d11}
@@ -842,22 +840,11 @@ body.party .dhero-shade{background:
    否则从红色模块点进正文会突然跳回蓝色 */
 body.party .phero{background:#7d1519 url("../assets/img/banners/party.webp?v=296") center/cover}
 body.party .phero::before{background:linear-gradient(110deg,rgba(50,8,12,.92) 0%,rgba(96,15,20,.86) 55%,rgba(140,26,32,.72) 100%)}
-/* 党建模块没有分类按钮（标签栏已承担分类），筛选栏只剩搜索框：靠右与列表对齐 */
-body.party .nfilter{justify-content:flex-end}
-/* V301 用户指令：党建页的两个子模块标签改成「新闻中心」那种实心按钮，
-   配色走模块红（--accent 在这里已是 #9a2026），不再用关于我们的金色下划线。
-   结构仍是 .atabs/.apane（切换逻辑不动），只把外观换成与 .ntabs 同一套数值 ——
-   42 高、0 22 内距、1px 线框、当前态实底白字。
-   页面原本用 .sec-tight-top（padding-top:0）是为了让通栏标签线贴着 banner，
-   换成实心按钮后需要回到正常留白，否则按钮直接顶在 banner 下沿。 */
-body.party .sec-tight-top{padding-top:clamp(40px,6vh,70px)}
-body.party .atabs.pair{display:flex;flex-wrap:wrap;gap:8px;border-bottom:0}
-body.party .atabs.pair button{height:42px;padding:0 22px;font-size:1.0625rem;letter-spacing:.06em;
-  border:1px solid var(--line);color:var(--ink2);display:inline-flex;align-items:center;
-  transition:background-color .3s var(--ease),border-color .3s var(--ease),color .3s}
-body.party .atabs.pair button::after{display:none}
-body.party .atabs.pair button.act{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
-body.party .atabs.pair button:hover:not(.act){border-color:var(--accent);color:var(--accent)}
+/* V303 用户指令：党建模块的标签栏 + 搜索栏与新闻中心完全一致，只换配色。
+   做法是让 party.html 与 news.html 共用同一套列表结构（site.js 的 mountList），
+   所以这里不再需要任何针对 .atabs/.apane/.nfilter 的外观覆写 —— 之前那几段
+   「标签单独一行、搜索框靠右另起一行」的样式全部删掉。
+   党建页剩余差异只有上面那组 --accent 变量（深红），以及 banner / 详情页红绸。 */
 
 /* 菜单面板项数少时同样均分铺满（V301 用户指令）：新闻中心、党建各 2 项。
    V297 曾把 2 项菜单的列宽写死成 clamp(220px,17.5vw,260px)，不管视口多大都是 220–260，
