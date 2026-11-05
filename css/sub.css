@@ -409,20 +409,20 @@ figure.bfig figcaption{margin-top:12px;font-size:0.8125rem;line-height:1.7;lette
    三个扩展产品各占 1 格落在第二行。两条线都按 3 等分栅格走，行内不留偏置。 */
 .pline{padding-top:clamp(36px,5vh,56px)}
 .pline+.pline{padding-top:clamp(48px,7vh,76px)}
-.pline-h{font-size:clamp(1.1875rem,1.5vw,1.4375rem);font-weight:600;letter-spacing:.04em;line-height:1.5}
-.pline-k{margin-top:12px;font-size:0.8125rem;line-height:1.9;color:var(--mut);letter-spacing:.02em}
+/* V311：两线大标题直接写产品名（桂农易通 / 桂资通），字号提到与卡片标题拉开一档；
+   标题下的灰色小字（原 .pline-k）按用户指令删除 */
+.pline-h{font-size:clamp(1.75rem,2.4vw,2.25rem);font-weight:600;letter-spacing:.04em;line-height:1.3}
 .pline-body{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
   gap:clamp(28px,3.6vh,44px) clamp(20px,2.2vw,32px);align-items:start}
 .pline-intro{grid-column:span 1;align-self:center;padding-right:clamp(0px,1vw,16px)}
 .pline-base{grid-column:span 2}
-.pline-note{margin-top:clamp(14px,1.8vh,20px);font-size:0.9375rem;line-height:2;color:var(--ink2)}
+.pline-note{margin-top:clamp(18px,2.3vh,26px);font-size:0.9375rem;line-height:2;color:var(--ink2)}
 /* 底座卡宽了两格，铭牌若跟着拉满就是一条扁横条；收成定宽，并相对整张图居中（左右 0 + auto 外边距） */
 .pline-base .pcard-plate{left:0;right:0;margin-inline:auto;width:min(440px,64%)}
 /* 900 以下单列：文字块、主卡、各扩展卡都吃满整宽 */
 @media (max-width:900px){
   .pline-body{grid-template-columns:1fr;gap:34px}
   .pline-intro{grid-column:auto;align-self:start;padding-right:0}
-  .pline-k br{display:none}
   .pline-base{grid-column:auto}
   /* 主卡与扩展卡在单列时等宽，铭牌收窄口径也跟它们保持一致（601–900 为 360/62%，同样居中） */
   .pline-base .pcard-plate{width:min(360px,62%)}
