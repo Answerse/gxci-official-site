@@ -380,72 +380,70 @@ body.dark-hero .nav:not(.on) .burger i{background:#fff}
   .hist::before{animation:none}
 }
 .hist .shead h2{color:#fff}
-.hacc{position:relative;display:flex;gap:0;height:clamp(300px,32vh,330px);container-type:inline-size}
-.hacc-item{--fg:1;position:relative;flex:var(--fg) 1 0;min-width:0;overflow:hidden;background:transparent;border-radius:4px;transition:flex-grow .7s var(--ease),flex-basis .7s var(--ease),background .45s}
-.hacc-item:not(.on):hover{background:rgba(255,255,255,.055)}
-.hacc-item.on{--fg:0;flex:0 0 clamp(260px,27vw,380px);background:transparent}
-/* V308 展开卡片底色归零后不再画顶线：卡片已是纯文字，一条 2px 金线孤悬在
-   文字上方只会读成装饰分割线。激活态改由「大号白字年份 + 展开正文」交代。 */
-/* 折叠态：只留年份。年份上移挂在轴线上方，轴线与节点贯通整条时间轴 */
-.hacc-btn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:0;text-align:center;color:rgba(255,255,255,.72);transition:color .3s,opacity .3s}
-.hacc-btn::before{content:"";position:absolute;top:50%;left:0;right:0;height:1px;background:rgba(255,255,255,.26)}
-.hacc-btn::after{content:"";position:absolute;top:50%;left:50%;width:5px;height:5px;margin:-2.5px 0 0 -2.5px;background:rgba(255,255,255,.62);border-radius:50%;transition:background .3s,transform .3s var(--ease)}
-.hacc-btn .yr{position:relative;z-index:1;font-family:var(--num);font-size:var(--yrfs,0.9375rem);font-weight:400;line-height:1;letter-spacing:.04em;white-space:nowrap;transform:translateY(calc(-0.5em - var(--yo,19px)));transition:font-size .5s var(--ease)}
-/* 年份上下错落：奇数列挂在轴线上方、偶数列垂到轴线下方，两侧离轴各 19px。
-   相邻年份不再共用一条基线，横向间距可以压到「字宽 + 6px」而不粘连，
-   同一条轴上能多排三分之一节点（15 → 20 左右），也不必给标签留左右护边。
-   只在桌面横向手风琴里生效：<1280 是竖排清单，年份本就一行一个，错落无意义。 */
-@media (min-width:1280px){
-  .hacc-item:nth-child(even) .hacc-btn .yr{transform:translateY(calc(0.5em + 19px))}
-}
+/* 发展历程（V312 用户指令）：年份点回归纯时间轴，展开的详情移到时间轴上方，
+   左侧大号年份、右侧该年事件列表；年份自动轮播，详情跟着换。
+   原横向手风琴（激活项撑宽成卡片）整体废弃。 */
+.hacc{position:relative;container-type:inline-size}
+/* 详情舞台高度固定，切换年份时下面的时间轴不会上下跳 */
+.hacc-stage{position:relative;min-height:clamp(142px,18vh,178px)}
+.hacc-item{position:absolute;inset:0;display:grid;grid-template-columns:auto minmax(0,1fr);
+  gap:clamp(32px,5.2vw,84px);align-items:start;opacity:0;visibility:hidden;pointer-events:none;
+  transform:translateY(10px);transition:opacity .45s var(--ease),transform .45s var(--ease),visibility .45s}
+.hacc-item.on{opacity:1;visibility:visible;pointer-events:auto;transform:none}
+.hacc-item .yr-lg{font-family:var(--num);font-size:clamp(3.25rem,6vw,5.25rem);font-weight:600;
+  line-height:.86;letter-spacing:.01em;color:#fff;font-variant-numeric:tabular-nums}
+.hacc-list{display:flex;flex-direction:column;gap:clamp(8px,1.1vh,12px);max-width:62ch;padding-top:.42em}
+.hacc-list li{position:relative;padding-left:16px;font-size:0.9375rem;line-height:1.8;color:rgba(255,255,255,.82)}
+.hacc-list li::before{content:"";position:absolute;left:0;top:.78em;width:5px;height:1px;background:rgba(143,196,240,.85)}
+/* 时间轴：年份等分整宽，落在同一根横轴上 */
+.hacc-axis{position:relative;display:flex;align-items:center;
+  margin-top:clamp(18px,2.8vh,32px);height:clamp(60px,7.6vh,72px)}
+.hacc-btn{position:relative;flex:1 1 0;min-width:0;height:100%;display:flex;align-items:center;justify-content:center;
+  padding:0;text-align:center;color:rgba(255,255,255,.58);transition:color .3s}
+.hacc-btn::before{content:"";position:absolute;top:50%;left:0;right:0;height:1px;background:rgba(255,255,255,.22)}
+.hacc-btn::after{content:"";position:absolute;top:50%;left:50%;width:5px;height:5px;margin:-2.5px 0 0 -2.5px;
+  border-radius:50%;background:rgba(255,255,255,.55);transition:background .3s,transform .3s var(--ease)}
+.hacc-btn .yr{position:relative;z-index:1;font-family:var(--num);font-size:0.9375rem;line-height:1;
+  letter-spacing:.04em;white-space:nowrap;transform:translateY(calc(-0.5em - 17px));
+  transition:color .3s,font-size .4s var(--ease)}
+/* 轴线两端淡出，首尾年份不贴边 */
+.hacc-btn:first-child::before{background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.22) 22%)}
+.hacc-btn:last-child::before{background:linear-gradient(270deg,rgba(255,255,255,0),rgba(255,255,255,.22) 22%)}
 .hacc-btn:hover{color:var(--gold)}
 .hacc-btn:hover::after{background:var(--gold);transform:scale(1.35)}
-.hacc-item:first-child .hacc-btn::before{background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.26) 26%)}
-.hacc-item:last-child .hacc-btn::before{background:linear-gradient(270deg,rgba(255,255,255,0),rgba(255,255,255,.26) 26%)}
-.hacc-item.on .hacc-btn{opacity:0;pointer-events:none}
-/* 首尾年份最大，向中段逐级缩小：两端留宽、中间收窄，仍是同一条轴的刻度 */
-.hacc-item:nth-child(1),.hacc-item:nth-child(15){--fg:1.5;--yrfs:clamp(1.5rem,2.15cqw,2rem)}
-/* V143 只有首尾加粗，中间年份随字号递减、字重回正常 */
-.hacc-item:nth-child(1) .hacc-btn .yr,.hacc-item:nth-child(15) .hacc-btn .yr{font-weight:600}
-.hacc-item:nth-child(2),.hacc-item:nth-child(14){--fg:1.25;--yrfs:clamp(1.25rem,1.8cqw,1.75rem)}
-.hacc-item:nth-child(3),.hacc-item:nth-child(13){--fg:1.12;--yrfs:clamp(1.0625rem,1.55cqw,1.5rem)}
-.hacc-item:nth-child(4),.hacc-item:nth-child(12){--fg:1.05;--yrfs:clamp(1rem,1.31cqw,1.1875rem)}
-.hacc-item:nth-child(n+5):not(:nth-child(n+12)){--fg:1;--yrfs:0.9375rem}
-.hacc-panel{position:absolute;inset:0;padding:clamp(26px,4.2vh,38px) 34px 26px;display:block;opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity .4s .08s var(--ease),transform .4s .08s var(--ease),visibility .4s}
-.hacc-item.on .hacc-panel{opacity:1;visibility:visible;transform:none}
-.hacc-panel .yr-lg{display:inline-block;font-family:var(--num);font-size:clamp(1.75rem,3.1cqw,2.5rem);font-weight:600;line-height:1;letter-spacing:.02em;color:#fff;vertical-align:baseline}
-.hacc-list{margin-top:clamp(12px,1.7vh,16px);display:flex;flex-direction:column;gap:7px;max-width:44ch}
-.hacc-list li{position:relative;padding-left:16px;font-size:0.8125rem;line-height:1.75;color:rgba(255,255,255,.8)}
-.hacc-list li::before{content:"";position:absolute;left:0;top:.72em;width:5px;height:1px;background:rgba(143,196,240,.85)}
-.hacc-ctrl{display:flex;align-items:center;gap:22px;margin-top:clamp(16px,2.2vh,24px)}
+.hacc-btn.on{color:#fff}
+.hacc-btn.on .yr{font-weight:600;letter-spacing:.06em}
+.hacc-btn.on::after{background:var(--gold);transform:scale(1.7)}
+/* 年份上下错落（延续 V308）：奇偶分挂轴线上下，两侧离轴各 17px，
+   同一条轴上能多排三分之一节点而不粘连。只在桌面横向轴生效。 */
+@media (min-width:1280px){
+  .hacc-btn:nth-child(even) .yr{transform:translateY(calc(0.5em + 17px))}
+}
+.hacc-ctrl{display:flex;align-items:center;gap:22px;margin-top:clamp(8px,1.4vh,16px)}
 .hacc-prog{flex:1;height:2px;background:rgba(255,255,255,.14);position:relative;border-radius:2px;overflow:hidden}
 .hacc-prog i{position:absolute;inset:0 auto 0 0;width:0;background:var(--gold);transition:width .6s var(--ease)}
 .hacc-count{font-family:var(--num);font-size:0.8125rem;letter-spacing:.14em;color:rgba(255,255,255,.45);white-space:nowrap}
 .hacc-count b{color:#fff;font-weight:600}
-/* V141 箭头分置两端：控制条与时间轴同为 1296 铺满，左右各一个按钮形成对称 */
-.hacc-arrow{flex:none;width:40px;height:40px;border:1px solid rgba(255,255,255,.22);border-radius:4px;color:#fff;display:grid;place-items:center;font-size:1.0625rem;transition:all .3s}
+.hacc-arrow{flex:none;width:40px;height:40px;border:1px solid rgba(255,255,255,.22);border-radius:4px;color:#fff;
+  display:grid;place-items:center;font-size:1.0625rem;transition:all .3s}
 .hacc-arrow:hover{background:var(--gold-d);color:#fff;border-color:var(--gold-d)}
-/* ≤1279：横向 15 个年份放不下，改竖向时间轴（左侧贯通轴线 + 节点） */
-@media (max-width:1279px){
-  .hist{padding:64px 0}
-  .hacc{flex-direction:column;height:auto;gap:0;position:relative}
-  .hacc::before{content:"";position:absolute;left:8px;top:21px;bottom:21px;width:1px;background:rgba(255,255,255,.2)}
-  .hacc-item{--fg:0;flex:none;background:transparent;overflow:visible}
-  .hacc-item:not(.on):hover{background:rgba(255,255,255,.045)}
-  .hacc-item.on{flex:none;background:rgba(255,255,255,.055)}
-  .hacc-btn{position:relative;inset:auto;display:flex;align-items:center;justify-content:flex-start;padding:13px 0 13px 24px;width:100%;opacity:1;pointer-events:auto}
-  .hacc-btn::before{display:none}
-  .hacc-btn::after{top:50%;left:5.5px;margin:-2.5px 0 0 0}
-  .hacc-btn .yr{font-size:0.9375rem;transform:none}
-  .hacc-item.on .hacc-btn{opacity:1;pointer-events:auto}
-  .hacc-item.on .hacc-btn::after{background:var(--gold)}
-  .hacc-panel{position:relative;inset:auto;padding:0 0 0 24px;max-height:0;overflow:hidden;opacity:1;visibility:visible;transform:none;transition:max-height .5s var(--ease),padding-bottom .5s var(--ease)}
-  .hacc-item.on .hacc-panel{max-height:680px;padding-bottom:24px}
-  .hacc-panel .yr-lg{display:none}
-  .hacc-list{margin-top:0;gap:8px;max-width:none}
-  .hacc-list li{font-size:0.8125rem;line-height:1.9;color:rgba(255,255,255,.72)}
-  .hacc-ctrl{gap:14px}
-  .hacc-arrow{width:40px;height:40px}
+/* ≤899：详情改上下排（年份在上、事件在下），时间轴横向滑动，年份不再错落 */
+@media (max-width:899px){
+  .hist{padding:56px 0}
+  .hacc-stage{min-height:0}
+  .hacc-item{position:relative;display:none}
+  .hacc-item.on{display:grid;grid-template-columns:minmax(0,1fr);gap:0;opacity:1;visibility:visible;pointer-events:auto;transform:none}
+  .hacc-item .yr-lg{font-size:clamp(2.25rem,9vw,3rem);line-height:1}
+  .hacc-list{padding-top:14px;gap:8px;max-width:none}
+  .hacc-list li{font-size:0.875rem;line-height:1.85;color:rgba(255,255,255,.74)}
+  .hacc-axis{overflow-x:auto;overflow-y:hidden;height:56px;margin-top:20px;scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
+    mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
+  .hacc-axis::-webkit-scrollbar{display:none}
+  .hacc-btn{flex:0 0 auto;min-width:68px;scroll-snap-align:center}
+  .hacc-btn .yr{transform:none;font-size:0.9375rem}
+  .hacc-ctrl{gap:14px;margin-top:14px}
 }
 
 /* ---------- 新闻 ---------- */

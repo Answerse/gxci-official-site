@@ -482,31 +482,40 @@
   }, { threshold: 0.5 });
   $$('[data-count]').forEach(function (el) { cio.observe(el); });
 
-  /* ---------- 发展历程：横向手风琴 + 自动循环轮播 ---------- */
+  /* ---------- 发展历程（V312）：时间轴上的年份自动轮播，详情区跟着换 ---------- */
   var histBox = $('[data-hist]');
   if (histBox) {
     var hacc = $('[data-hacc]', histBox);
     var hItems = $$('.hacc-item', hacc);
+    var hBtns = $$('.hacc-btn', hacc);
     var hProg = $('.hacc-prog i', histBox);
     var hCur = $('.hacc-count b', histBox);
     var hTotal = hItems.length;
     var hIdx = 0, hTimer = null, hPaused = false, hVisible = false;
     var H_DUR = 4000;
     var hReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var hIsMobile = function () { return window.matchMedia('(max-width:1279px)').matches; };
+    var hIsMobile = function () { return window.matchMedia('(max-width:899px)').matches; };
     var hCanHover = function () { return window.matchMedia('(hover:hover) and (pointer:fine)').matches && !hIsMobile(); };
 
     function hGo(n, byUser) {
       hIdx = ((n % hTotal) + hTotal) % hTotal;
-      hItems.forEach(function (it, k) {
+      hItems.forEach(function (it, k) { it.classList.toggle('on', k === hIdx); });
+      hBtns.forEach(function (b, k) {
         var on = k === hIdx;
-        it.classList.toggle('on', on);
-        var b = $('.hacc-btn', it);
-        if (b) b.setAttribute('aria-expanded', on ? 'true' : 'false');
+        b.classList.toggle('on', on);
+        b.setAttribute('aria-expanded', on ? 'true' : 'false');
       });
       if (hProg) hProg.style.width = ((hIdx + 1) / hTotal * 100) + '%';
       if (hCur) hCur.textContent = ('0' + (hIdx + 1)).slice(-2);
-      if (byUser) hRestart();
+      /* 窄屏时间轴可横向滑动，把当前年份滚进视野 */
+      if (hIsMobile() && hBtns[hIdx]) {
+        var b = hBtns[hIdx], ax = b.parentNode;
+        var bl = b.offsetLeft, br = bl + b.offsetWidth;
+        if (bl < ax.scrollLeft || br > ax.scrollLeft + ax.clientWidth) {
+          ax.scrollTo({ left: bl - (ax.clientWidth - b.offsetWidth) / 2, behavior: 'smooth' });
+        }
+      }
+      if (byUser) hStart();
     }
     function hStop() { if (hTimer) { clearInterval(hTimer); hTimer = null; } }
     function hStart() {
@@ -516,26 +525,11 @@
         if (!hPaused && hVisible) hGo(hIdx + 1);
       }, H_DUR);
     }
-    function hRestart() { hStart(); }
 
-    hItems.forEach(function (it, k) {
-      var b = $('.hacc-btn', it);
-      if (b) b.addEventListener('click', function () { hGo(k, true); });
-    });
-    /* 桌面：悬停即展开。用「鼠标停稳后再取指针下的项」而不是 mouseenter——
-       展开会改变格子宽度，mouseenter 在边界上会来回触发抖动；停稳采样只切一次。 */
-    var hMoveT = null;
-    hacc.addEventListener('mousemove', function (e) {
-      if (!hCanHover()) return;
-      var mx = e.clientX, my = e.clientY;
-      clearTimeout(hMoveT);
-      hMoveT = setTimeout(function () {
-        var el = document.elementFromPoint(mx, my);
-        var item = el && el.closest ? el.closest('.hacc-item') : null;
-        if (!item) return;
-        var k = hItems.indexOf(item);
-        if (k > -1 && k !== hIdx) hGo(k, true);
-      }, 110);
+    hBtns.forEach(function (b, k) {
+      b.addEventListener('click', function () { hGo(k, true); });
+      /* 桌面划过即切：节点宽度固定，不会像旧手风琴那样在边界上抖动 */
+      b.addEventListener('mouseenter', function () { if (hCanHover()) hGo(k, true); });
     });
     var hPrev = $('.hacc-ctrl .prev', histBox), hNext = $('.hacc-ctrl .next', histBox);
     if (hPrev) hPrev.addEventListener('click', function () { hGo(hIdx - 1, true); });
