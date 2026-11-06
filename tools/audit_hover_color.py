@@ -27,6 +27,10 @@ NEUTRAL = ("#fff", "#ffffff", "white", "transparent", "inherit", "none",
            "var(--line)", "var(--panel)", "var(--panel-2)", "#e9ecf2", "currentcolor", "var(--dark)", "var(--dark2)",
            "var(--mut)")
 GOLD = ("--gold", "--gold-d")
+# V315 用户指令：导航 hover 按**被 hover 的模块**上色 —— 党建工作深红 #9a2026、其余模块标准蓝 #2b3a92
+# （深底页头各用提亮版 #e6a8a8 / #7c8ce8）。变量在 .menu>li 上定义：--mc（标准色）/ --mc2（深底提亮）。
+# 这里的红是模块专色、不是装饰金，属合规声明。
+MODULE = ("var(--mc)", "var(--mc2)", "#9a2026", "#e6a8a8")
 
 # 允许保留金色的交互态（白名单，每条都有用户明确指令，禁止擅自"统一成蓝"）
 GOLD_ALLOWED = (
@@ -53,6 +57,11 @@ def is_blue(v):
 def is_neutral(v):
     lv = v.lower()
     return any(n in lv for n in NEUTRAL)
+
+
+def is_module(v):
+    lv = v.lower()
+    return any(m in lv for m in MODULE)
 
 
 # V194 用户指令：产品卡 hover 铭牌色按各卡配图取主色（非蓝非金，逐色白名单）
@@ -83,7 +92,7 @@ for f in FILES:
                     gold_ok += 1
                 else:
                     gold_bad.append((f.split("/")[-1], sel, prop, val))
-            elif is_blue(val) or is_neutral(val) or is_image_hover(val):
+            elif is_blue(val) or is_neutral(val) or is_image_hover(val) or is_module(val):
                 blue += 1
             else:
                 other.append((f.split("/")[-1], sel, prop, val))

@@ -73,19 +73,29 @@ body.party .nav:not(.on):not(.mega-on) .logo .lg-w{display:block}
 .logo-t{font-size:clamp(1.25rem,1.62vw,1.625rem);line-height:1.3;font-weight:600;letter-spacing:.04em}
 .logo-t small{display:block;font-size:0.8125rem;font-weight:400;color:var(--mut);letter-spacing:.1em}
 .menu{display:flex;align-items:stretch;align-self:stretch;gap:clamp(30px,4.1vw,70px)}
-.menu>li{position:relative;display:flex;align-items:center}
+/* V315 模块色（用户指令）：hover 时每个一级导航项显示「自己那个模块」的颜色 ——
+   党建工作深红，其余模块一律标准蓝。颜色跟着被 hover 的模块走，与「当前页是哪个模块」无关，
+   所以这里必须写死字面色值：body.party 把 --accent 改成了深红，若引用 var(--accent)，
+   党建页面里 hover「产品中心」也会跟着变红。--mc = 标准色，--mc2 = 深底页头上的提亮版。 */
+.menu>li{position:relative;display:flex;align-items:center;--mc:#2b3a92;--mc2:#7c8ce8}
+.menu>li.mega-party{--mc:#9a2026;--mc2:#e6a8a8}
 .menu>li.has-mega{position:static;padding:0 10px;margin:0 -10px}
 .menu a.m{display:flex;align-items:center;height:100%;padding:0 2px;font-size:clamp(1.0625rem,1.3vw,1.1875rem);letter-spacing:.06em;color:var(--ink);position:relative;transition:color .3s;white-space:nowrap}
 /* 激活 / 悬停下划线：落到页头底边，压住 1px 分隔线 */
 .menu a.m::after{content:"";position:absolute;left:0;bottom:-1px;width:0;height:3px;background:var(--gold-d);transition:width .35s var(--ease)}
 .menu>li:hover a.m::after,.menu a.m.act::after{width:100%}
-/* 悬停细一档、当前页实一档，两条线同时在底边时能分出主次；hover 走标准蓝，当前页 active 保持金色（用户 2026-10-26 明确） */
-.menu>li:hover a.m::after{height:2px;background:var(--accent)}
-.menu>li:hover a.m{color:var(--accent)}
-/* 深底页头（页面顶部、未转白）：hover 用既有 --accent2 提亮蓝——纯 #2b3a92 在深蓝页头上几乎不可见 */
-body.dark-hero .nav:not(.on):not(.mega-on) .menu>li:hover a.m{color:var(--accent2)}
-/* 页头已转白（mega 展开或已滚动）：hover 用标准蓝，必须压过 mega-on 的 ink 规则 */
-body.dark-hero .nav.mega-on .menu>li:hover a.m{color:var(--accent)}
+/* 悬停细一档、当前页实一档，两条线同时在底边时能分出主次；
+   hover 用该模块自己的色（V315），当前页 active 保持金色（用户 2026-10-26 明确）。
+   下划线直接取 currentColor：文字是什么色，线就是什么色，深底/浅底不必各写一条。 */
+.menu>li:hover a.m::after{height:2px;background:currentColor}
+.menu>li:hover a.m{color:var(--mc)}
+/* 页头已转白（滚动后 / mega 展开）：mega-on 的 ink 规则权重更高，这里补一条压住它，
+   否则普通页面展开子菜单时 hover 不变色（旧规则只给 dark-hero 写了这条）。 */
+.nav .menu>li:hover a.m{color:var(--mc)}
+/* 深底页头（页面顶部、未转白）：hover 用提亮版——纯 #2b3a92 在深蓝页头上几乎不可见 */
+body.dark-hero .nav:not(.on):not(.mega-on) .menu>li:hover a.m{color:var(--mc2)}
+/* 页头已转白（mega 展开）：用标准色 */
+body.dark-hero .nav.mega-on .menu>li:hover a.m{color:var(--mc)}
 .menu a.m.act::after{width:100%;height:3px}
 .menu a.m.act{color:var(--gold-d);font-weight:600}
 /* 通栏子菜单：整幅白板自页头下方落下，内容与 logo 同左缘（沿用页头通栏边距） */
@@ -145,7 +155,7 @@ body.dark-hero .nav.mega-on .burger i{background:var(--ink)}
 /* 深色首屏上：当前栏目保持亮金；hover 用 --accent2 提亮蓝（纯 #2b3a92 在深蓝页头上不可见） */
 body.dark-hero .nav:not(.on) .menu a.m.act{color:var(--gold)}
 body.dark-hero .nav:not(.on) .menu a.m.act:not(:hover)::after{background:var(--gold)}
-body.dark-hero .nav:not(.on):not(.mega-on) .menu>li:hover a.m::after{background:var(--accent2)}
+/* hover 下划线取 currentColor（见上），文字已换成该模块的提亮色，线自动跟随，不必再写一条 */
 /* V296 用户指令：滚到发展历程这种深色区块时，页头要透出底色、文字泛白、logo 同色处理。
    只换颜色，不动尺寸——滚动后的紧凑高度和小 logo 保持不变，避免经过这一屏时页头忽然长高。
    .dark-clear 由 site.js 判定「深色块是否盖住页头」后加/撤。 */
@@ -155,7 +165,7 @@ body.dark-hero .nav.dark-clear:not(.mega-on) .menu a.m{color:#fff}
 body.dark-hero .nav.dark-clear:not(.mega-on) .logo-t small{color:rgba(255,255,255,.55)}
 body.dark-hero .nav.dark-clear:not(.mega-on) .menu a.m.act{color:var(--gold)}
 body.dark-hero .nav.dark-clear:not(.mega-on) .menu a.m.act:not(:hover)::after{background:var(--gold)}
-body.dark-hero .nav.dark-clear:not(.mega-on) .menu>li:hover a.m{color:var(--accent2)}
+body.dark-hero .nav.dark-clear:not(.mega-on) .menu>li:hover a.m{color:var(--mc2)}
 body.dark-hero .nav.dark-clear .burger i{background:#fff}
 /* 汉堡 */
 .burger{display:none;width:44px;height:44px;position:relative;z-index:120}
@@ -859,9 +869,11 @@ body.party .phero::before{background:linear-gradient(110deg,rgba(50,8,12,.92) 0%
    用户原话「尺寸要自适应啊，现在固定尺寸了」—— 这里删掉定宽，回到基础规则的
    grid-auto-columns:minmax(0,1fr)：卡片宽度 = 面板宽 ÷ 项数，跟着视口走。 */
 
-/* 党建模块的子菜单用模块专色（V301 用户指令）：只有「党建工作」这一栏是红，
-   其余菜单仍是标准蓝。变量只下到 .mega 面板内，不影响导航项本身（a.m 的当前态仍是金色）。 */
-.menu>li.mega-party .mega{--accent:#9a2026;--accent2:#e6a8a8}
+/* 子菜单面板同样按模块上色（V301 起，V315 统一）：面板内的卡片底色、图标、描边全部读 --accent，
+   在 .mega 上把它指向该模块自己的 --mc —— 党建工作红、其余模块标准蓝。
+   必须在 .mega 这一层重新声明：党建页面 body.party 把 --accent 改成了深红，
+   若不重声明，在该页展开「产品中心」面板会整片变红。 */
+.mega{--accent:var(--mc);--accent2:var(--mc2)}
 
 /* 首页业务领域加浅灰底（V297 用户指令）：与新闻板块的白底分开一档明度。
    只作用于首页；business.html 索引页的同一网格保持白底。 */
