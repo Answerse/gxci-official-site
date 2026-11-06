@@ -48,6 +48,18 @@ body[data-page="news"] .dhero-shade{background:
     rgba(8,15,42,.60) 70%,
     rgba(8,15,42,.36) 86%,
     rgba(8,15,42,.26) 100%)}
+/* V348 业务领域换成明亮办公场景（白桌面 + 亮显示器），默认的横向均匀遮罩压不住：
+   实测导航与「业务领域」标题都是反白，落在近白屏上对比不足。给该页单开一条纵向渐变 ——
+   顶部盖住 80px 页头、中段（40–60%）压住居中标题、底部放浅让打印机与桌面透出来。
+   只作用 business，其余 .dhero 页仍用上面那条横向均匀规则。 */
+body[data-page="business"] .dhero-shade{background:
+  linear-gradient(180deg,
+    rgba(8,15,42,.88) 0%,
+    rgba(8,16,46,.82) 26%,
+    rgba(9,19,52,.70) 46%,
+    rgba(9,20,54,.58) 66%,
+    rgba(8,18,48,.42) 86%,
+    rgba(8,18,48,.34) 100%)}
 /* V193：底栏（面包屑/向下滚动）已删。标题在原 V188 位置上整体下移 20px：
    top +20、bottom -20（60→40，为已删的 60px 底栏预留位），flex 居中下移量 = (20+20)/2 = 20px */
 .dhero-in{position:relative;z-index:2;width:100%;flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center;padding-top:calc(var(--nav-h) + clamp(10px,1.4vh,16px) + 20px);padding-bottom:calc(40px + clamp(8px,1.2vh,12px))}
