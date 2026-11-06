@@ -154,7 +154,9 @@ body.dark-hero .nav.mega-on .logo-t small{color:rgba(20,20,20,.45)}
 body.dark-hero .nav.mega-on .burger i{background:var(--ink)}
 /* 深色首屏上：当前栏目保持亮金；hover 用 --accent2 提亮蓝（纯 #2b3a92 在深蓝页头上不可见） */
 body.dark-hero .nav:not(.on) .menu a.m.act{color:var(--gold)}
-body.dark-hero .nav:not(.on) .menu a.m.act:not(:hover)::after{background:var(--gold)}
+/* 当前栏目的金色线：判据挂在 li 上而不是 a 上 —— 缺省的 li 内边距有 10px，
+   鼠标停在文字外侧时 li 已 hover、a 还没 hover，写在 a 上会留下「蓝字配金线」。 */
+body.dark-hero .nav:not(.on) .menu>li:not(:hover) a.m.act::after{background:var(--gold)}
 /* hover 下划线取 currentColor（见上），文字已换成该模块的提亮色，线自动跟随，不必再写一条 */
 /* V296 用户指令：滚到发展历程这种深色区块时，页头要透出底色、文字泛白、logo 同色处理。
    只换颜色，不动尺寸——滚动后的紧凑高度和小 logo 保持不变，避免经过这一屏时页头忽然长高。
@@ -164,7 +166,7 @@ body.dark-hero .nav.dark-clear:not(.mega-on) .logo-t,
 body.dark-hero .nav.dark-clear:not(.mega-on) .menu a.m{color:#fff}
 body.dark-hero .nav.dark-clear:not(.mega-on) .logo-t small{color:rgba(255,255,255,.55)}
 body.dark-hero .nav.dark-clear:not(.mega-on) .menu a.m.act{color:var(--gold)}
-body.dark-hero .nav.dark-clear:not(.mega-on) .menu a.m.act:not(:hover)::after{background:var(--gold)}
+body.dark-hero .nav.dark-clear:not(.mega-on) .menu>li:not(:hover) a.m.act::after{background:var(--gold)}
 body.dark-hero .nav.dark-clear:not(.mega-on) .menu>li:hover a.m{color:var(--mc2)}
 body.dark-hero .nav.dark-clear .burger i{background:#fff}
 /* 汉堡 */
