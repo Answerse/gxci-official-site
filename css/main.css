@@ -630,6 +630,13 @@ body.dark-hero .nav:not(.on) .burger i{background:#fff}
 .ntabs button{height:42px;padding:0 22px;border:1px solid var(--line);font-size:1.0625rem;color:var(--ink2);letter-spacing:.06em;display:inline-flex;align-items:center;transition:all .3s}
 .ntabs button.act{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
 .ntabs button:hover:not(.act){border-color:var(--accent);color:var(--accent)}
+/* V352 新闻中心标签增到 4 个（全部 / 公司动态 / 行业资讯 / 党建工作）：
+   ≤520 宽时按原尺寸会折成「3+1」，最后一枚单独占一行很难看。
+   这里只收紧内边距与字号，四枚在 360 宽也排得进一行（实测 308 / 320） */
+@media (max-width:520px){
+  .ntabs{gap:6px}
+  .ntabs button{height:38px;padding:0 10px;font-size:0.9375rem;letter-spacing:.02em}
+}
 
 /* ---------- 合作伙伴 ---------- */
 .mq{overflow:hidden;position:relative;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}

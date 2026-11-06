@@ -48,6 +48,16 @@ body[data-page="news"] .dhero-shade{background:
     rgba(8,15,42,.60) 70%,
     rgba(8,15,42,.36) 86%,
     rgba(8,15,42,.26) 100%)}
+/* V352 党建工作回到新闻中心当一个分类标签：切到该标签时 banner 整块换成原党建
+   模块那张红绸图。两张底图叠在同一个 .dhero-media 里用透明度互换，不重排、不闪。
+   红绸配蓝遮罩会泛紫，所以遮罩同步换成党建模块那条深红渐变（数值与 body.party 一致） */
+body[data-page="news"] .dhero-media img{transition:opacity .5s var(--ease)}
+body[data-page="news"] .dhero-media img.dhero-img--party{position:absolute;inset:0;opacity:0}
+body[data-page="news"] #news-hero.ban-party .dhero-img--news{opacity:0}
+body[data-page="news"] #news-hero.ban-party .dhero-img--party{opacity:1}
+body[data-page="news"] #news-hero.ban-party .dhero-shade{background:
+  linear-gradient(90deg,rgba(59,11,15,.48) 0%,rgba(59,11,15,.40) 38%,rgba(59,11,15,.34) 70%,rgba(59,11,15,.28) 100%),
+  linear-gradient(180deg,rgba(48,9,12,.24) 0%,rgba(48,9,12,.12) 28%,rgba(48,9,12,.22) 62%,rgba(48,9,12,.50) 100%)}
 /* V348 业务领域换成明亮办公场景（白桌面 + 亮显示器），默认的横向均匀遮罩压不住：
    实测导航与「业务领域」标题都是反白，落在近白屏上对比不足。给该页单开一条纵向渐变 ——
    顶部盖住 80px 页头、中段（40–60%）压住居中标题、底部放浅让打印机与桌面透出来。

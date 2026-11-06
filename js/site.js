@@ -224,17 +224,12 @@
     ])
     + '</li>'
     + '<li class="has-mega"><a class="m" data-nav="news" href="news.html">新闻中心</a>'
-    /* V297：党建工作、主题教育已从新闻中心移出，成为独立模块（party.html），
-       新闻中心只保留公司动态与行业资讯 */
+    /* V352 用户指令：党建工作回到新闻中心当一个分类标签，党建独立页 party.html
+       与导航项一并下线；主题教育不再单列入口（稿件正文页仍可访问）。 */
     + mega([
       ['公司动态', 'news.html?cat=3', '经营与项目进展', 'ic-news'],
-      ['行业资讯', 'news.html?cat=4', '政策与产业观察', 'ic-paper']
-    ])
-    + '</li>'
-    + '<li class="has-mega mega-party"><a class="m" data-nav="party" href="party.html">党建工作</a>'
-    + mega([
-      ['党建工作', 'party.html?s=party', '党建活动与支部建设', 'ic-flag'],
-      ['主题教育', 'party.html?s=theme', '专题学习与教育成果', 'ic-cap']
+      ['行业资讯', 'news.html?cat=4', '政策与产业观察', 'ic-paper'],
+      ['党建工作', 'news.html?cat=5', '党建活动与支部建设', 'ic-flag']
     ])
     + '</li>'
     + '<li class="has-mega"><a class="m" data-nav="about" href="about.html">关于我们</a>'
@@ -254,7 +249,6 @@
     + '<a href="business.html">业务领域</a>'
     + '<a href="products.html">产品中心</a>'
     + '<a href="news.html">新闻中心</a>'
-    + '<a href="party.html">党建工作</a>'
     + '<a href="about.html">关于我们</a>'
     + '</div>'
     + '<button id="top" aria-label="回到顶部">↑</button>';
@@ -578,21 +572,18 @@
     hGo(0);
   }
 
-  /* ---------- 新闻列表（新闻中心 / 党建模块共用） ---------- */
-  /* V297 用户指令：党建工作与主题教育从新闻中心移出，单列党建模块（party.html，
-     两个标签页）。两处列表是同一套「标题行 + 搜索 + 分页」，抽成 mountList(app, opts)：
+  /* ---------- 新闻列表（新闻中心 / 党建列表共用） ---------- */
+  /* 列表是同一套「标题行 + 搜索 + 分页」，抽成 mountList(app, opts)：
        opts.cats      分类筛选表（不传 = 只留标题搜索，不显示分类按钮）
-       opts.fixedCat  固定分类 id（党建模块每个标签页只看一个分类）
+       opts.fixedCat  固定分类 id（每页只看一个分类时用）
        opts.hideCat   行内分类标签不输出（整页只有一个分类，标签是废话）
-       opts.per       每页条数，默认 12 */
-  var PARTY_CATS = { 5: 'party', 17: 'theme' };   /* 分类 id → 党建模块标签页 key */
+       opts.per       每页条数，默认 12
+       opts.onCat     切换分类后回调（新闻中心用它在「党建工作」标签换 banner） */
 
   function mountList(app, opts) {
     opts = opts || {};
     var CATS = opts.cats || null;
     var hideCat = !!opts.hideCat;
-    /* 新闻中心已不含党建 / 主题教育，没有把这两类列进 CATS 时，全部列表也要滤掉 */
-    var skipParty = !!CATS && !CATS[5] && !CATS[17];
     /* 有分类表但表里没有 0（党建模块：5 / 17）时，默认落在第一个分类，
        不能落 0 —— 0 在 filtered() 里表示「全部」，而那种页面没有「全部」按钮可回 */
     var firstCat = CATS ? +Object.keys(CATS)[0] : 0;
@@ -617,8 +608,11 @@
 
     function filtered() {
       return window.__NEWS.filter(function (x) {
-        return !x.external && (!skipParty || !PARTY_CATS[x.cat_id]) &&
-          (state.cat === 0 || x.cat_id === state.cat) &&
+        if (x.external) return false;
+        /* 只收本页列出的分类：「全部」= 所有可见分类之和，不能把没有标签的分类
+           （如主题教育 17）混进来，否则会出现数得到、翻不到的文章 */
+        if (CATS && !CATS[x.cat_id]) return false;
+        return (state.cat === 0 || x.cat_id === state.cat) &&
           (!state.q || x.title.toLowerCase().indexOf(state.q) > -1);
       });
     }
@@ -636,6 +630,7 @@
       return out + escHtml(t.slice(i));
     }
     function render() {
+      if (opts.onCat) opts.onCat(state.cat);
       var list = filtered();
       var pages = Math.max(1, Math.ceil(list.length / state.per));
       state.page = Math.min(state.page, pages);
@@ -715,18 +710,24 @@
   }
 
   var nlApp = $('#news-app');
-  if (nlApp) mountList(nlApp, { cats: { 0: '全部', 3: '公司动态', 4: '行业资讯' } });
-
-  /* 党建模块（V303 用户指令）：标签栏与搜索栏要和新闻中心完全一致、只有配色不同，
-     所以不再自己搭一套 .atabs/.apane，直接走同一个 mountList —— 两个子模块当分类，
-     结构、尺寸、同一行「左标签右搜索」的排布全部与 news 同源，颜色只由 body.party 的
-     --accent 决定。?s=party / ?s=theme 的旧深链由 catAlias 映射到 5 / 17。 */
-  var ptApp = $('#party-app');
-  if (ptApp) {
-    mountList(ptApp, {
-      cats: { 5: '党建工作', 17: '主题教育' },
-      hideCat: true,
-      catAlias: { party: 5, theme: 17 }
+  if (nlApp) {
+    /* V352 用户指令：党建工作回到新闻中心当一个分类标签；切到该标签时 banner 整块
+       换成原党建模块那张红绸（底图、标题、副标题、红遮罩一起换），其余标签不变 */
+    var nHero = $('#news-hero');
+    var nBan = nHero ? $('.dhero-img--party', nHero) : null;
+    function newsBanner(cat) {
+      if (!nHero) return;
+      var on = cat === 5;
+      /* 红绸图按需加载：默认停在「全部」时一个字节都不拉，点进来才取（57KB） */
+      if (on && nBan && !nBan.getAttribute('src')) nBan.src = nBan.getAttribute('data-src');
+      nHero.classList.toggle('ban-party', on);
+      var nh1 = $('h1', nHero), nsub = $('.dhero-sub', nHero);
+      if (nh1) nh1.textContent = on ? '党建工作' : '新闻中心';
+      if (nsub) nsub.textContent = on ? '党建活动与学习教育' : '公司要闻与经营动态';
+    }
+    mountList(nlApp, {
+      cats: { 0: '全部', 3: '公司动态', 4: '行业资讯', 5: '党建工作' },
+      onCat: newsBanner
     });
   }
 
@@ -734,33 +735,15 @@
   var art = $('#art-app');
   if (art) {
     var id = new URLSearchParams(location.search).get('id');
-    /* V297：党建 / 主题教育稿件已从新闻中心移入党建模块，
-       正文页仍复用本页，但面包屑、返回按钮、模块专色都要跟着归属走 */
-    var CAT_MODULE = {
-      5: { page: 'party.html?s=party', name: '党建工作' },
-      17: { page: 'party.html?s=theme', name: '主题教育' }
-    };
+    /* V352：党建工作已回到新闻中心当分类标签，党建稿件按普通新闻处理，
+       不再给 body 加 .party、也不改页头标题；主题教育没有列表入口了，
+       面包屑只回到新闻中心，不拼一个点不进去的分类链接 */
+    var NEWS_TABS = { 3: 1, 4: 1, 5: 1 };
     var showArt = function (x) {
-      var mod = CAT_MODULE[x.cat_id];
-      if (mod) {
-        document.body.classList.add('party');
-        /* 顶部 phero 是静态写的「新闻中心」，党建稿件进来要换成本模块的名字，
-           否则页面标题写着新闻中心、下面却是党建内容 */
-        var ph1 = $('.phero h1'); if (ph1) ph1.textContent = '党建工作';
-        var pcr = $('.phero .crumb'); if (pcr) pcr.textContent = mod.name;
-        /* 导航当前项也跟着归属走：news-detail.html 的 data-page 是 news，
-           党建稿件进来后要让「党建工作」亮起、「新闻中心」熄灭 */
-        var oldAct = $('.menu a.m.act');
-        if (oldAct) oldAct.classList.remove('act');
-        var pnav = $('.menu a.m[data-nav="party"]');
-        if (pnav) pnav.classList.add('act');
-      }
-      var crumb = mod
-        /* 分类名与模块名同名（党建工作）时不重复列两级 */
-        ? '<a href="' + mod.page + '">党建工作</a>'
-          + (mod.name === '党建工作' ? '' : ' / <a href="' + mod.page + '">' + mod.name + '</a>')
-        : '<a href="news.html">新闻中心</a> / <a href="news.html?cat=' + x.cat_id + '">' + x.cat + '</a>';
-      var back = mod || { page: 'news.html', name: '新闻中心' };
+      var tabbed = !!NEWS_TABS[x.cat_id];
+      var crumb = '<a href="news.html">新闻中心</a>'
+        + (tabbed ? ' / <a href="news.html?cat=' + x.cat_id + '">' + x.cat + '</a>' : '');
+      var back = { page: tabbed ? 'news.html?cat=' + x.cat_id : 'news.html', name: '新闻中心' };
       document.title = x.title + ' - 广西计算机有限责任公司';
       art.innerHTML =
         '<div class="art">'

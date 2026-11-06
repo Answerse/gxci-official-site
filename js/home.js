@@ -5,7 +5,8 @@
   'use strict';
 
   /* 与新闻页 site.js 的 CATS 口径一致（按 cat_id 过滤）
-     V297：党建工作(5) 与主题教育(17) 已移入独立模块 party.html，首页新闻不再收这两类 */
+     V352：党建工作已回到新闻中心当一个标签，但首页这块只做「公司动态 / 行业资讯」
+     的摘要位，仍然不收党建(5)与主题教育(17) —— 要看党建走新闻中心的标签 */
   var CATS = { 0: '全部', 3: '公司动态', 4: '行业资讯' };
   var PARTY_CATS = { 5: 1, 17: 1 };
   var DEFAULT_COVER = 'assets/img/_img_index_news-header-bg.png?v=96';
