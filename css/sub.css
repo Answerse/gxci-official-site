@@ -419,6 +419,14 @@ figure.bfig figcaption{margin-top:12px;font-size:0.8125rem;line-height:1.7;lette
 .pline-note{margin-top:clamp(18px,2.3vh,26px);font-size:0.9375rem;line-height:2;color:var(--ink2)}
 /* 底座卡宽了两格，铭牌若跟着拉满就是一条扁横条；收成定宽，并相对整张图居中（左右 0 + auto 外边距） */
 .pline-base .pcard-plate{left:0;right:0;margin-inline:auto;width:min(440px,64%)}
+/* V314 用户指令：主产品卡（桂农易通／桂资通）的图片高度要收成与下方扩展卡一致。
+   两张卡图现在同为 16:9，可主卡宽两格 → 高度也是别人的两倍，一屏里看着比下面一排高一截。
+   扩展卡图高 = 列宽 × 9/16；主卡宽 = 2×列宽 + 列间距，于是主卡图的比例
+   = (2C−g)/3 ÷ ((C−2g)/3 × 9/16) ≈ 3.69，与视口无关（1440 实测 853×231、1024 实测 563×152，
+   比值都是 3.69）。这里直接锁 3.69:1，图片 object-fit:cover 横向裁切，行高自然与下一排齐平。 */
+@media (min-width:901px){
+  .pline-base .pcard-fig{aspect-ratio:3.69/1}
+}
 /* 900 以下单列：文字块、主卡、各扩展卡都吃满整宽 */
 @media (max-width:900px){
   .pline-body{grid-template-columns:1fr;gap:34px}
