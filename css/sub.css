@@ -507,3 +507,62 @@ figure.bfig figcaption{margin-top:12px;font-size:0.8125rem;line-height:1.7;lette
   .pmore{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 14px}
   .pmore-i b{font-size:0.875rem;margin-top:9px}
 }
+
+/* ============================================================
+   V330 业务领域索引页（business.html）：一行 5 卡 · 图/文上下交替
+   用户指令：「改成上图下文和上文下图的版式交替出现，一行 5 块卡片，
+   保证 5 块卡片的标题文字行数一样」。
+   只作用于 body[data-page="business"] —— 首页 .biz 仍是 V313 的蓝实色
+   文字块 + 2+3 错格，两套版式互不干扰（SPEC 原「business 保留渐变溶接」
+   的约定自本版起被本指令取代）。
+   图与文彻底分离：不再压图、不要渐变蒙版、不要溶接；文字块只留业务名称
+   标题（.btags / .bsum 隐藏，DOM 不动），标题全档强制单行 → 5 张卡行数一致。
+   交替靠 nth-child(even) 翻 flex-direction，DOM 顺序不变。
+   ============================================================ */
+body[data-page="business"] .biz{
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
+  grid-auto-rows:auto;gap:clamp(10px,1.2vw,16px);align-items:stretch}
+body[data-page="business"] .biz .bcard:first-child{grid-column:auto}
+body[data-page="business"] .biz .bcard{
+  aspect-ratio:auto;height:auto;display:flex;flex-direction:column;justify-content:flex-start;
+  overflow:visible;border-radius:0;background:none;color:var(--ink);box-shadow:none}
+/* 1/3/5 图上文下；2/4 文上图下 */
+body[data-page="business"] .biz .bcard:nth-child(even){flex-direction:column-reverse}
+body[data-page="business"] .bcard::after,
+body[data-page="business"] .bcard .bfig::after{content:none}
+body[data-page="business"] .bcard .bfig{
+  position:relative;inset:auto;flex:0 0 auto;width:100%;max-width:none;
+  aspect-ratio:4/3;overflow:hidden;border-radius:4px;background:none}
+body[data-page="business"] .bcard .bfig img{
+  height:100%;-webkit-mask-image:none;mask-image:none}
+body[data-page="business"] .bcard .bbody{
+  position:relative;z-index:auto;flex:0 0 auto;
+  height:clamp(58px,4.6vw,68px);display:flex;flex-direction:column;justify-content:center;
+  padding:0 4px;text-align:center}
+/* 5 个标题统一单行：字号 15–17px，nowrap 兜底；不做字距撑层级 */
+body[data-page="business"] .bcard :is(h2,h3){
+  font-size:clamp(0.9375rem,1.15vw,1.0625rem);font-weight:600;line-height:1.45;
+  letter-spacing:.01em;white-space:nowrap;color:var(--ink);transition:color .3s}
+body[data-page="business"] .bcard :is(.btags,.bsum){display:none}
+@media (hover:hover){
+  body[data-page="business"] .bcard:hover :is(h2,h3){color:var(--accent)}
+  body[data-page="business"] .bcard:hover{box-shadow:none}
+}
+body[data-page="business"] .bcard:focus-visible :is(h2,h3){color:var(--accent)}
+body[data-page="business"] .bcard:focus-visible{box-shadow:none}
+/* 5 列只在 ≥1101 保持；窄屏按 3 / 2 / 1 列折行，交替顺序不变。
+   1100 时单卡仍有约 187px，10 字标题 15px 单行不溢出；再窄就必须折行。
+   这些断点要显式写，否则会落到 main.css 的 ≤760 单列 + 4/3 压图规则。 */
+@media (max-width:1100px){
+  body[data-page="business"] .biz{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media (max-width:760px){
+  body[data-page="business"] .biz{grid-template-columns:repeat(2,minmax(0,1fr))}
+  body[data-page="business"] .bcard .bbody{height:56px}
+  body[data-page="business"] .bcard :is(h2,h3){font-size:0.9375rem}
+}
+@media (max-width:520px){
+  body[data-page="business"] .biz{grid-template-columns:1fr}
+  body[data-page="business"] .bcard .bfig{aspect-ratio:16/9}
+  body[data-page="business"] .bcard .bbody{height:52px}
+}
