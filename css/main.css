@@ -225,20 +225,30 @@ body.dark-hero .nav:not(.on) .burger i{background:#fff}
 @keyframes kenburns{
   from{transform:scale(1.02) translate3d(0,1.8%,0)}
   to{transform:scale(1.14) translate3d(0,-2.6%,0)}}
-/* 遮罩：顶部压深保住反白页头，中段留亮让楼体若隐若现，底部压深托住按钮与滚动提示。
-   V341：较 V339 减淡一档（中段 .42→.34、顶部 .84→.80），建筑轮廓能看出来但不到清晰，
-   副标题与按钮仍压得住；再淡就会让楼体细节抢标题。 */
+/* 遮罩：V342 用户要「网格 + 点阵波浪」当首屏主视觉，照片退成极淡的底 ——
+   比 V341 再压一档（中段 .34→.52、顶部 .80→.86），楼体只剩隐约轮廓，
+   网格与点阵才在上面读得出来；仍保留一丝建筑质感，不做成纯色块。 */
 .hero-bg::before{content:"";position:absolute;inset:0;z-index:1;background:
-  linear-gradient(180deg,rgba(8,18,54,.80) 0%,rgba(9,22,64,.56) 22%,rgba(11,26,72,.34) 52%,rgba(8,20,60,.62) 100%),
-  linear-gradient(100deg,rgba(8,18,54,.50) 0%,rgba(10,26,74,.26) 48%,rgba(10,26,74,.12) 100%)}
+  linear-gradient(180deg,rgba(8,18,54,.86) 0%,rgba(9,22,64,.70) 22%,rgba(11,26,72,.52) 52%,rgba(8,20,60,.76) 100%),
+  linear-gradient(100deg,rgba(8,18,54,.58) 0%,rgba(10,26,74,.40) 48%,rgba(10,26,74,.30) 100%)}
 /* 原 72px 网格线撤掉，点阵交给 Canvas 氛围层；这里只留一层极轻暗角收边 */
 .hero-bg::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
   background:radial-gradient(ellipse 82% 72% at 50% 45%,transparent 42%,rgba(6,14,44,.34) 100%)}
-/* Canvas 轻量粒子/点阵氛围层，见 js/hero-atmos.js */
+/* V342 用户指令「首屏做成网格 + 点阵波浪」：
+   .hero-grid 铺满细网格（62–78px 随视口），中心靠 mask 让到 .28 弱、边缘到 1 强，
+   标题区不被格子切碎；点阵波浪由 canvas 画（js/hero-atmos.js），两者分工不重叠。 */
+.hero-grid{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.075) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.075) 1px,transparent 1px);
+  background-size:clamp(62px,5.4vw,78px) clamp(62px,5.4vw,78px);
+  background-position:50% 0;
+  -webkit-mask-image:radial-gradient(ellipse 78% 74% at 50% 54%,rgba(0,0,0,.38) 0%,rgba(0,0,0,.68) 46%,#000 100%);
+  mask-image:radial-gradient(ellipse 78% 74% at 50% 54%,rgba(0,0,0,.38) 0%,rgba(0,0,0,.68) 46%,#000 100%)}
+/* Canvas 点阵波浪 + 底部压深，见 js/hero-atmos.js */
 .hero-dots{position:absolute;inset:0;z-index:2;width:100%;height:100%;pointer-events:none}
 @media (prefers-reduced-motion:reduce){
   .hero-media{animation:none}
-  .hero-dots{display:none}
 }
 .orb{position:absolute;z-index:1;border-radius:50%;filter:blur(90px);opacity:.22;animation:drift 14s ease-in-out infinite alternate}
 .orb.o1{width:560px;height:560px;background:radial-gradient(circle,#2b3a92 0%,transparent 65%);top:-10%;right:-8%}

@@ -1,45 +1,31 @@
-/* V341 首页首屏氛围层：底部密集粒子 / 点阵（Canvas 2D）
-   用户要求：更明显、集中在屏幕底部、顺带压住图片下方的杂乱元素。
-   - 约 82% 粒子落在下半屏，缓慢上飘，越靠下越大越亮
-   - 每帧先铺一层底部渐变雾，压住画面杂色，粒子与短线再叠颗粒感
-   - 只在视口内、标签页可见时跑；prefers-reduced-motion 直接不启动
+/* V342 首页首屏：点阵波浪（Canvas 2D）+ 底部压深
+   网格由 CSS `.hero-grid` 负责画，这里只画从 30% 高度到底部的点阵：
+   每个点按两重行波上下浮动、波峰更亮更大，整片读起来是「点阵在起伏」。
+   - 亮度按深度递增（顶部极淡、底部明显），底部再铺一层渐变雾盖住画面杂色
+   - 只在视口内、标签页可见时跑；prefers-reduced-motion 只画一帧静态波
    - 无外部依赖、无内联脚本 */
 (function () {
   'use strict';
   var cv = document.getElementById('hero-dots');
   if (!cv || !cv.getContext) return;
-  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var reduce = !!(window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   var hero = cv.closest('.hero') || cv.parentElement;
   var ctx = cv.getContext('2d');
-  var w = 0, h = 0, pts = [], raf = 0, running = false, visible = true, t = 0, fog = null;
-  var BOTTOM = 0.46;       /* 底部雾与密集区起点 */
-  var LINK2 = 120 * 120;   /* 连线阈值（平方） */
+  var w = 0, h = 0, raf = 0, running = false, visible = true, t = 0, fog = null;
+  var TOP = 0.30;      /* 点阵起始高度 */
+  var BOTTOM = 0.44;   /* 底部压雾起点 */
 
-  function make() {
-    var n = Math.max(150, Math.min(250, Math.round(w / 7)));
-    pts = [];
-    for (var i = 0; i < n; i++) {
-      var deep = Math.random() < 0.86;
-      var y = deep ? h * (BOTTOM + Math.random() * (1 - BOTTOM)) : Math.random() * h;
-      var near = 0.7 + 0.6 * (y / h);
-      pts.push({
-        x: Math.random() * w,
-        y: y,
-        r: (0.9 + Math.random() * 1.5) * near,
-        a: (0.30 + Math.random() * 0.50) * (0.6 + 0.4 * (y / h)),
-        vy: -(0.14 + Math.random() * 0.42),
-        ph: Math.random() * Math.PI * 2,
-        sp: 0.003 + Math.random() * 0.005
-      });
-    }
-  }
+  /* 透明度量化成 25 档复用字符串，避免每帧给上千点拼 rgba() */
+  var AQ = [];
+  for (var q = 0; q <= 24; q++) AQ.push('rgba(255,255,255,' + (q / 200).toFixed(4) + ')');
 
   function fogPaint() {
     if (!ctx.createLinearGradient) { fog = null; return; }
     fog = ctx.createLinearGradient(0, h * BOTTOM, 0, h);
     fog.addColorStop(0, 'rgba(8,18,54,0)');
-    fog.addColorStop(0.5, 'rgba(8,18,54,.42)');
-    fog.addColorStop(1, 'rgba(7,15,46,.84)');
+    fog.addColorStop(0.52, 'rgba(8,18,54,.34)');
+    fog.addColorStop(1, 'rgba(7,15,46,.80)');
   }
 
   function size() {
@@ -51,7 +37,6 @@
     cv.height = Math.round(h * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     fogPaint();
-    make();
   }
 
   function draw() {
@@ -60,52 +45,48 @@
       ctx.fillStyle = fog;
       ctx.fillRect(0, h * BOTTOM, w, h - h * BOTTOM);
     }
-    var cut = h * BOTTOM;
-    var i, j, p, q, dx, dy, d2;
-    /* 只在底部密集区连极淡短线，读起来是点阵，不抢画面 */
-    for (i = 0; i < pts.length; i++) {
-      p = pts[i];
-      if (p.y < cut) continue;
-      for (j = i + 1; j < pts.length; j++) {
-        q = pts[j];
-        if (q.y < cut) continue;
-        dx = p.x - q.x; dy = p.y - q.y; d2 = dx * dx + dy * dy;
-        if (d2 < LINK2) {
-          ctx.strokeStyle = 'rgba(255,255,255,' + (0.10 * (1 - d2 / LINK2)).toFixed(3) + ')';
-          ctx.lineWidth = 0.7;
-          ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y); ctx.stroke();
+    var step = Math.max(28, Math.min(40, Math.round(w / 45)));
+    var y0 = h * TOP;
+    var span = h - y0;
+    var cols = Math.ceil(w / step) + 1;
+    var rows = Math.ceil(span / step) + 1;
+    var r, c, x, y, baseY, depth, ph, wave, amp, a, rad;
+    for (r = 0; r < rows; r++) {
+      baseY = y0 + r * step;
+      if (baseY > h + step) break;
+      depth = Math.min(1, (baseY - y0) / span);
+      for (c = 0; c < cols; c++) {
+        x = c * step;
+        /* 单一方向的短波长正弦（一屏约 4 个周期）：每行都能跟上一条起伏曲线，
+           相邻行相位错开 → 整片呈斜向流动的波纹。波长放长到 800px 时只剩一条
+           渐变带、看不出「波浪」，别改回去 */
+        ph = x * 0.018 + baseY * 0.010 + t * 0.026;
+        wave = Math.sin(ph);
+        amp = 0.5 + 0.5 * wave;
+        /* 点仍钉在网格上，只给 11px（小于半个间距）的起伏，网格结构才没散 */
+        y = baseY + wave * 11;
+        a = (0.10 + 0.72 * Math.pow(amp, 1.8)) * (0.26 + 0.74 * depth);
+        rad = (0.6 + 2.5 * Math.pow(amp, 1.5)) * (0.7 + 0.3 * depth);
+        ctx.fillStyle = AQ[Math.max(0, Math.min(24, Math.round(a * 200)))];
+        /* 波峰加一圈柔光，亮带才会连成片而不是孤立亮点 */
+        if (a > 0.30) {
+          ctx.globalAlpha = 0.30;
+          ctx.beginPath(); ctx.arc(x, y, rad * 2.1, 0, 6.2832); ctx.fill();
+          ctx.globalAlpha = 1;
         }
+        ctx.beginPath(); ctx.arc(x, y, rad, 0, 6.2832); ctx.fill();
       }
-    }
-    /* 每个点画两层：外圈柔光 + 实芯，点才「亮得出来」而不是细沙。
-       亮度按高度衰减 —— 飘到底部以上迅速变淡，整体密度才真的落在下半屏。 */
-    for (i = 0; i < pts.length; i++) {
-      p = pts[i];
-      var tw = 0.72 + 0.28 * Math.sin(t * 0.025 + p.ph);
-      var vis = p.y >= cut ? 1 : Math.max(0.08, (p.y / cut) * (p.y / cut));
-      var a1 = p.a * tw * vis;
-      ctx.fillStyle = 'rgba(255,255,255,' + (a1 * 0.24).toFixed(3) + ')';
-      ctx.beginPath(); ctx.arc(p.x, p.y, p.r * 2.4, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = 'rgba(255,255,255,' + a1.toFixed(3) + ')';
-      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
     }
   }
 
   function step() {
     t++;
-    for (var i = 0; i < pts.length; i++) {
-      var p = pts[i];
-      p.y += p.vy;
-      p.x += Math.sin(t * p.sp + p.ph) * 0.10;
-      if (p.y < -6) { p.y = h + 6; p.x = Math.random() * w; }
-      if (p.x < -6) p.x = w + 6; else if (p.x > w + 6) p.x = -6;
-    }
     draw();
     raf = window.requestAnimationFrame(step);
   }
 
   function sync() {
-    var should = visible && !document.hidden;
+    var should = visible && !document.hidden && !reduce;
     if (should && !running) { running = true; raf = window.requestAnimationFrame(step); }
     else if (!should && running) { running = false; window.cancelAnimationFrame(raf); }
   }
