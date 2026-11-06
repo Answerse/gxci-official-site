@@ -488,8 +488,6 @@
     var hacc = $('[data-hacc]', histBox);
     var hItems = $$('.hacc-item', hacc);
     var hBtns = $$('.hacc-btn', hacc);
-    var hProg = $('.hacc-prog i', histBox);
-    var hCur = $('.hacc-count b', histBox);
     var hTotal = hItems.length;
     var hIdx = 0, hTimer = null, hPaused = false, hVisible = false;
     var H_DUR = 4000;
@@ -505,8 +503,7 @@
         b.classList.toggle('on', on);
         b.setAttribute('aria-expanded', on ? 'true' : 'false');
       });
-      if (hProg) hProg.style.width = ((hIdx + 1) / hTotal * 100) + '%';
-      if (hCur) hCur.textContent = ('0' + (hIdx + 1)).slice(-2);
+      /* V316：进度条与计数已撤，翻年只靠两侧箭头 */
       /* 窄屏时间轴可横向滑动，把当前年份滚进视野 */
       if (hIsMobile() && hBtns[hIdx]) {
         var b = hBtns[hIdx], ax = b.parentNode;
@@ -531,7 +528,7 @@
       /* 桌面划过即切：节点宽度固定，不会像旧手风琴那样在边界上抖动 */
       b.addEventListener('mouseenter', function () { if (hCanHover()) hGo(k, true); });
     });
-    var hPrev = $('.hacc-ctrl .prev', histBox), hNext = $('.hacc-ctrl .next', histBox);
+    var hPrev = $('.hacc-axis .prev', histBox), hNext = $('.hacc-axis .next', histBox);
     if (hPrev) hPrev.addEventListener('click', function () { hGo(hIdx - 1, true); });
     if (hNext) hNext.addEventListener('click', function () { hGo(hIdx + 1, true); });
 

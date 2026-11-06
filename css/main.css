@@ -398,18 +398,26 @@ body.dark-hero .nav:not(.on) .burger i{background:#fff}
 .hacc{position:relative;container-type:inline-size}
 /* 详情舞台高度固定，切换年份时下面的时间轴不会上下跳 */
 .hacc-stage{position:relative;min-height:clamp(142px,18vh,178px)}
+/* V316 用户指令：整块详情往中间挪，视觉居中（不是把内容死板居中——
+   各年事件条数不同，真居中会让大号年份随内容左右跳，反而不稳）。
+   做法：给舞台一个固定左缩进，所有年份共用同一条竖线，重心右移到视觉中段。
+   缩进按视口分两档：宽屏内容占比小（约七成），要退得更多；窄屏内容已铺满，少退即可。 */
 .hacc-item{position:absolute;inset:0;display:grid;grid-template-columns:auto minmax(0,1fr);
-  gap:clamp(32px,5.2vw,84px);align-items:start;opacity:0;visibility:hidden;pointer-events:none;
+  gap:clamp(32px,5.2vw,84px);align-items:start;padding-inline-start:clamp(0px,4vw,60px);
+  opacity:0;visibility:hidden;pointer-events:none;
   transform:translateY(10px);transition:opacity .45s var(--ease),transform .45s var(--ease),visibility .45s}
+@media (min-width:1280px){.hacc-item{padding-inline-start:clamp(60px,13.5vw,200px)}}
 .hacc-item.on{opacity:1;visibility:visible;pointer-events:auto;transform:none}
 .hacc-item .yr-lg{font-family:var(--num);font-size:clamp(3.25rem,6vw,5.25rem);font-weight:600;
   line-height:.86;letter-spacing:.01em;color:#fff;font-variant-numeric:tabular-nums}
 .hacc-list{display:flex;flex-direction:column;gap:clamp(8px,1.1vh,12px);max-width:62ch;padding-top:.42em}
 .hacc-list li{position:relative;padding-left:16px;font-size:0.9375rem;line-height:1.8;color:rgba(255,255,255,.82)}
 .hacc-list li::before{content:"";position:absolute;left:0;top:.78em;width:5px;height:1px;background:rgba(143,196,240,.85)}
-/* 时间轴：年份等分整宽，落在同一根横轴上 */
-.hacc-axis{position:relative;display:flex;align-items:center;
-  margin-top:clamp(18px,2.8vh,32px);height:clamp(60px,7.6vh,72px)}
+/* 时间轴：左右各一个切换按钮，年份等分中间那根横轴。
+   V316 用户指令：进度条与「12 / 15」计数撤掉，只用两侧箭头翻年。 */
+.hacc-axis{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;
+  gap:clamp(8px,1.1vw,18px);margin-top:clamp(18px,2.8vh,32px);height:clamp(60px,7.6vh,72px)}
+.hacc-track{display:flex;align-items:center;min-width:0;height:100%}
 .hacc-btn{position:relative;flex:1 1 0;min-width:0;height:100%;display:flex;align-items:center;justify-content:center;
   padding:0;text-align:center;color:rgba(255,255,255,.58);transition:color .3s}
 .hacc-btn::before{content:"";position:absolute;top:50%;left:0;right:0;height:1px;background:rgba(255,255,255,.22)}
@@ -423,39 +431,46 @@ body.dark-hero .nav:not(.on) .burger i{background:#fff}
 .hacc-btn:last-child::before{background:linear-gradient(270deg,rgba(255,255,255,0),rgba(255,255,255,.22) 22%)}
 .hacc-btn:hover{color:var(--gold)}
 .hacc-btn:hover::after{background:var(--gold);transform:scale(1.35)}
-.hacc-btn.on{color:#fff}
+/* V316 用户指令：当前年份的文字与轴上的节点同色（金） */
+.hacc-btn.on{color:var(--gold)}
 .hacc-btn.on .yr{font-weight:600;letter-spacing:.06em}
 .hacc-btn.on::after{background:var(--gold);transform:scale(1.7)}
+/* V316 用户指令：首尾两个年份加大加粗，作时间轴的「起点 / 当下」两个端点。
+   写在 .on 之后：同为 (0,3,0) 权重，后写者赢，首尾恰好是当前年时也保持加粗。
+   900–1279 档位窄，箭头又占去两侧空间，首尾只加到 17px，免得压到相邻年份。 */
+.hacc-btn:first-child .yr,.hacc-btn:last-child .yr{font-size:1.0625rem;font-weight:700;letter-spacing:.02em}
+@media (min-width:1280px){
+  .hacc-btn:first-child .yr,.hacc-btn:last-child .yr{font-size:1.125rem}
+}
 /* 年份上下错落（延续 V308）：奇偶分挂轴线上下，两侧离轴各 17px，
    同一条轴上能多排三分之一节点而不粘连。只在桌面横向轴生效。 */
 @media (min-width:1280px){
   .hacc-btn:nth-child(even) .yr{transform:translateY(calc(0.5em + 17px))}
 }
-.hacc-ctrl{display:flex;align-items:center;gap:22px;margin-top:clamp(8px,1.4vh,16px)}
-.hacc-prog{flex:1;height:2px;background:rgba(255,255,255,.14);position:relative;border-radius:2px;overflow:hidden}
-.hacc-prog i{position:absolute;inset:0 auto 0 0;width:0;background:var(--gold);transition:width .6s var(--ease)}
-.hacc-count{font-family:var(--num);font-size:0.8125rem;letter-spacing:.14em;color:rgba(255,255,255,.45);white-space:nowrap}
-.hacc-count b{color:#fff;font-weight:600}
-.hacc-arrow{flex:none;width:40px;height:40px;border:1px solid rgba(255,255,255,.22);border-radius:4px;color:#fff;
-  display:grid;place-items:center;font-size:1.0625rem;transition:all .3s}
+/* 切换按钮（V316 移到时间轴两侧）：与轴线同一行、垂直居中 */
+.hacc-arrow{flex:none;width:36px;height:36px;border:1px solid rgba(255,255,255,.22);border-radius:4px;color:#fff;
+  display:grid;place-items:center;font-size:1rem;transition:all .3s}
 .hacc-arrow:hover{background:var(--gold-d);color:#fff;border-color:var(--gold-d)}
 /* ≤899：详情改上下排（年份在上、事件在下），时间轴横向滑动，年份不再错落 */
 @media (max-width:899px){
   .hist{padding:56px 0}
   .hacc-stage{min-height:0}
-  .hacc-item{position:relative;display:none}
+  .hacc-item{position:relative;display:none;padding-inline-start:0}
   .hacc-item.on{display:grid;grid-template-columns:minmax(0,1fr);gap:0;opacity:1;visibility:visible;pointer-events:auto;transform:none}
   .hacc-item .yr-lg{font-size:clamp(2.25rem,9vw,3rem);line-height:1}
   .hacc-list{padding-top:14px;gap:8px;max-width:none}
   .hacc-list li{font-size:0.875rem;line-height:1.85;color:rgba(255,255,255,.74)}
-  .hacc-axis{overflow-x:auto;overflow-y:hidden;height:56px;margin-top:20px;scrollbar-width:none;
+  /* 窄屏：横向滑动的是年份轨道本身，两侧箭头固定不动 */
+  .hacc-axis{height:auto;gap:8px;margin-top:20px}
+  .hacc-track{overflow-x:auto;overflow-y:hidden;height:56px;scrollbar-width:none;
     -webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;
     -webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
     mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
-  .hacc-axis::-webkit-scrollbar{display:none}
+  .hacc-track::-webkit-scrollbar{display:none}
   .hacc-btn{flex:0 0 auto;min-width:68px;scroll-snap-align:center}
   .hacc-btn .yr{transform:none;font-size:0.9375rem}
-  .hacc-ctrl{gap:14px;margin-top:14px}
+  .hacc-btn:first-child .yr,.hacc-btn:last-child .yr{font-size:1rem}
+  .hacc-arrow{width:36px;height:36px;font-size:1rem}
 }
 
 /* ---------- 新闻 ---------- */
