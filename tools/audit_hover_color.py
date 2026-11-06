@@ -25,7 +25,10 @@ BLUE_HINTS = ("--accent", "--accent2", "#2b3a92", "#7c8ce8", "#1e2a70",
 NEUTRAL = ("#fff", "#ffffff", "white", "transparent", "inherit", "none",
            "rgba(255,255,255", "rgba(20,20,20", "rgba(15,25,45", "var(--ink)", "var(--ink2)",
            "var(--line)", "var(--panel)", "var(--panel-2)", "#e9ecf2", "currentcolor", "var(--dark)", "var(--dark2)",
-           "var(--mut)")
+           "var(--mut)",
+           # V321 用户指令：产品中心子菜单统一走黑色半透明（常态 4% 底、hover 30% 描边 / 5% 底），
+           # 属中性灰阶，不是新的强调色。
+           "rgba(0,0,0", "rgba(0, 0, 0")
 GOLD = ("--gold", "--gold-d")
 # V315 用户指令：导航 hover 按**被 hover 的模块**上色 —— 党建工作深红 #9a2026、其余模块标准蓝 #2b3a92
 # （深底页头各用提亮版 #e6a8a8 / #7c8ce8）。变量在 .menu>li 上定义：--mc（标准色）/ --mc2（深底提亮）。
