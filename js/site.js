@@ -494,7 +494,9 @@
     var hBtns = $$('.hacc-btn', hacc);
     var hTotal = hItems.length;
     var hIdx = 0, hTimer = null, hPaused = false, hVisible = false;
-    var H_DUR = 4000;
+    /* V320 用户指令：切换间隔缩短一点。详情入场约 0.7s（含错峰延迟），
+       3s 一轮仍能留出 2.3s 稳定阅读时间；再短就会变成「来不及看清就翻页」。 */
+    var H_DUR = 3000;
     var hReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var hIsMobile = function () { return window.matchMedia('(max-width:899px)').matches; };
     var hCanHover = function () { return window.matchMedia('(hover:hover) and (pointer:fine)').matches && !hIsMobile(); };

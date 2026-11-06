@@ -418,23 +418,44 @@ body.dark-hero .nav:not(.on) .burger i{background:#fff}
 /* 发展历程（V312 用户指令）：年份点回归纯时间轴，展开的详情移到时间轴上方，
    左侧大号年份、右侧该年事件列表；年份自动轮播，详情跟着换。
    原横向手风琴（激活项撑宽成卡片）整体废弃。 */
-.hacc{position:relative;container-type:inline-size}
-/* 详情舞台高度固定，切换年份时下面的时间轴不会上下跳 */
-.hacc-stage{position:relative;min-height:clamp(142px,18vh,178px)}
+.hacc{position:relative;container-type:inline-size;
+  /* V320 用户指令：详情上移 30px，用弹性单位换算。30px ÷ 900px 视口高 ≈ 3.33vh，
+     故写成 3.3vh：900 高 ≈ 30px，800 高 ≈ 26px，768 高 ≈ 25px，
+     矮屏不低于 18px、高屏封顶 30px（再高就没必要继续抬）。窄屏在下方断点单独给小值。 */
+  --rise:clamp(18px,3.3vh,30px)}
+/* 详情舞台高度固定，切换年份时下面的时间轴不会上下跳。
+   V320：上移用 transform —— 不占布局，只把详情这块提上去，
+   时间轴位置、整屏高度、水平缩进全部不动，居中关系不受影响。 */
+.hacc-stage{position:relative;min-height:clamp(142px,18vh,178px);
+  transform:translateY(calc(-1 * var(--rise)))}
 /* V316 用户指令：整块详情往中间挪，视觉居中（不是把内容死板居中——
    各年事件条数不同，真居中会让大号年份随内容左右跳，反而不稳）。
    做法：给舞台一个固定左缩进，所有年份共用同一条竖线，重心右移到视觉中段。
-   缩进按视口分两档：宽屏内容占比小（约七成），要退得更多；窄屏内容已铺满，少退即可。 */
+   缩进按视口分两档：宽屏内容占比小（约七成），要退得更多；窄屏内容已铺满，少退即可。
+   V320 动效：父级只负责「交叉淡化 + 轻微去模糊」，位移全部交给下面的大号年份与事件行。
+   旧年份 0.26s 快速褪净、新年份延迟 0.08s 再花 0.58s 浮出，两段几乎不叠字；
+   整体不再做 translateY(10px) 的整块上下跳，视觉更稳。 */
 .hacc-item{position:absolute;inset:0;display:grid;grid-template-columns:auto minmax(0,1fr);
   gap:clamp(32px,5.2vw,84px);align-items:start;padding-inline-start:clamp(0px,4vw,60px);
-  opacity:0;visibility:hidden;pointer-events:none;
-  transform:translateY(10px);transition:opacity .45s var(--ease),transform .45s var(--ease),visibility .45s}
+  opacity:0;visibility:hidden;pointer-events:none;filter:blur(3px);
+  transition:opacity .26s ease,filter .26s ease,visibility .26s}
 @media (min-width:1280px){.hacc-item{padding-inline-start:clamp(60px,13.5vw,200px)}}
-.hacc-item.on{opacity:1;visibility:visible;pointer-events:auto;transform:none}
+.hacc-item.on{opacity:1;visibility:visible;pointer-events:auto;filter:none;z-index:2;
+  transition:opacity .58s var(--ease),filter .58s var(--ease),visibility 0s;
+  transition-delay:.08s}
 .hacc-item .yr-lg{font-family:var(--num);font-size:clamp(3.25rem,6vw,5.25rem);font-weight:600;
-  line-height:.86;letter-spacing:.01em;color:#fff;font-variant-numeric:tabular-nums}
+  line-height:.86;letter-spacing:.01em;color:#fff;font-variant-numeric:tabular-nums;
+  /* V320：年份单独一层，轻微上浮入场；离场时被父级淡化盖住，看不出回弹 */
+  transform:translateY(10px);transition:transform .62s var(--ease)}
+.hacc-item.on .yr-lg{transform:none;transition-delay:.1s}
 .hacc-list{display:flex;flex-direction:column;gap:clamp(8px,1.1vh,12px);max-width:62ch;padding-top:.42em}
-.hacc-list li{position:relative;padding-left:16px;font-size:0.9375rem;line-height:1.8;color:rgba(255,255,255,.82)}
+.hacc-list li{position:relative;padding-left:16px;font-size:0.9375rem;line-height:1.8;color:rgba(255,255,255,.82);
+  transform:translateY(7px);transition:transform .55s var(--ease)}
+/* 事件逐条错峰 80ms 浮出，动效有节奏但不抢眼；最多 3 条（数据现状） */
+.hacc-item.on .hacc-list li{transform:none}
+.hacc-item.on .hacc-list li:nth-child(1){transition-delay:.16s}
+.hacc-item.on .hacc-list li:nth-child(2){transition-delay:.24s}
+.hacc-item.on .hacc-list li:nth-child(3){transition-delay:.32s}
 .hacc-list li::before{content:"";position:absolute;left:0;top:.78em;width:5px;height:1px;background:rgba(143,196,240,.85)}
 /* 时间轴：左右各一个切换按钮，年份等分中间那根横轴。
    V316 用户指令：进度条与「12 / 15」计数撤掉，只用两侧箭头翻年。 */
@@ -442,13 +463,13 @@ body.dark-hero .nav:not(.on) .burger i{background:#fff}
   gap:clamp(8px,1.1vw,18px);margin-top:clamp(18px,2.8vh,32px);height:clamp(60px,7.6vh,72px)}
 .hacc-track{display:flex;align-items:center;min-width:0;height:100%}
 .hacc-btn{position:relative;flex:1 1 0;min-width:0;height:100%;display:flex;align-items:center;justify-content:center;
-  padding:0;text-align:center;color:rgba(255,255,255,.58);transition:color .3s}
+  padding:0;text-align:center;color:rgba(255,255,255,.58);transition:color .45s var(--ease)}
 .hacc-btn::before{content:"";position:absolute;top:50%;left:0;right:0;height:1px;background:rgba(255,255,255,.22)}
 .hacc-btn::after{content:"";position:absolute;top:50%;left:50%;width:5px;height:5px;margin:-2.5px 0 0 -2.5px;
-  border-radius:50%;background:rgba(255,255,255,.55);transition:background .3s,transform .3s var(--ease)}
+  border-radius:50%;background:rgba(255,255,255,.55);transition:background .45s var(--ease),transform .45s var(--ease)}
 .hacc-btn .yr{position:relative;z-index:1;font-family:var(--num);font-size:0.9375rem;line-height:1;
   letter-spacing:.04em;white-space:nowrap;transform:translateY(calc(-0.5em - 17px));
-  transition:color .3s,font-size .4s var(--ease)}
+  transition:color .45s var(--ease),font-size .45s var(--ease)}
 /* 轴线两端淡出，首尾年份不贴边 */
 .hacc-btn:first-child::before{background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.22) 22%)}
 .hacc-btn:last-child::before{background:linear-gradient(270deg,rgba(255,255,255,0),rgba(255,255,255,.22) 22%)}
@@ -476,10 +497,14 @@ body.dark-hero .nav:not(.on) .burger i{background:#fff}
 .hacc-arrow:hover{background:var(--gold-d);color:#fff;border-color:var(--gold-d)}
 /* ≤899：详情改上下排（年份在上、事件在下），时间轴横向滑动，年份不再错落 */
 @media (max-width:899px){
+  /* 窄屏是自然文档流，详情紧跟标题；上移按同一弹性口径缩到约 1/3，免得挤到标题 */
+  .hacc{--rise:clamp(6px,1.2vh,12px)}
   .hist{padding:56px 0}
   .hacc-stage{min-height:0}
-  .hacc-item{position:relative;display:none;padding-inline-start:0}
-  .hacc-item.on{display:grid;grid-template-columns:minmax(0,1fr);gap:0;opacity:1;visibility:visible;pointer-events:auto;transform:none}
+  .hacc-item{position:relative;display:none;padding-inline-start:0;transition:none}
+  /* display 不能过渡，用一次性入场动画补上：点年份/箭头时详情也柔和浮出，不硬闪 */
+  .hacc-item.on{display:grid;grid-template-columns:minmax(0,1fr);gap:0;opacity:1;visibility:visible;pointer-events:auto;transform:none;
+    animation:histIn .5s var(--ease) both}
   .hacc-item .yr-lg{font-size:clamp(2.25rem,9vw,3rem);line-height:1}
   .hacc-list{padding-top:14px;gap:8px;max-width:none}
   .hacc-list li{font-size:0.875rem;line-height:1.85;color:rgba(255,255,255,.74)}
@@ -494,6 +519,16 @@ body.dark-hero .nav:not(.on) .burger i{background:#fff}
   .hacc-btn .yr{transform:none;font-size:0.9375rem}
   .hacc-btn:first-child .yr,.hacc-btn:last-child .yr{font-size:1rem}
   .hacc-arrow{width:36px;height:36px;font-size:1rem}
+  @keyframes histIn{from{opacity:0;transform:translateY(8px);filter:blur(3px)}to{opacity:1;transform:none;filter:none}}
+}
+/* V320：系统开启「减少动态效果」时详情切换退回瞬时，不残留模糊与位移。
+   必须把 .on 一起列出：入场规则写在 .hacc-item.on 上（权重 0,2,0），
+   只写 .hacc-item（0,1,0）压不过它，transition 会照跑 0.58s。 */
+@media (prefers-reduced-motion:reduce){
+  .hacc-item,.hacc-item.on,
+  .hacc-item .yr-lg,.hacc-item.on .yr-lg,
+  .hacc-item .hacc-list li,.hacc-item.on .hacc-list li{
+    transition:none;animation:none;filter:none;transform:none}
 }
 
 /* ---------- 新闻 ---------- */
