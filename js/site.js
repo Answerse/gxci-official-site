@@ -161,6 +161,9 @@
   /* 通栏子菜单（V184）：一行卡片 —— 线形图标 + 子模块标题 + 一行说明。
      左侧「模块名 + 简介 + 查看全部」整块已撤：一级导航项本身就是模块索引页入口，
      面板里再放一遍标题和「查看全部」是把同一件事说两遍。 */
+  /* V325：茧易通换成用户提供的卡通 Logo（透明底 PNG），其余四枚仍是 Figma 导出的 SVG。
+     扩展名按 slug 查表，不为单个资源在拼串里写死分支。 */
+  var LOGO_EXT = { cocoon: 'png' };
   function mega(items) {
     /* data-n 只作钩子保留：V297 曾据此给 2 项菜单收窄列宽，V301 用户要求「尺寸自适应」，
        已改回 1fr 均分，列宽跟着面板走。 */
@@ -168,10 +171,12 @@
     items.forEach(function (it) {
       /* V317：产品中心这一栏改用各产品自己的彩色 Logo（it[4] 有值即走图片分支），
          其余四栏仍用线性 / 面性双 svg 交叉淡入（V283）。两者共用 .ml-ico 盒子，
-         卡片级配色由 data-logo 在 CSS 里指定，不写行内样式。 */
+         卡片级配色由 data-logo 在 CSS 里指定，不写行内样式。
+         V325：Logo 资源统一升 v325，扩展名由 LOGO_EXT 决定。 */
       var logo = it[4];
+      var ext = logo ? (LOGO_EXT[logo] || 'svg') : '';
       var ico = logo
-        ? '<img class="ml-logo-img" src="assets/img/prod/logo-' + logo + '.svg?v=317" alt="" aria-hidden="true">'
+        ? '<img class="ml-logo-img" src="assets/img/prod/logo-' + logo + '.' + ext + '?v=325" alt="" aria-hidden="true">'
         : '<svg class="ml-ic" aria-hidden="true" focusable="false"><use href="#' + it[3] + '"></use></svg>'
           + '<svg class="ml-ic-f" aria-hidden="true" focusable="false"><use href="#' + it[3] + '-f"></use></svg>';
       h += '<a class="ml' + (logo ? ' ml-logo' : '') + '"'
