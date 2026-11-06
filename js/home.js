@@ -124,21 +124,25 @@
   var mq1 = document.getElementById('mq1');
   var mq2 = document.getElementById('mq2');
   if (mq1 && mq2) {
-    /* V324：移除「广西一禾投资管理」（用户指定），两行各 12 个保持均衡 */
-    var names = ['hg', 'bjdx', 'bbwcqjy', 'ejy', 'kd', 'zy', 'ca', 'hw', 'gdlz',
-      'szsm', 'nd', 'ld', 'dx', 'hsdz', 'jsy', 'wps', 'tj', 'liyade', 'maxhub',
-      'hk', 'dj', 'aqg', 'qm', 'yt'];
+    /* V338：新增 7 家（安恒信息 / 承章科技 / 泛微 / 浪潮 / 深信服 / H3C / 360）。
+       华为（hw）原已在列，不重复添加；「广西一禾」V324 已删。
+       新 Logo 分散插入，避免全挤在队尾；两行按总数自动均分（31 → 16 + 15）。 */
+    var names = ['hg', 'ah', 'bjdx', 'bbwcqjy', 'czkj', 'ejy', 'kd', 'fw',
+      'zy', 'ca', 'lc', 'hw', 'gdlz', 'sxf', 'szsm', 'nd',
+      'ld', 'h3c', 'dx', 'hsdz', '360', 'jsy', 'wps', 'tj',
+      'liyade', 'maxhub', 'hk', 'dj', 'aqg', 'qm', 'yt'];
 
     function row(el, list) {
       var h = '';
       list.forEach(function (n) {
-        h += '<span class="mq-item"><img src="assets/img/hzhb_' + n + '.png?v=75" alt=""></span>';
+        h += '<span class="mq-item"><img src="assets/img/hzhb_' + n + '.png?v=338" alt=""></span>';
       });
       el.innerHTML = h + h; /* 复制一份以实现无缝滚动 */
     }
 
-    row(mq1, names.slice(0, 12));
-    row(mq2, names.slice(12));
+    var half = Math.ceil(names.length / 2);
+    row(mq1, names.slice(0, half));
+    row(mq2, names.slice(half));
   }
 
 })();

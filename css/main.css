@@ -599,12 +599,31 @@ body.dark-hero .nav:not(.on) .burger i{background:#fff}
 
 /* ---------- 合作伙伴 ---------- */
 .mq{overflow:hidden;position:relative;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
-.mq-track{display:flex;gap:18px;width:max-content;animation:mq 42s linear infinite}
+/* V338：31 个 Logo 分两行 16/15（原 12/12），42s→56s 保持原来的滚动线速度 */
+.mq-track{display:flex;gap:18px;width:max-content;animation:mq 56s linear infinite}
 .mq:hover .mq-track{animation-play-state:paused}
 .mq.rev .mq-track{animation-direction:reverse}
 @keyframes mq{to{transform:translateX(-50%)}}
 .mq-track .mq-item{display:grid;place-items:center;width:190px;height:96px;background:#fff;border:1px solid var(--line);padding:18px}
 .mq-track .mq-item img{max-width:100%;max-height:100%;object-fit:contain}
+
+/* V338 合作伙伴底纹：复用业务领域曾用过的灰色点阵世界地图（V176/V281 同款矢量，
+   源文件 assets/img/deco/world-dots.svg；改色/改密度重跑 tools/make_world_dots.py）。
+   只作用于首页合作伙伴屏；上淡下浓，标题与白底 Logo 卡不被底纹压住。 */
+body[data-page="index"] .sec-partners{position:relative}
+body[data-page="index"] .sec-partners::before{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.68;
+  background:url("../assets/img/deco/world-dots.svg?v=338") 50% 68%/100% auto no-repeat;
+  -webkit-mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.22) 30%,#000 78%);
+  mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.22) 30%,#000 78%)}
+body[data-page="index"] .sec-partners > .wrap,
+body[data-page="index"] .sec-partners > .pbody{position:relative;z-index:1}
+/* 窄屏：点被缩到 0.6px 会像脏点，换点径更粗的 sm 版并降低浓度 */
+@media (max-width:700px){
+  body[data-page="index"] .sec-partners::before{opacity:.38;
+    background-image:url("../assets/img/deco/world-dots-sm.svg?v=338");
+    background-size:140% auto}
+}
 
 /* ---------- 页脚 ---------- */
 /* 版式：Logo 独占一行；下一行 二维码 / 联系方式 / 友情链接 三块顶对齐 */
