@@ -782,7 +782,10 @@ html.pg-on{scroll-behavior:auto}
      width:100% 必须有：.wrap 自带 margin-inline:auto，在 flex 交叉轴上会把 auto 外边距变成
      「按内容宽度自适应」，历史区第二个 wrap 因此塌到 343px（时间轴被压成一张卡）。 */
   body[data-page="index"] :is(.sec-biz,.sec-news) > .wrap{
-    flex:1 1 auto;display:flex;flex-direction:column;min-height:0}
+    flex:1 1 auto;display:flex;flex-direction:column;min-height:0;width:100%}
+  /* V313：业务卡去掉标签 + 摘要后，这一行 .wrap 的 fit-content 从 1296 塌到 924（卡片只剩
+     一个短标题，撑不出原宽度）—— 五张卡整体缩进、与新闻区左右不齐。width:100% 锁死满宽，
+     与历史区同一个修法。 */
   body[data-page="index"] .hist > .wrap,
   body[data-page="index"] .sec-partners > .wrap{flex:0 0 auto;width:100%}
   body[data-page="index"] .hist > .wrap:last-child{flex:1 1 auto}
@@ -872,3 +875,30 @@ body[data-page="index"] .sec-biz{background:var(--panel)}
   .menu{gap:clamp(16px,2.2vw,30px)}
   .logo-t{font-size:1.0625rem}
 }
+
+/* ============================================================
+   V313 首页业务卡 + 新闻焦点图：底部遮罩改标准蓝实色块
+   用户指令：文字下的遮罩改成标准色蓝色填充、不要渐变；卡面只留业务名称主标题、字号加大。
+   做法：图片不再用渐变蒙版溶进底色，改为整张铺满后由不透明的蓝色文字块「压住」下半段 ——
+   上下是硬切边，和渐变溶接区分开。只作用于首页；business.html 的同一网格仍是渐变卡。
+   ============================================================ */
+body[data-page="index"] .biz .bcard{background:var(--accent)}
+body[data-page="index"] .biz .bcard .bfig img,
+body[data-page="index"] .feat img{-webkit-mask-image:none;mask-image:none}
+body[data-page="index"] .biz .bcard::after,
+body[data-page="index"] .biz .bcard .bfig::after,
+body[data-page="index"] .feat::after{display:none}
+/* 文字块：纯 --accent 实色（标准蓝 #2b3a92），上下留白相等，标题在色块里居中 */
+body[data-page="index"] .biz .bcard .bbody{
+  background:var(--accent);
+  padding:clamp(20px,2.2vw,30px) var(--cp)}
+/* 只剩一个主标题，字号从 15–18 提到 20–24（1440 实测 22.3px），10 字标题最窄卡仍单行 */
+body[data-page="index"] .biz .bcard :is(h2,h3){
+  font-size:clamp(1.25rem,1.55vw,1.5rem);line-height:1.35;letter-spacing:.02em}
+/* 焦点图同款：图铺满，底部说明条改蓝实色块（日期 + 标题保留）
+   取图位置上移一档：头条封面常是竖版整页截图（当前这条是「广西云客户端」页面，
+   1260×2161），object-fit:cover 居中会正好卡在正文段落中间、被蓝条横切一刀；
+   上移到 15% 露出文章标题区。横版照片封面受这行影响极小（只在纵向多裁几十像素）。 */
+body[data-page="index"] .feat{background:var(--accent)}
+body[data-page="index"] .feat .cap{background:var(--accent)}
+body[data-page="index"] .feat img{object-position:50% 15%}
