@@ -207,20 +207,33 @@
   if (mq1 && mq2) {
     /* V338：新增 7 家（安恒信息 / 承章科技 / 泛微 / 浪潮 / 深信服 / H3C / 360）。
        华为（hw）原已在列，不重复添加；「广西一禾」V324 已删。
-       新 Logo 分散插入，避免全挤在队尾；两行按总数自动均分（31 → 16 + 15）。 */
-    var names = ['hg', 'ah', 'bjdx', 'bbwcqjy', 'czkj', 'ejy', 'kd', 'fw',
-      'zy', 'ca', 'lc', 'hw', 'gdlz', 'sxf', 'szsm', 'nd',
-      'ld', 'h3c', 'dx', 'hsdz', '360', 'jsy', 'wps', 'tj',
-      'liyade', 'maxhub', 'hk', 'dj', 'aqg', 'qm', 'yt'];
+       V353 用户按截图划线删掉 17 家，剩 14 家（两行各 7）：
+         北京大学 · e交易 · 科大讯飞 · 卓优 · 国盾量子 · 神州数码 · 南大尚诚 ·
+         趣链科技 · 恒生电子 · 太极 · 利亚德 · MAXHUB · 海康威视 · 顶佳 ·
+         安全狗 · 启明星辰 · 英拓网络
+       顺序保持原图编号顺序。 */
+    var names = ['hg', 'ah', 'bbwcqjy', 'czkj', 'fw', 'ca', 'lc',
+      'hw', 'sxf', 'h3c', 'dx', '360', 'jsy', 'wps'];
 
+    /* V353：只剩 7 项时一行宽度（7×208≈1456）在 1920 宽的容器里不够，
+       无缝滚动会从右侧露出空白。按容器宽度动态复制整数份，保证「半幅」始终盖满，
+       并按固定速度折算时长，条数变化后观感速度不变（原来 16 项 / 56s ≈ 59px/s）。 */
+    var UNIT = 208;    /* .mq-item 190 + .mq-track gap 18 */
+    var SPEED = 59;    /* px/s */
     function row(el, list) {
+      var unitW = list.length * UNIT;
+      var boxW = (el.parentNode && el.parentNode.clientWidth) || window.innerWidth;
+      var reps = Math.max(2, 2 * Math.ceil(boxW / unitW));
       var h = '';
       list.forEach(function (n) {
         /* V351：PNG 转 WebP（306KB → 110KB），并加 lazy —— 合作屏在第 5 屏，
-           原来冷启动就一次性拉完 31 张（约 250KB / 31 个请求），拖慢首屏。 */
-        h += '<span class="mq-item"><img src="assets/img/hzhb_' + n + '.webp?v=351" alt="" loading="lazy" decoding="async"></span>';
+           原来冷启动就一次性拉完（约 250KB / 31 个请求），拖慢首屏。 */
+        h += '<span class="mq-item"><img src="assets/img/hzhb_' + n + '.webp?v=353" alt="" loading="lazy" decoding="async"></span>';
       });
-      el.innerHTML = h + h; /* 复制一份以实现无缝滚动 */
+      var all = '';
+      for (var i = 0; i < reps; i++) all += h;   /* 整数份，-50% 位移仍落在整份边界上 */
+      el.innerHTML = all;
+      el.style.animationDuration = ((unitW * reps / 2) / SPEED).toFixed(1) + 's';
     }
 
     var half = Math.ceil(names.length / 2);
