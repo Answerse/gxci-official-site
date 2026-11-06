@@ -110,24 +110,30 @@
 /* 公司简介（V205 重构）：沿革段 → 发展定位 → 愿景/使命/价值观独立一栏（水平 3 列等高、无标题栏）；
    V198 的关键信息四条、SINCE 1986 slogan 块、双栏结构均已删除（用户指定）。
    正文限宽 880：全宽 1040 时沿革/定位段落每行约 60 字，超阅读舒适区 */
-/* V293 用户指令：首段与上方标签栏之间太空。原来 .apane 的 54px + 这里的 45px 叠成 99px，
-   是下面「首段 → 发展定位」间距（.prof-cols 67px）的 1.5 倍。
-   收到 13px 左右，两处间距对齐，段落上下节奏一致。 */
-.prof-intro{padding-top:clamp(10px,1.5vh,18px)}
-.prof-lead{font-size:1.0625rem;line-height:2.3;color:var(--ink2);text-indent:2em}
-.prof-body .pb-h{font-size:1.25rem;font-weight:600;line-height:1.5;letter-spacing:.2em;color:var(--ink);margin:0 0 22px}
-.prof-body p{font-size:1.0625rem;line-height:2.3;color:var(--ink2);margin-bottom:1.6em;text-indent:2em}
+/* V293 原则保留：「标签栏 → 首段」与「首段 → 发展定位」两处间距对齐。
+   V327 用户指令：首段换成更长的沿革文本，「发展定位」标题跟其它页面板块标题同档，
+   并压缩纵向间隔提高一屏信息密度 —— 两处间距同时由 ≈67px 收到 ≈32px，
+   行高 2.3→1.9、正文段后 1.6em→1.1em、vmv 上间距 67→32、卡内 padding 27→20。
+   用 #pane-profile 限定作用域，其它四个 tab 的 .apane 留白不受影响。 */
+#pane-profile{padding-top:clamp(20px,2.6vh,30px)}
+.prof-intro{padding-top:8px}
+.prof-lead{font-size:1.0625rem;line-height:1.9;color:var(--ink2);text-indent:2em}
+/* 与 about 其它 tab 的板块标题 .ipane-h 完全同档：clamp(1.5rem,2.4vw,2rem)，1440 下 32px，
+   字重 600 / 行高 1.4 / 字距 .02em 一并对齐（业务领域页 40px 是 V285 单独指定的例外，不套用）。
+   字距由 .2em 收到 .02em，不再靠拉开字距撑层级 */
+.prof-body .pb-h{font-size:clamp(1.5rem,2.4vw,2rem);font-weight:600;line-height:1.4;letter-spacing:.02em;color:var(--ink);margin:0 0 clamp(14px,2vh,20px)}
+.prof-body p{font-size:1.0625rem;line-height:1.9;color:var(--ink2);margin-bottom:1.1em;text-indent:2em}
 .prof-body p:last-child{margin-bottom:0}
-.prof-cols{margin-top:clamp(52px,7.5vh,84px)}
+.prof-cols{margin-top:clamp(24px,3.6vh,38px)}
 /* 愿景/使命/价值观：独立一栏、水平 3 列，grid stretch 三卡自动等高；
    无容器标题，与发展定位共同构成公司定位信息 */
-.vmv-row{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,1.6vw,22px);margin-top:clamp(52px,7.5vh,84px)}
-.vmv-row .vm{border-radius:4px;padding:clamp(24px,3vh,32px) clamp(22px,2.2vw,30px);color:#fff}
+.vmv-row{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,1.6vw,22px);margin-top:clamp(24px,3.6vh,38px)}
+.vmv-row .vm{border-radius:4px;padding:clamp(18px,2.3vh,24px) clamp(22px,2.2vw,30px);color:#fff}
 .vmv-row .vm--1{background:color-mix(in srgb,var(--accent) 82%,#fff)}
 .vmv-row .vm--2{background:var(--accent)}
 .vmv-row .vm--3{background:#1e2a70}
 .vmv-row .vm h4{font-size:1.75rem;font-weight:700;line-height:1.5;letter-spacing:.14em;text-align:center;margin:0}
-.vmv-row .vm p{margin-top:10px;font-size:1.0625rem;font-weight:400;line-height:1.9;letter-spacing:.04em;text-align:center;color:rgba(255,255,255,.88)}
+.vmv-row .vm p{margin-top:8px;font-size:1.0625rem;font-weight:400;line-height:1.9;letter-spacing:.04em;text-align:center;color:rgba(255,255,255,.88)}
 @media (max-width:860px){
   .vmv-row{grid-template-columns:1fr}
 }
