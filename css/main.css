@@ -59,19 +59,22 @@ p,li,dd{text-wrap:pretty}
 .nav-in{height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;transition:height .45s var(--ease)}
 .nav.on{background:rgba(255,255,255,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-color:var(--line)}
 .nav.on .nav-in{height:clamp(64px,5vw,70px)}
-.logo{display:flex;align-items:center;gap:clamp(12px,1.2vw,18px)}
-.logo img{width:clamp(50px,4.3vw,62px);height:clamp(50px,4.3vw,62px);transition:width .3s,height .3s}
-.nav.on .logo img{width:clamp(40px,3.4vw,48px);height:clamp(40px,3.4vw,48px)}
-/* 反白 logo（V299 用户指令）：党建工作模块的页头浮在深红 banner 上，
-   彩色 logo 压不住底图，换白色版本。两个 img 叠在同一位置、按状态切换 ——
-   .lg-w 默认 display:none，只有 party 页页头处于深色态（未滚动 / 未展开 mega）时替换。
-   滚动后页头转白底、或展开子菜单面板，必须换回彩色版，否则白 logo 看不见。 */
+.logo{display:flex;align-items:center}
+/* V329：全站 Logo 换成 Figma 导出的整幅横版 SVG（400×63，图形＋中文全称＋英文，文字已转曲）。
+   不再用「PNG 图形 + HTML 文字」拼装；宽度按 viewBox 比例自适应，只控制高度。 */
+.logo img{display:block;flex:none;width:auto;max-width:none;height:clamp(38px,3.6vw,50px);transition:height .3s}
+.nav.on .logo img{height:clamp(32px,3vw,40px)}
+/* 反白 Logo：所有深色页头态（党建深红 banner、首页深色首屏、发展历程 .dark-clear）
+   统一切到全白整图；滚动后白底、或展开 mega 白板时必须换回标准色。
+   两张图共用同一盒子按 display 切换，避免叠放造成宽度抖动。 */
 .logo .lg-w{display:none}
 .logo .lg-c{display:block}
-body.party .nav:not(.on):not(.mega-on) .logo .lg-c{display:none}
-body.party .nav:not(.on):not(.mega-on) .logo .lg-w{display:block}
-.logo-t{font-size:clamp(1.25rem,1.62vw,1.625rem);line-height:1.3;font-weight:600;letter-spacing:.04em}
-.logo-t small{display:block;font-size:0.8125rem;font-weight:400;color:var(--mut);letter-spacing:.1em}
+body.party .nav:not(.on):not(.mega-on) .logo .lg-c,
+body.dark-hero .nav:not(.on):not(.mega-on) .logo .lg-c,
+body.dark-hero .nav.dark-clear:not(.mega-on) .logo .lg-c{display:none}
+body.party .nav:not(.on):not(.mega-on) .logo .lg-w,
+body.dark-hero .nav:not(.on):not(.mega-on) .logo .lg-w,
+body.dark-hero .nav.dark-clear:not(.mega-on) .logo .lg-w{display:block}
 .menu{display:flex;align-items:stretch;align-self:stretch;gap:clamp(30px,4.1vw,70px)}
 /* V315 模块色（用户指令）：hover 时每个一级导航项显示「自己那个模块」的颜色 ——
    党建工作深红，其余模块一律标准蓝。颜色跟着被 hover 的模块走，与「当前页是哪个模块」无关，
@@ -170,14 +173,11 @@ body.dark-hero .nav.mega-on .menu>li:hover a.m{color:var(--mc)}
 /* V193：子菜单展开时，页面内容（导航与面板之外）盖黑色半透明遮罩 */
 body::after{content:"";position:fixed;inset:0;z-index:90;background:rgba(8,12,28,.45);opacity:0;visibility:hidden;transition:opacity .32s var(--ease),visibility .32s;pointer-events:none}
 body.mega-open::after{opacity:1;visibility:visible}
-.nav.mega-on .logo-t,.nav.mega-on .logo-t small{color:var(--ink)}
 .nav.mega-on .menu a.m{color:var(--ink)}
 .nav.mega-on .burger i{background:var(--ink)}
-/* 深色首屏上的导航 */
-body.dark-hero .nav:not(.on) .logo-t,body.dark-hero .nav:not(.on) .menu a.m{color:#fff}
-body.dark-hero .nav:not(.on) .logo-t small{color:rgba(255,255,255,.55)}
-body.dark-hero .nav.mega-on .logo-t,body.dark-hero .nav.mega-on .menu a.m{color:var(--ink)}
-body.dark-hero .nav.mega-on .logo-t small{color:rgba(20,20,20,.45)}
+/* 深色首屏上的导航（Logo 走整图反白版，见上方 .lg-w 规则） */
+body.dark-hero .nav:not(.on) .menu a.m{color:#fff}
+body.dark-hero .nav.mega-on .menu a.m{color:var(--ink)}
 body.dark-hero .nav.mega-on .burger i{background:var(--ink)}
 /* 深色首屏上：当前栏目保持亮金；hover 用 --accent2 提亮蓝（纯 #2b3a92 在深蓝页头上不可见）。
    V323：加 :not(.mega-on) —— 一展开子菜单页头就变成白板，此时该按浅底规则走标准蓝，
@@ -191,9 +191,7 @@ body.dark-hero .nav:not(.on):not(.mega-on) .menu>li:not(:hover) a.m.act::after{b
    只换颜色，不动尺寸——滚动后的紧凑高度和小 logo 保持不变，避免经过这一屏时页头忽然长高。
    .dark-clear 由 site.js 判定「深色块是否盖住页头」后加/撤。 */
 body.dark-hero .nav.dark-clear:not(.mega-on){background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;border-color:transparent;box-shadow:none}
-body.dark-hero .nav.dark-clear:not(.mega-on) .logo-t,
 body.dark-hero .nav.dark-clear:not(.mega-on) .menu a.m{color:#fff}
-body.dark-hero .nav.dark-clear:not(.mega-on) .logo-t small{color:rgba(255,255,255,.55)}
 body.dark-hero .nav.dark-clear:not(.mega-on) .menu a.m.act{color:var(--gold)}
 body.dark-hero .nav.dark-clear:not(.mega-on) .menu>li:not(:hover) a.m.act::after{background:var(--gold)}
 body.dark-hero .nav.dark-clear:not(.mega-on) .menu>li:hover a.m{color:var(--mc2)}
@@ -594,10 +592,9 @@ footer{background:#f4f6f9;color:var(--ink);border-top:1px solid var(--line)}
 /* V324 用户指令：页脚垂直间隔整体收紧 —— 上下内边距、Logo 行到内容行的间距、
    版权条上下内边距同档下调；友情链接删至 6 条后改两列三行，避免右列只剩 2 条 */
 .ft-main{padding-block:clamp(28px,4.2vh,44px)}
-.ft-logo{display:flex;align-items:center;gap:12px}
-.ft-logo img{width:50px;height:50px}
-.ft-logo b{font-size:1.125rem;letter-spacing:.05em}
-.ft-logo small{display:block;font-size:0.8125rem;color:rgba(20,20,20,.42);letter-spacing:.14em}
+.ft-logo{display:flex;align-items:center}
+/* V329：页脚同用整幅标准色 SVG，删掉原来的 HTML 中英文文字 */
+.ft-logo img{display:block;width:auto;max-width:none;height:44px}
 /* V210 用户指令：二维码+联系方式装进同一容器（.ft-left）贴左，友情链接整块贴右；
    友链名称用原站全称，两列按内容收紧 */
 .ft-cols{margin-top:clamp(24px,2.6vw,38px);display:flex;justify-content:space-between;align-items:flex-start;gap:clamp(26px,3.4vw,60px)}
@@ -788,9 +785,7 @@ footer{background:#f4f6f9;color:var(--ink);border-top:1px solid var(--line)}
   :root{--nav-h:72px}
   .nav-in{height:var(--nav-h);padding-inline:20px}
   .nav.on .nav-in{height:62px}
-  .logo img,.nav.on .logo img{width:44px;height:44px}
-  .logo-t{font-size:1.125rem}
-  .logo-t small{font-size:0.8125rem;letter-spacing:.06em}
+  .logo img,.nav.on .logo img{height:34px}
   .scene.lead{grid-row:auto;min-height:320px;padding:24px}
   .scene h3,.scene.lead h3{font-size:1.25rem}
   .scene .tag,.scene p,.scene-go{opacity:1;transform:none}
@@ -901,7 +896,7 @@ html.pg-on{scroll-behavior:auto}
      内容顶对齐、不再垂直居中；页脚恢复自然高度、不裁不压。
      内容比剩余空间高时合作区自己撑高（shrink 也是 0），页脚被推到屏外 —— 符合预期。
      窄屏（<900）不进这套规则，仍是自然文档流。 */
-  body[data-page="index"]{--footh:348px}
+  body[data-page="index"]{--footh:337px}
   body[data-page="index"] .sec-partners{
     flex-shrink:0;min-height:calc(100vh - var(--footh));
     padding-bottom:clamp(36px,6vh,54px)}
@@ -972,7 +967,8 @@ body[data-page="index"] .sec-biz{background:var(--panel)}
    配合上面给 .menu a.m 加的 white-space:nowrap，菜单恒为单行。 */
 @media (min-width:861px) and (max-width:1120px){
   .menu{gap:clamp(16px,2.2vw,30px)}
-  .logo-t{font-size:1.0625rem}
+  .logo img{height:32px}
+  .nav.on .logo img{height:28px}
 }
 
 /* ============================================================
