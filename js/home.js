@@ -160,27 +160,44 @@
       });
     };
 
-    window.__loadNews()
-      .then(function () {
-        dataAll = (window.NEWS_INDEX || []).filter(function (x) {
-          return !x.external && !PARTY_CATS[x.cat_id];
-        });
-        if (!dataAll.length) {
+    /* V351：新闻索引 209KB（gzip 后 54KB）原来随首屏一起拉，但新闻板块在第 3 屏。
+       改成进入视口前 600px 才加载，首屏少一个请求、也少一次 200KB JSON 解析；
+       不支持 IntersectionObserver 的内核仍按原逻辑立即加载。 */
+    var loadNews = function () {
+      window.__loadNews()
+        .then(function () {
+          dataAll = (window.NEWS_INDEX || []).filter(function (x) {
+            return !x.external && !PARTY_CATS[x.cat_id];
+          });
+          if (!dataAll.length) {
+            listEl.innerHTML = '<li><span class="t">新闻数据加载失败，请稍后重试。</span></li>';
+            return;
+          }
+          /* 封面优先取站点自有图源：微信 mmbiz.qpic.cn 的封面常是 140px 缩略图或
+             防盗链占位，轮到时会糊掉；不足 3 张再按原顺序补其它来源。 */
+          var covers = dataAll.filter(function (x) { return x.cover; });
+          var own = covers.filter(function (x) { return x.cover.indexOf('www.gxci.com.cn/') >= 0; });
+          var other = covers.filter(function (x) { return x.cover.indexOf('www.gxci.com.cn/') < 0; });
+          buildFeature(own.concat(other).slice(0, FEAT_MAX));
+          buildTabs();
+          renderList(0);
+        })
+        .catch(function () {
           listEl.innerHTML = '<li><span class="t">新闻数据加载失败，请稍后重试。</span></li>';
-          return;
+        });
+    };
+
+    var secNews = document.querySelector('.sec-news');
+    if (secNews && window.IntersectionObserver) {
+      var newsIO = new IntersectionObserver(function (es) {
+        for (var i = 0; i < es.length; i++) {
+          if (es[i].isIntersecting) { newsIO.disconnect(); loadNews(); break; }
         }
-        /* 封面优先取站点自有图源：微信 mmbiz.qpic.cn 的封面常是 140px 缩略图或
-           防盗链占位，轮到时会糊掉；不足 3 张再按原顺序补其它来源。 */
-        var covers = dataAll.filter(function (x) { return x.cover; });
-        var own = covers.filter(function (x) { return x.cover.indexOf('www.gxci.com.cn/') >= 0; });
-        var other = covers.filter(function (x) { return x.cover.indexOf('www.gxci.com.cn/') < 0; });
-        buildFeature(own.concat(other).slice(0, FEAT_MAX));
-        buildTabs();
-        renderList(0);
-      })
-      .catch(function () {
-        listEl.innerHTML = '<li><span class="t">新闻数据加载失败，请稍后重试。</span></li>';
-      });
+      }, { rootMargin: '600px 0px' });
+      newsIO.observe(secNews);
+    } else {
+      loadNews();
+    }
   }
 
   /* ---------- 合作伙伴：双行反向无缝滚动 ---------- */
@@ -198,7 +215,9 @@
     function row(el, list) {
       var h = '';
       list.forEach(function (n) {
-        h += '<span class="mq-item"><img src="assets/img/hzhb_' + n + '.png?v=338" alt=""></span>';
+        /* V351：PNG 转 WebP（306KB → 110KB），并加 lazy —— 合作屏在第 5 屏，
+           原来冷启动就一次性拉完 31 张（约 250KB / 31 个请求），拖慢首屏。 */
+        h += '<span class="mq-item"><img src="assets/img/hzhb_' + n + '.webp?v=351" alt="" loading="lazy" decoding="async"></span>';
       });
       el.innerHTML = h + h; /* 复制一份以实现无缝滚动 */
     }

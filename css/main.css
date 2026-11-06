@@ -216,8 +216,13 @@ body.dark-hero .nav:not(.on) .burger i{background:#fff}
 /* V339 首屏：国控大厦实景图。图片单独一层跑 Ken Burns，遮罩/光晕/粒子不跟着缩放，
    否则缩放时遮罩边缘会露白、点阵会被拉散。原 banner-first.webp 仍供党建 .phero 使用。 */
 .hero-bg{position:absolute;inset:0;z-index:0;overflow:hidden}
+/* V351 首屏图改 AVIF：同一张 1920×1080，webp 266KB → avif 130KB（图上压着 .86 遮罩，
+   画质差异不可见）。先写 webp 给不认 image-set 的旧内核兜底，再用 image-set 让支持
+   AVIF 的浏览器走小图；position/size/repeat 留在 shorthand 里，第二条只换图源。 */
 .hero-media{position:absolute;inset:-6%;z-index:0;
-  background:url("../assets/img/hero-guokong.webp?v=346") center/cover no-repeat;
+  background:url("../assets/img/hero-guokong.webp?v=351") center/cover no-repeat;
+  background-image:image-set(url("../assets/img/hero-guokong.avif?v=351") type("image/avif"),
+    url("../assets/img/hero-guokong.webp?v=351") type("image/webp"));
   transform-origin:50% 50%;animation:kenburns 16s ease-in-out infinite alternate;will-change:transform}
 /* V341 用户指令：缩放平移要更明显、更快，方向由下往上（缓慢上摇）。
    原 26s / scale 1→1.09 / 位移 -1.2%,-1% 几乎看不出，改成 16s /

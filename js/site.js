@@ -178,8 +178,11 @@
          V325：Logo 资源统一升 v325，扩展名由 LOGO_EXT 决定。 */
       var logo = it[4];
       var ext = logo ? (LOGO_EXT[logo] || 'svg') : '';
+      /* V351：茧易通是位图，重压过（320px/137KB → 96px/19KB），单独升版本；
+         其余四枚 SVG 没变，保持原版本号，避免无谓重下。 */
+      var lv = logo === 'cocoon' ? '351' : '325';
       var ico = logo
-        ? '<img class="ml-logo-img" src="assets/img/prod/logo-' + logo + '.' + ext + '?v=325" alt="" aria-hidden="true">'
+        ? '<img class="ml-logo-img" src="assets/img/prod/logo-' + logo + '.' + ext + '?v=' + lv + '" alt="" aria-hidden="true">'
         : '<svg class="ml-ic" aria-hidden="true" focusable="false"><use href="#' + it[3] + '"></use></svg>'
           + '<svg class="ml-ic-f" aria-hidden="true" focusable="false"><use href="#' + it[3] + '-f"></use></svg>';
       h += '<a class="ml' + (logo ? ' ml-logo' : '') + '"'
@@ -287,7 +290,7 @@
     + '<div class="ft-logo"><img src="assets/img/logo-standard.svg?v=329" alt="广西计算机有限责任公司"></div>'
     + '<div class="ft-cols">'
     + '<div class="ft-left">'
-    + '<div class="ft-qrbox"><img class="qrcode ft-qr" src="assets/img/_img_index_ewm.png?v=109" alt="官方微信二维码"><span class="ft-qr-t">微信公众号</span></div>'
+    + '<div class="ft-qrbox"><img class="qrcode ft-qr" src="assets/img/_img_index_ewm.png?v=351" alt="官方微信二维码"><span class="ft-qr-t">微信公众号</span></div>'
     + '<div class="ft-contact"><dl>'
     + FCONTACT.map(function (it) { return '<div><dt>' + it[0] + '</dt><dd>' + it[1] + '</dd></div>'; }).join('')
     + '</dl></div>'
