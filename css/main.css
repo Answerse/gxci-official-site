@@ -614,7 +614,10 @@ footer{background:#f4f6f9;color:var(--ink);border-top:1px solid var(--line)}
 .ft-main{padding-block:clamp(28px,4.2vh,44px)}
 .ft-logo{display:flex;align-items:center}
 /* V329：页脚同用整幅标准色 SVG，删掉原来的 HTML 中英文文字 */
-.ft-logo img{display:block;width:auto;max-width:none;height:44px}
+/* V335 用户指令「页头Logo和页脚Logo尺寸统一」：页脚不再固定 44px，
+   改为完全跟随页头默认态的同一套高度（下面两个断点里也各跟一档），
+   页头两态与导航交互一律不动。整幅 SVG 400×63，宽度按比例自适应。 */
+.ft-logo img{display:block;width:auto;max-width:none;height:clamp(38px,3.6vw,50px)}
 /* V210 用户指令：二维码+联系方式装进同一容器（.ft-left）贴左，友情链接整块贴右；
    友链名称用原站全称，两列按内容收紧 */
 .ft-cols{margin-top:clamp(24px,2.6vw,38px);display:flex;justify-content:space-between;align-items:flex-start;gap:clamp(26px,3.4vw,60px)}
@@ -806,6 +809,8 @@ footer{background:#f4f6f9;color:var(--ink);border-top:1px solid var(--line)}
   .nav-in{height:var(--nav-h);padding-inline:20px}
   .nav.on .nav-in{height:62px}
   .logo img,.nav.on .logo img{height:34px}
+  /* V335：页脚同档跟随页头默认态，仍是 34px */
+  .ft-logo img{height:34px}
   .scene.lead{grid-row:auto;min-height:320px;padding:24px}
   .scene h3,.scene.lead h3{font-size:1.25rem}
   .scene .tag,.scene p,.scene-go{opacity:1;transform:none}
@@ -912,11 +917,12 @@ html.pg-on{scroll-behavior:auto}
      页脚允许超出屏幕外。不能为了「露出完整页脚」把合作区压扁，那是拿合作伙伴的信息去换。
      做法：合作区高度 = 100vh − 页脚自然高；     页脚自然高由 home-scroll.js 实测写进 --footh
      （页脚高度随宽度变，写死会在大屏/窄屏错位），CSS 里的 348 只是 JS 未跑时的兜底，
-     V324 页脚收紧后实测 348px（原 433px）。
+     V324 页脚收紧后实测 348px（原 433px），V329 换整幅 Logo 后 337px，
+     V335 页脚 Logo 与页头统一（44→50px）后 343px。
      内容顶对齐、不再垂直居中；页脚恢复自然高度、不裁不压。
      内容比剩余空间高时合作区自己撑高（shrink 也是 0），页脚被推到屏外 —— 符合预期。
      窄屏（<900）不进这套规则，仍是自然文档流。 */
-  body[data-page="index"]{--footh:337px}
+  body[data-page="index"]{--footh:343px}
   body[data-page="index"] .sec-partners{
     flex-shrink:0;min-height:calc(100vh - var(--footh));
     padding-bottom:clamp(36px,6vh,54px)}
@@ -989,6 +995,8 @@ body[data-page="index"] .sec-biz{background:var(--panel)}
   .menu{gap:clamp(16px,2.2vw,30px)}
   .logo img{height:32px}
   .nav.on .logo img{height:28px}
+  /* V335：页脚同档跟随页头默认态 32px（页头滚动态 28px 是既有交互，不动） */
+  .ft-logo img{height:32px}
 }
 
 /* ============================================================
