@@ -451,7 +451,11 @@ body.dark-hero .nav:not(.on) .burger i{background:#fff}
   transform:translateX(var(--enter-x));
   /* 常态不给 transform 过渡：清掉 .out 回待命位时瞬间归位，隐藏项不会留半透明残影 */
   transition:opacity .26s ease,filter .26s ease,visibility .26s}
-@media (min-width:1280px){.hacc-item{padding-inline-start:clamp(60px,13.5vw,200px)}}
+/* V332：文字区加宽后，若不收左缩进，整块详情右边界会从 1164 推到 1307、
+   重心从 715 偏到 787（V316 要求这块视觉居中）。把 ≥1280 档的左缩进
+   13.5vw/200 → 8.3vw/130（1440 实测 194→120），重心回到 712，与改前 715 基本一致，
+   大号年份的竖线仍全年份共用、不随内容左右跳。 */
+@media (min-width:1280px){.hacc-item{padding-inline-start:clamp(40px,8.3vw,130px)}}
 .hacc-item.on{opacity:1;visibility:visible;pointer-events:auto;filter:none;z-index:2;
   transform:translateX(0);
   transition:opacity .58s var(--ease),transform .58s var(--ease),filter .58s var(--ease),visibility 0s;
@@ -464,7 +468,12 @@ body.dark-hero .nav:not(.on) .burger i{background:#fff}
 .hacc-item .yr-lg{font-family:var(--num);font-size:clamp(3.25rem,6vw,5.25rem);font-weight:600;
   line-height:.86;letter-spacing:.01em;color:#fff;font-variant-numeric:tabular-nums;
   /* V331：位移统一交给父级 .hacc-item，这里不再单独上浮 */}
-.hacc-list{display:flex;flex-direction:column;gap:clamp(8px,1.1vh,12px);max-width:62ch;padding-top:.42em}
+/* V332 用户指令：扩大文字展示区域，避免年份详情换行后第二行只剩一个字。
+   62ch 在 1440 只有 632px，最长一条（2026 第 2 条 51 字）被折成 44+7 行，
+   字体或缩放稍有差异就会退化成 50+1 的孤字尾行。放宽到 76ch（1440 实测 775px）
+   后 15 个年份 26 条事件在 ≥1280 全部单行，孤字无从产生；窄档仍按可用宽自动折。
+   ch 随字号等比缩放，所以每行容量在各视口档基本一致。 */
+.hacc-list{display:flex;flex-direction:column;gap:clamp(8px,1.1vh,12px);max-width:76ch;padding-top:.42em}
 .hacc-list li{position:relative;padding-left:16px;font-size:0.9375rem;line-height:1.8;color:rgba(255,255,255,.82)}
 /* V331：事件行随父级整块平移，不再逐条错峰上浮 */
 .hacc-list li::before{content:"";position:absolute;left:0;top:.78em;width:5px;height:1px;background:rgba(143,196,240,.85)}
@@ -567,7 +576,10 @@ body.dark-hero .nav:not(.on) .burger i{background:#fff}
 .feat:hover img,.feat:focus-visible img{transform:scale(1.05)}
 .nlist li{border-bottom:1px solid var(--line)}
 .nlist li:last-child{border-bottom:0}
-.nlist a{display:flex;justify-content:space-between;gap:20px;align-items:baseline;padding:16px 4px;transition:padding .3s var(--ease)}
+/* V332：标题区在 1440 只有 494px，而「广西国控召开党委会…重要指示精神」
+   单行需 495px，差 1px 就折出只有「神」的第二行。收紧标题与日期之间的空隙
+   给标题让出 10px 余量（日期仍 nowrap、不挤压），避免单字尾行。 */
+.nlist a{display:flex;justify-content:space-between;gap:10px;align-items:baseline;padding:16px 4px;transition:padding .3s var(--ease)}
 .nlist a:hover{padding-left:14px}
 .nlist a:hover .t{color:var(--accent)}
 .nlist .t{font-size:0.9375rem;line-height:1.7;color:var(--ink);transition:color .25s;overflow:hidden;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical}
