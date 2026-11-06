@@ -45,8 +45,11 @@
     + '<path d="M3 21h18"/><path d="M4.4 21V8.6l5.2-3.2V21"/><path d="M9.6 21V11.6L19 8.8V21"/><path d="M6.6 11.4v1.4M6.6 15.4v1.4M13.4 13.4v1.4M13.4 17.4v1.4"/></symbol>'
     + '<symbol id="ic-chip" viewBox="1.8 1.8 20.4 20.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
     + '<rect x="6.6" y="6.6" width="10.8" height="10.8" rx="1.6"/><path d="M9.6 2.6v4M14.4 2.6v4M9.6 17.4v4M14.4 17.4v4M2.6 9.6h4M2.6 14.4h4M17.4 9.6h4M17.4 14.4h4"/></symbol>'
+    /* V350：原路径右端大弧顶点在 x=23.31，超出 viewBox 右边界 22.2 而被硬裁，
+       云朵右上出现方形缺口（用户截图）。改写成三次贝塞尔，控制点全部收在
+       x∈[2.9,21.2] / y∈[4.8,18.4]，留出 1.6 描边的 0.8 半宽后仍完整落在框内。 */
     + '<symbol id="ic-cloud" viewBox="1.8 1.8 20.4 20.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
-    + '<path d="M6 19h12a5 5 0 0 0 .6-10 7.4 7.4 0 0 0-14 1.8A4.6 4.6 0 0 0 6 19Z"/></symbol>'
+    + '<path d="M6.6 18.4h11.2C20.5 18.4 21.2 15.2 19.4 13C18.3 11.6 16.4 11.2 14.8 11.8C14 7.4 10.4 4.8 7.2 6C4.6 7 3.4 9.8 4 12.4C2.9 13.5 3 16.4 4.6 17.6C5.2 18.1 5.8 18.4 6.6 18.4Z"/></symbol>'
     + '<symbol id="ic-cocoon" viewBox="1.8 1.8 20.4 20.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
     + '<ellipse cx="12" cy="12" rx="7" ry="8.6"/><path d="M5.6 8.4c3.9 2.3 8.9 2.3 12.8 0M5.6 15.6c3.9-2.3 8.9-2.3 12.8 0"/></symbol>'
     + '<symbol id="ic-orange" viewBox="1.8 1.8 20.4 20.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
