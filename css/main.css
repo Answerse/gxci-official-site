@@ -96,8 +96,18 @@ body.party .nav:not(.on):not(.mega-on) .logo .lg-w{display:block}
 body.dark-hero .nav:not(.on):not(.mega-on) .menu>li:hover a.m{color:var(--mc2)}
 /* 页头已转白（mega 展开）：用标准色 */
 body.dark-hero .nav.mega-on .menu>li:hover a.m{color:var(--mc)}
-.menu a.m.act::after{width:100%;height:3px}
-.menu a.m.act{color:var(--gold-d);font-weight:600}
+/* V323 用户指令：激活标签的颜色按「页头压在什么底色上」判断 ——
+   浅色内容区（白底页头，如首页的业务领域 / 新闻中心、各子页滚动后）用标准蓝 #2b3a92；
+   深色内容区（首屏 hero、发展历程等 .dark-clear 区块）仍是亮金 var(--gold)，
+   否则金线压在深色图上读不出来。判据沿用 site.js 的 .nav.on / .dark-clear：
+   .dark-clear 是「深色块盖住整条页头」才置位，不是按滚动位置硬切。
+   写死字面色值，不引用 var(--accent)：body.party 会把 --accent 改成深红。
+   下划线取 currentColor，文字换色时线自动跟随，深浅底不必各写一条。 */
+.menu a.m.act::after{width:100%;height:3px;background:currentColor}
+.menu a.m.act{color:#2b3a92;font-weight:600}
+/* 展开子菜单时页头是白板，.nav.mega-on 的 ink 规则权重高，会顺手把激活标签压成黑字；
+   补一条只在「该 li 未被 hover」时生效的规则，hover 仍走 V315 的模块专色。 */
+.nav.mega-on .menu>li:not(:hover) a.m.act{color:#2b3a92}
 /* 通栏子菜单：整幅白板自页头下方落下，内容与 logo 同左缘（沿用页头通栏边距） */
 .mega{position:absolute;top:100%;left:0;right:0;background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);box-shadow:0 28px 44px rgba(10,20,40,.07);opacity:0;visibility:hidden;transform:translateY(-10px);transition:opacity .32s var(--ease),transform .32s var(--ease),visibility .32s;z-index:99}
 .mega .wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:var(--pad)}
@@ -169,11 +179,13 @@ body.dark-hero .nav:not(.on) .logo-t small{color:rgba(255,255,255,.55)}
 body.dark-hero .nav.mega-on .logo-t,body.dark-hero .nav.mega-on .menu a.m{color:var(--ink)}
 body.dark-hero .nav.mega-on .logo-t small{color:rgba(20,20,20,.45)}
 body.dark-hero .nav.mega-on .burger i{background:var(--ink)}
-/* 深色首屏上：当前栏目保持亮金；hover 用 --accent2 提亮蓝（纯 #2b3a92 在深蓝页头上不可见） */
-body.dark-hero .nav:not(.on) .menu a.m.act{color:var(--gold)}
+/* 深色首屏上：当前栏目保持亮金；hover 用 --accent2 提亮蓝（纯 #2b3a92 在深蓝页头上不可见）。
+   V323：加 :not(.mega-on) —— 一展开子菜单页头就变成白板，此时该按浅底规则走标准蓝，
+   否则亮金压在白底上既读不清、也和同排的墨色菜单项打架。 */
+body.dark-hero .nav:not(.on):not(.mega-on) .menu a.m.act{color:var(--gold)}
 /* 当前栏目的金色线：判据挂在 li 上而不是 a 上 —— 缺省的 li 内边距有 10px，
    鼠标停在文字外侧时 li 已 hover、a 还没 hover，写在 a 上会留下「蓝字配金线」。 */
-body.dark-hero .nav:not(.on) .menu>li:not(:hover) a.m.act::after{background:var(--gold)}
+body.dark-hero .nav:not(.on):not(.mega-on) .menu>li:not(:hover) a.m.act::after{background:var(--gold)}
 /* hover 下划线取 currentColor（见上），文字已换成该模块的提亮色，线自动跟随，不必再写一条 */
 /* V296 用户指令：滚到发展历程这种深色区块时，页头要透出底色、文字泛白、logo 同色处理。
    只换颜色，不动尺寸——滚动后的紧凑高度和小 logo 保持不变，避免经过这一屏时页头忽然长高。
