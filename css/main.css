@@ -136,6 +136,29 @@ body.dark-hero .nav.mega-on .menu>li:hover a.m{color:var(--mc)}
 .ml:hover .ml-ic{opacity:0}
 .ml:hover .ml-ic-f{opacity:1}
 .ml:focus-visible{border-color:color-mix(in srgb,var(--accent) 50%,transparent);outline:2px solid var(--accent);outline-offset:2px}
+/* ---------- V317 产品中心子菜单：彩色产品 Logo + 卡片按 Logo 主色配色 ----------
+   五个 Logo 各自的主色取自 SVG 本体（不是另配一套近似色）：
+     桂农易通 #16A34A 亮绿 / 茧易通 #14532D 墨绿 / 陈皮通 #F87A25 橙
+     林易通 #15803D 中绿 / 桂资通 #A10A19 深红（框），金 #C59739 只作柱内点缀
+   --pc 只下到卡片这一层：背景、描边按各自 Logo 走，标题与说明仍用模块蓝，
+   导航项 hover 色也仍是 V315 的 --mc 标准蓝，两者互不干扰。 */
+.mega .ml[data-logo]{--pc:#2b3a92}
+.mega .ml[data-logo="nongyi"]{--pc:#16a34a}
+.mega .ml[data-logo="cocoon"]{--pc:#14532d}
+.mega .ml[data-logo="chenpi"]{--pc:#f87a25}
+.mega .ml[data-logo="forest"]{--pc:#15803d}
+.mega .ml[data-logo="house"]{--pc:#a10a19}
+.mega .ml[data-logo]{
+  background:color-mix(in srgb,var(--pc) 8%,#fff);
+  border-color:color-mix(in srgb,var(--pc) 30%,#fff)}
+.mega .ml[data-logo]:hover,
+.mega .ml[data-logo]:focus-visible{
+  background:color-mix(in srgb,var(--pc) 14%,#fff);
+  border-color:color-mix(in srgb,var(--pc) 65%,#fff)}
+.mega .ml[data-logo]:focus-visible{outline-color:var(--pc)}
+/* 彩色 Logo 缩到 32px 细节会糊，只把这一栏的图标盒放大；其余四栏仍是 32px sprite */
+.mega .ml-logo .ml-ico{width:48px;height:48px}
+.mega .ml-logo-img{display:block;width:100%;height:100%;object-fit:contain}
 /* 图标 sprite 只做定义，不占位 */
 .ico-sprite{position:absolute;width:0;height:0;overflow:hidden}
 /* 子菜单展开时页头转白，保证深色首屏上文字可读 */

@@ -166,13 +166,17 @@
        已改回 1fr 均分，列宽跟着面板走。 */
     var h = '<div class="mega"><div class="wrap"><div class="mega-cards" data-n="' + items.length + '">';
     items.forEach(function (it) {
-      /* V283：线性 / 面性两个 svg 叠在同一个 32×32 盒子里，hover 时交叉淡入淡出。
-         用 opacity 而不是 display，才有过渡；两个都留在 DOM 里也不会多占位。 */
-      h += '<a class="ml" href="' + it[1] + '">'
-        + '<span class="ml-ico">'
-        + '<svg class="ml-ic" aria-hidden="true" focusable="false"><use href="#' + it[3] + '"></use></svg>'
-        + '<svg class="ml-ic-f" aria-hidden="true" focusable="false"><use href="#' + it[3] + '-f"></use></svg>'
-        + '</span>'
+      /* V317：产品中心这一栏改用各产品自己的彩色 Logo（it[4] 有值即走图片分支），
+         其余四栏仍用线性 / 面性双 svg 交叉淡入（V283）。两者共用 .ml-ico 盒子，
+         卡片级配色由 data-logo 在 CSS 里指定，不写行内样式。 */
+      var logo = it[4];
+      var ico = logo
+        ? '<img class="ml-logo-img" src="assets/img/prod/logo-' + logo + '.svg?v=317" alt="" aria-hidden="true">'
+        : '<svg class="ml-ic" aria-hidden="true" focusable="false"><use href="#' + it[3] + '"></use></svg>'
+          + '<svg class="ml-ic-f" aria-hidden="true" focusable="false"><use href="#' + it[3] + '-f"></use></svg>';
+      h += '<a class="ml' + (logo ? ' ml-logo' : '') + '"'
+        + (logo ? ' data-logo="' + logo + '"' : '') + ' href="' + it[1] + '">'
+        + '<span class="ml-ico">' + ico + '</span>'
         + '<b>' + it[0] + '</b><small>' + it[2] + '</small></a>';
     });
     return h + '</div></div></div>';
@@ -202,11 +206,11 @@
     /* V181：桂资通是业务领域（area-asset.html），不进产品中心，故原「桂资通」分组撤掉；
        菜单与 products.html 的 5 张卡一一对应，桂农易通既是业务也是产品，这里作为产品条目 */
     + mega([
-      ['桂农易通', 'product-nongyi.html', '特色农产品产业服务平台', 'ic-leaf'],
-      ['茧易通', 'case-jiayitong.html', '桑蚕茧丝绸产业服务平台', 'ic-cocoon'],
-      ['陈皮通', 'case-chenpitong.html', '浦北陈皮产业服务平台', 'ic-orange'],
-      ['林易通', 'case-linyitong.html', '林产品交易线上综合平台', 'ic-tree'],
-      ['桂资通', 'case-house.html', '国企房产资产统一登记', 'ic-house']
+      ['桂农易通', 'product-nongyi.html', '特色农产品产业服务平台', 'ic-leaf', 'nongyi'],
+      ['茧易通', 'case-jiayitong.html', '桑蚕茧丝绸产业服务平台', 'ic-cocoon', 'cocoon'],
+      ['陈皮通', 'case-chenpitong.html', '浦北陈皮产业服务平台', 'ic-orange', 'chenpi'],
+      ['林易通', 'case-linyitong.html', '林产品交易线上综合平台', 'ic-tree', 'forest'],
+      ['桂资通', 'case-house.html', '国企房产资产统一登记', 'ic-house', 'house']
     ])
     + '</li>'
     + '<li class="has-mega"><a class="m" data-nav="news" href="news.html">新闻中心</a>'
