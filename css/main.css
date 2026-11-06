@@ -216,16 +216,21 @@ body.dark-hero .nav:not(.on) .burger i{background:#fff}
 /* V339 首屏：国控大厦实景图。图片单独一层跑 Ken Burns，遮罩/光晕/粒子不跟着缩放，
    否则缩放时遮罩边缘会露白、点阵会被拉散。原 banner-first.webp 仍供党建 .phero 使用。 */
 .hero-bg{position:absolute;inset:0;z-index:0;overflow:hidden}
-.hero-media{position:absolute;inset:-4%;z-index:0;
+.hero-media{position:absolute;inset:-6%;z-index:0;
   background:url("../assets/img/hero-guokong.webp?v=339") center/cover no-repeat;
-  transform-origin:50% 50%;animation:kenburns 26s ease-in-out infinite alternate;will-change:transform}
+  transform-origin:50% 50%;animation:kenburns 16s ease-in-out infinite alternate;will-change:transform}
+/* V341 用户指令：缩放平移要更明显、更快，方向由下往上（缓慢上摇）。
+   原 26s / scale 1→1.09 / 位移 -1.2%,-1% 几乎看不出，改成 16s /
+   scale 1.02→1.14 / 纵向 +1.8% → -2.6%。inset 放到 -6% 留出上摇余量。 */
 @keyframes kenburns{
-  from{transform:scale(1) translate3d(0,0,0)}
-  to{transform:scale(1.09) translate3d(-1.2%,-1%,0)}}
-/* 遮罩：顶部压深保住反白页头，中段留亮让楼体透出来，底部压深托住按钮与滚动提示 */
+  from{transform:scale(1.02) translate3d(0,1.8%,0)}
+  to{transform:scale(1.14) translate3d(0,-2.6%,0)}}
+/* 遮罩：顶部压深保住反白页头，中段留亮让楼体若隐若现，底部压深托住按钮与滚动提示。
+   V341：较 V339 减淡一档（中段 .42→.34、顶部 .84→.80），建筑轮廓能看出来但不到清晰，
+   副标题与按钮仍压得住；再淡就会让楼体细节抢标题。 */
 .hero-bg::before{content:"";position:absolute;inset:0;z-index:1;background:
-  linear-gradient(180deg,rgba(8,18,54,.84) 0%,rgba(9,22,64,.62) 22%,rgba(11,26,72,.42) 52%,rgba(8,20,60,.66) 100%),
-  linear-gradient(100deg,rgba(8,18,54,.58) 0%,rgba(10,26,74,.30) 48%,rgba(10,26,74,.16) 100%)}
+  linear-gradient(180deg,rgba(8,18,54,.80) 0%,rgba(9,22,64,.56) 22%,rgba(11,26,72,.34) 52%,rgba(8,20,60,.62) 100%),
+  linear-gradient(100deg,rgba(8,18,54,.50) 0%,rgba(10,26,74,.26) 48%,rgba(10,26,74,.12) 100%)}
 /* 原 72px 网格线撤掉，点阵交给 Canvas 氛围层；这里只留一层极轻暗角收边 */
 .hero-bg::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
   background:radial-gradient(ellipse 82% 72% at 50% 45%,transparent 42%,rgba(6,14,44,.34) 100%)}
@@ -614,8 +619,14 @@ body.dark-hero .nav:not(.on) .burger i{background:#fff}
 /* ---------- 合作伙伴 ---------- */
 .mq{overflow:hidden;position:relative;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
 /* V338：31 个 Logo 分两行 16/15（原 12/12），42s→56s 保持原来的滚动线速度 */
-.mq-track{display:flex;gap:18px;width:max-content;animation:mq 56s linear infinite}
-.mq:hover .mq-track{animation-play-state:paused}
+.mq-track{display:flex;gap:18px;width:max-content;animation:mq 56s linear infinite;
+  animation-play-state:paused}
+/* V341 用户反馈：刚加载时第一列左侧被隐藏、看着不自动滚。
+   实测根因不是动画停了，而是动画从页面加载就开始跑 —— 等滚到第 5 屏时
+   第一列已左移近 500px，开头几个 Logo 早被移出。改成进入视口才启动
+   （js/home.js 加 .run），首次看到从 0 开始、左侧完整，动感也明显。 */
+.mq.run .mq-track{animation-play-state:running}
+.mq.run:hover .mq-track{animation-play-state:paused}
 .mq.rev .mq-track{animation-direction:reverse}
 @keyframes mq{to{transform:translateX(-50%)}}
 .mq-track .mq-item{display:grid;place-items:center;width:190px;height:96px;background:#fff;border:1px solid var(--line);padding:18px}
@@ -1058,3 +1069,35 @@ body[data-page="index"] .biz .bcard :is(h2,h3){
 body[data-page="index"] .feat{background:var(--accent)}
 body[data-page="index"] .feat .cap{background:var(--accent)}
 body[data-page="index"] .feat img{object-position:50% 15%}
+
+/* ============================================================
+   V340 新闻焦点图：单条静态头条 → 3 张淡入淡出轮播
+   .feat 由链接改为容器；3 个 .feat-slide 绝对铺满，各自带图 +
+   蓝实色说明条；圆点只作切换控件，当前态靠亮度/尺寸强调，不加色块。
+   高度仍由 .news-grid 的 stretch 决定，满屏第 3 屏布局不变。
+   ============================================================ */
+body[data-page="index"] .feat{display:block}
+body[data-page="index"] .feat-slides{position:absolute;inset:0}
+body[data-page="index"] .feat-slide{
+  position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;
+  opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity .55s var(--ease),visibility .55s}
+body[data-page="index"] .feat-slide.on{
+  opacity:1;visibility:visible;pointer-events:auto;z-index:2}
+body[data-page="index"] .feat-dots{
+  position:absolute;z-index:4;top:38%;right:clamp(14px,1.4vw,20px);
+  display:flex;flex-direction:column;gap:9px}
+/* 封面明暗不定（有白底网页截图、有深色照片）：常态白芯 + 中性深色细环
+   （暗底靠白芯、亮底靠环），当前态标准蓝实心 + 白色细环 —— 蓝只给当前态。 */
+body[data-page="index"] .feat-dots button{
+  width:8px;height:8px;padding:0;border:0;border-radius:50%;
+  background:rgba(255,255,255,.62);box-shadow:0 0 0 1px rgba(16,24,48,.42);
+  cursor:pointer;transition:background .3s,transform .3s,box-shadow .3s}
+body[data-page="index"] .feat-dots button.act{
+  background:var(--accent);box-shadow:0 0 0 1.5px rgba(255,255,255,.9);transform:scale(1.3)}
+body[data-page="index"] .feat-dots button:focus-visible{
+  outline:2px solid #fff;outline-offset:3px}
+@media (prefers-reduced-motion:reduce){
+  body[data-page="index"] .feat-slide,
+  body[data-page="index"] .feat-dots button{transition:none}
+}

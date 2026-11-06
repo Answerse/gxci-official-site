@@ -27,26 +27,85 @@
 
   if (gridEl && listEl) {
     var dataAll = [];
-    var featured = null;
 
-    /* 左侧头条：一次性填充，之后不随标签变化 */
-    var fillFeature = function (x) {
-      if (!x) return;
-      var fimg = document.getElementById('hn-feat-img');
-      var ft = document.getElementById('hn-feat-title');
-      var fd = document.getElementById('hn-feat-day');
-      var fy = document.getElementById('hn-feat-ym');
-      var fa = document.getElementById('hn-feat');
-      if (fimg) fimg.src = x.cover || DEFAULT_COVER;
-      if (ft) ft.textContent = x.title;
-      var dp = dateParts(x.date);
-      if (fd) fd.textContent = dp.d || '';
-      if (fy) fy.textContent = dp.y + '-' + dp.m;
-      if (fa) {
-        fa.href = hrefOf(x);
-        if (x.external) { fa.target = '_blank'; fa.rel = 'noopener'; }
-        else { fa.removeAttribute('target'); fa.removeAttribute('rel'); }
+    /* ---------- V340 左侧焦点新闻：3 张淡入淡出轮播 ----------
+       取新闻数据里按日期倒序的前 3 条带封面稿件（与右列同一数据源，不新增内容）。
+       自动 5.2s 切换；鼠标悬停、键盘聚焦、标签页隐藏时暂停；点圆点立即切换；
+       prefers-reduced-motion 下不自动播，仍可手动点。 */
+    var FEAT_MAX = 3;
+    var FEAT_DUR = 5200;
+    var featBox = document.getElementById('hn-feat');
+    var slidesEl = document.getElementById('hn-feat-slides');
+    var dotsEl = document.getElementById('hn-feat-dots');
+    var featSlides = [], featDots = [], featIdx = 0, featTimer = null;
+    var featReduce = window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var attrEsc = function (s) {
+      return esc(s).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    };
+
+    var featGo = function (n) {
+      if (!featSlides.length) return;
+      featIdx = ((n % featSlides.length) + featSlides.length) % featSlides.length;
+      featSlides.forEach(function (s, i) { s.classList.toggle('on', i === featIdx); });
+      featDots.forEach(function (b, i) {
+        b.classList.toggle('act', i === featIdx);
+        b.setAttribute('aria-selected', i === featIdx ? 'true' : 'false');
+      });
+    };
+    var featStop = function () {
+      if (featTimer) { clearInterval(featTimer); featTimer = null; }
+    };
+    var featPlay = function () {
+      if (featTimer || featReduce || featSlides.length < 2 || document.hidden) return;
+      featTimer = setInterval(function () { featGo(featIdx + 1); }, FEAT_DUR);
+    };
+
+    var buildFeature = function (list) {
+      if (!slidesEl || !dotsEl || !list.length) return;
+      var h = '', d = '';
+      list.forEach(function (x, i) {
+        var dp = dateParts(x.date);
+        h += '<a class="feat-slide' + (i === 0 ? ' on' : '') + '" href="' +
+          attrEsc(hrefOf(x)) + '"' + attrOf(x) + '>' +
+          '<img src="' + attrEsc(x.cover || DEFAULT_COVER) + '" alt="" ' +
+          'loading="eager" decoding="async">' +
+          '<div class="cap"><span class="fd"><b>' + dp.d + '</b><span>' +
+          dp.y + '-' + dp.m + '</span></span>' +
+          '<span class="cap-txt"><b>' + esc(x.title) + '</b></span></div></a>';
+        d += '<button type="button" role="tab" data-i="' + i + '" class="' +
+          (i === 0 ? 'act' : '') + '" aria-selected="' + (i === 0) +
+          '" aria-label="第 ' + (i + 1) + ' 条焦点新闻"></button>';
+      });
+      slidesEl.innerHTML = h;
+      dotsEl.innerHTML = d;
+      featSlides = Array.prototype.slice.call(slidesEl.children);
+      featDots = Array.prototype.slice.call(dotsEl.children);
+
+      /* 封面外链偶有失效：回退到站点自带兜底图，避免空白蓝块 */
+      featSlides.forEach(function (s) {
+        var im = s.querySelector('img');
+        if (!im) return;
+        im.addEventListener('error', function () {
+          if (im.getAttribute('src') !== DEFAULT_COVER) im.setAttribute('src', DEFAULT_COVER);
+        });
+      });
+      featDots.forEach(function (b) {
+        b.addEventListener('click', function () {
+          featGo(+b.getAttribute('data-i'));
+          featStop(); featPlay();
+        });
+      });
+      if (featBox) {
+        featBox.addEventListener('mouseenter', featStop);
+        featBox.addEventListener('mouseleave', featPlay);
+        featBox.addEventListener('focusin', featStop);
+        featBox.addEventListener('focusout', featPlay);
       }
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden) featStop(); else featPlay();
+      });
+      featIdx = 0; featGo(0); featPlay();
     };
 
     /* 右侧列表：首条带摘要 + 其余，随标签切换 */
@@ -110,8 +169,12 @@
           listEl.innerHTML = '<li><span class="t">新闻数据加载失败，请稍后重试。</span></li>';
           return;
         }
-        featured = dataAll.find(function (x) { return x.cover; }) || dataAll[0];
-        fillFeature(featured);
+        /* 封面优先取站点自有图源：微信 mmbiz.qpic.cn 的封面常是 140px 缩略图或
+           防盗链占位，轮到时会糊掉；不足 3 张再按原顺序补其它来源。 */
+        var covers = dataAll.filter(function (x) { return x.cover; });
+        var own = covers.filter(function (x) { return x.cover.indexOf('www.gxci.com.cn/') >= 0; });
+        var other = covers.filter(function (x) { return x.cover.indexOf('www.gxci.com.cn/') < 0; });
+        buildFeature(own.concat(other).slice(0, FEAT_MAX));
         buildTabs();
         renderList(0);
       })
@@ -143,6 +206,21 @@
     var half = Math.ceil(names.length / 2);
     row(mq1, names.slice(0, half));
     row(mq2, names.slice(half));
+
+    /* V341：两列滚动动画改为「进入视口才启动」。原来动画随页面加载就跑，
+       用户滚到合作屏时第一列已左移数百像素、开头 Logo 被移出，看着像没在动。
+       进出视口用同一个观察器切换 .run，离开即暂停，不白耗性能。 */
+    var mqBoxes = [].slice.call(document.querySelectorAll('.mq'));
+    if (window.IntersectionObserver && mqBoxes.length) {
+      var mqIO = new IntersectionObserver(function (es) {
+        es.forEach(function (e) {
+          e.target.classList.toggle('run', e.isIntersecting);
+        });
+      }, { threshold: 0.2 });
+      mqBoxes.forEach(function (m) { mqIO.observe(m); });
+    } else {
+      mqBoxes.forEach(function (m) { m.classList.add('run'); });
+    }
   }
 
 })();
