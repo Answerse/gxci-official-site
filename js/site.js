@@ -584,8 +584,8 @@
     opts = opts || {};
     var CATS = opts.cats || null;
     var hideCat = !!opts.hideCat;
-    /* 有分类表但表里没有 0（党建模块：5 / 17）时，默认落在第一个分类，
-       不能落 0 —— 0 在 filtered() 里表示「全部」，而那种页面没有「全部」按钮可回 */
+    /* 默认落在分类表的第一个（V354 起新闻中心也没有「全部」，
+       state.cat 为 0 只作为「不过滤」的兜底值存在，没有按钮能回到它） */
     var firstCat = CATS ? +Object.keys(CATS)[0] : 0;
     var state = { cat: opts.fixedCat || firstCat, q: '', page: 1, per: opts.per || 12 };
 
@@ -609,8 +609,8 @@
     function filtered() {
       return window.__NEWS.filter(function (x) {
         if (x.external) return false;
-        /* 只收本页列出的分类：「全部」= 所有可见分类之和，不能把没有标签的分类
-           （如主题教育 17）混进来，否则会出现数得到、翻不到的文章 */
+        /* 只收本页列出的分类：没有对应标签的分类（如主题教育 17）不混进来，
+           否则会出现数得到、翻不到的文章 */
         if (CATS && !CATS[x.cat_id]) return false;
         return (state.cat === 0 || x.cat_id === state.cat) &&
           (!state.q || x.title.toLowerCase().indexOf(state.q) > -1);
@@ -718,15 +718,17 @@
     function newsBanner(cat) {
       if (!nHero) return;
       var on = cat === 5;
-      /* 红绸图按需加载：默认停在「全部」时一个字节都不拉，点进来才取（57KB） */
+      /* 红绸图按需加载：默认停在非党建分类时一个字节都不拉，点进来才取（57KB） */
       if (on && nBan && !nBan.getAttribute('src')) nBan.src = nBan.getAttribute('data-src');
       nHero.classList.toggle('ban-party', on);
       var nh1 = $('h1', nHero), nsub = $('.dhero-sub', nHero);
       if (nh1) nh1.textContent = on ? '党建工作' : '新闻中心';
       if (nsub) nsub.textContent = on ? '党建活动与学习教育' : '公司要闻与经营动态';
     }
+    /* V354 用户指令：去掉「全部」标签，进来直接落在第一个分类（公司动态）。
+       去掉后 mountList 的 firstCat 自动取 CATS 的第一个键，不需要额外指定。 */
     mountList(nlApp, {
-      cats: { 0: '全部', 3: '公司动态', 4: '行业资讯', 5: '党建工作' },
+      cats: { 3: '公司动态', 4: '行业资讯', 5: '党建工作' },
       onCat: newsBanner
     });
   }

@@ -4,11 +4,10 @@
 (function () {
   'use strict';
 
-  /* 与新闻页 site.js 的 CATS 口径一致（按 cat_id 过滤）
-     V352：党建工作已回到新闻中心当一个标签，但首页这块只做「公司动态 / 行业资讯」
-     的摘要位，仍然不收党建(5)与主题教育(17) —— 要看党建走新闻中心的标签 */
-  var CATS = { 0: '全部', 3: '公司动态', 4: '行业资讯' };
-  var PARTY_CATS = { 5: 1, 17: 1 };
+  /* 与新闻页 site.js 的 CATS 完全同一口径（V354：两边都不再有「全部」，
+     标签、顺序、默认选中项一一对应）。主题教育(17) 没有标签，两边都不收。 */
+  var CATS = { 3: '公司动态', 4: '行业资讯', 5: '党建工作' };
+  var DEFAULT_CAT = +Object.keys(CATS)[0];
   var DEFAULT_COVER = 'assets/img/_img_index_news-header-bg.png?v=96';
   var LIST_MAX = 5; /* 右侧列表总条数（含带摘要的首条）；V144 由 6 收到 5，压新闻区高度 */
 
@@ -109,11 +108,17 @@
       featIdx = 0; featGo(0); featPlay();
     };
 
+    /* 「更多新闻 →」跟着当前标签走，点进去落在新闻中心的同一个分类上 */
+    var moreEl = document.querySelector('.news-bar .smore');
+    var syncMore = function (catId) {
+      if (!moreEl) return;
+      moreEl.setAttribute('href', catId === DEFAULT_CAT ? 'news.html' : 'news.html?cat=' + catId);
+    };
+
     /* 右侧列表：首条带摘要 + 其余，随标签切换 */
     var renderList = function (catId) {
-      var set = catId === 0
-        ? dataAll
-        : dataAll.filter(function (x) { return x.cat_id === catId; });
+      syncMore(catId);
+      var set = dataAll.filter(function (x) { return x.cat_id === catId; });
 
       if (!set.length) {
         listEl.innerHTML = '<li><span class="t">该栏目暂无内容。</span></li>';
@@ -144,13 +149,13 @@
       listEl.innerHTML = h;
     };
 
-    /* 直接复用新闻页 .ntabs 的按钮结构与口径 */
+    /* 直接复用新闻页 .ntabs 的按钮结构与口径（V354：默认高亮第一个分类） */
     var buildTabs = function () {
-      Object.keys(CATS).forEach(function (k) {
+      Object.keys(CATS).forEach(function (k, i) {
         var btn = document.createElement('button');
         btn.type = 'button';
         btn.setAttribute('data-cat', k);
-        btn.className = (+k === 0 ? 'act' : '');
+        btn.className = (i === 0 ? 'act' : '');
         btn.textContent = CATS[k];
         btn.addEventListener('click', function () {
           Array.prototype.forEach.call(tabsEl.children, function (b) { b.classList.remove('act'); });
@@ -167,8 +172,9 @@
     var loadNews = function () {
       window.__loadNews()
         .then(function () {
+          /* 只收有标签的分类，和新闻中心页 filtered() 同一口径 */
           dataAll = (window.NEWS_INDEX || []).filter(function (x) {
-            return !x.external && !PARTY_CATS[x.cat_id];
+            return !x.external && CATS[x.cat_id];
           });
           if (!dataAll.length) {
             listEl.innerHTML = '<li><span class="t">新闻数据加载失败，请稍后重试。</span></li>';
@@ -181,7 +187,7 @@
           var other = covers.filter(function (x) { return x.cover.indexOf('www.gxci.com.cn/') < 0; });
           buildFeature(own.concat(other).slice(0, FEAT_MAX));
           buildTabs();
-          renderList(0);
+          renderList(DEFAULT_CAT);
         })
         .catch(function () {
           listEl.innerHTML = '<li><span class="t">新闻数据加载失败，请稍后重试。</span></li>';
