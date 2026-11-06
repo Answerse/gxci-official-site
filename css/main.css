@@ -591,14 +591,16 @@ body.dark-hero .nav:not(.on) .burger i{background:#fff}
 /* ---------- 页脚 ---------- */
 /* 版式：Logo 独占一行；下一行 二维码 / 联系方式 / 友情链接 三块顶对齐 */
 footer{background:#f4f6f9;color:var(--ink);border-top:1px solid var(--line)}
-.ft-main{padding-block:clamp(44px,7vh,72px)}
+/* V324 用户指令：页脚垂直间隔整体收紧 —— 上下内边距、Logo 行到内容行的间距、
+   版权条上下内边距同档下调；友情链接删至 6 条后改两列三行，避免右列只剩 2 条 */
+.ft-main{padding-block:clamp(28px,4.2vh,44px)}
 .ft-logo{display:flex;align-items:center;gap:12px}
 .ft-logo img{width:50px;height:50px}
 .ft-logo b{font-size:1.125rem;letter-spacing:.05em}
 .ft-logo small{display:block;font-size:0.8125rem;color:rgba(20,20,20,.42);letter-spacing:.14em}
 /* V210 用户指令：二维码+联系方式装进同一容器（.ft-left）贴左，友情链接整块贴右；
    友链名称用原站全称，两列按内容收紧 */
-.ft-cols{margin-top:clamp(40px,4.5vw,60px);display:flex;justify-content:space-between;align-items:flex-start;gap:clamp(26px,3.4vw,60px)}
+.ft-cols{margin-top:clamp(24px,2.6vw,38px);display:flex;justify-content:space-between;align-items:flex-start;gap:clamp(26px,3.4vw,60px)}
 .ft-left{display:flex;gap:clamp(18px,2vw,28px);align-items:stretch}
 /* 二维码盒定宽：列内 img 按拉伸高取方形宽（≤130），否则 flex 行下会被图片固有宽（403px）撑开 */
 .ft-qrbox{flex:0 0 auto;width:130px}
@@ -617,10 +619,11 @@ footer{background:#f4f6f9;color:var(--ink);border-top:1px solid var(--line)}
 .ft-contact dt::after{content:'：'}
 /* 友情链接：两列按内容宽度收紧，整块贴右缘；「友情链接」标题上提进 logo 行右侧空隙，
    使正文首行与联系方式 dl 顶边对齐（h4 行高 20.8 + margin 12 ≈ 33px） */
+/* V324：6 条链接按两列三行排（原来 8 条是四行）；负 margin 仍按 h4 行盒 20.8 + 12 ≈ 33 抵消，不变 */
 .ft-links{margin-top:-33px}
-.ft-links ul{display:grid;grid-auto-flow:column;grid-template-rows:repeat(4,auto);grid-template-columns:repeat(2,max-content);gap:0 clamp(40px,5vw,88px);list-style:none}
+.ft-links ul{display:grid;grid-auto-flow:column;grid-template-rows:repeat(3,auto);grid-template-columns:repeat(2,max-content);gap:0 clamp(40px,5vw,88px);list-style:none}
 .ft-links li{margin:0}
-.ft-bar{border-top:1px solid rgba(20,20,20,.08);padding-block:22px;display:flex;justify-content:space-between;gap:10px 14px;flex-wrap:wrap;font-size:0.8125rem;color:rgba(20,20,20,.45);letter-spacing:.04em}
+.ft-bar{border-top:1px solid rgba(20,20,20,.08);padding-block:16px;display:flex;justify-content:space-between;gap:10px 14px;flex-wrap:wrap;font-size:0.8125rem;color:rgba(20,20,20,.45);letter-spacing:.04em}
 .ft-bar>span{text-wrap:pretty}
 .ft-bar a{color:inherit}
 .ft-bar a:hover{color:var(--accent)}
@@ -890,12 +893,13 @@ html.pg-on{scroll-behavior:auto}
     flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;min-height:0}
   /* V299 用户指令（V298 做反了）：最后一屏顶对齐 —— 先合作伙伴、再接页脚，
      页脚允许超出屏幕外。不能为了「露出完整页脚」把合作区压扁，那是拿合作伙伴的信息去换。
-     做法：合作区高度 = 100vh − 页脚自然高；页脚自然高由 home-scroll.js 实测写进 --footh
-     （页脚高度随宽度变，写死 433 会在大屏/窄屏错位），CSS 里的 433 只是 JS 未跑时的兜底。
+     做法：合作区高度 = 100vh − 页脚自然高；     页脚自然高由 home-scroll.js 实测写进 --footh
+     （页脚高度随宽度变，写死会在大屏/窄屏错位），CSS 里的 348 只是 JS 未跑时的兜底，
+     V324 页脚收紧后实测 348px（原 433px）。
      内容顶对齐、不再垂直居中；页脚恢复自然高度、不裁不压。
      内容比剩余空间高时合作区自己撑高（shrink 也是 0），页脚被推到屏外 —— 符合预期。
      窄屏（<900）不进这套规则，仍是自然文档流。 */
-  body[data-page="index"]{--footh:433px}
+  body[data-page="index"]{--footh:348px}
   body[data-page="index"] .sec-partners{
     flex-shrink:0;min-height:calc(100vh - var(--footh));
     padding-bottom:clamp(36px,6vh,54px)}

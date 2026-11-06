@@ -253,14 +253,13 @@
   /* V199：显示名改短名、按用户指定分两列（列序即数组序，CSS 按 4 行竖排）；
      江苏易交易随两列方案移除。URL 仍为各机构官网，与 gxci.com.cn 页脚一致 */
   /* V210：友链名称改回原站全称（gxci.com.cn 页脚原文，除已删的江苏易交易外逐条照抄） */
+  /* V324：按用户指令移除「广西电子学会」「中国东盟-知识产权运营平台」，余 6 条按两列三行排 */
   var FLINKS = [
     ['广西壮族自治区人民政府国有资产监督管理委员会', 'http://gzw.gxzf.gov.cn'],
     ['广西国控资本运营集团有限责任公司', 'https://www.gxgkjt.com'],
     ['广西宏桂资本运营集团有限公司', 'https://www.gxhgzb.com'],
     ['北部湾产权交易所集团股份有限公司', 'http://www.bbwcq.com'],
     ['广西壮族自治区数字证书认证中心有限公司', 'http://www.gxca.com.cn'],
-    ['广西电子学会', 'http://www.gxie.org'],
-    ['中国东盟-知识产权运营平台', 'http://www.gxipop.com'],
     ['南宁市互联网举报·辟谣网站', 'http://www.nnjbpy.org.cn/']
   ];
   var FCONTACT = [

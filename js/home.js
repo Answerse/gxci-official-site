@@ -124,7 +124,8 @@
   var mq1 = document.getElementById('mq1');
   var mq2 = document.getElementById('mq2');
   if (mq1 && mq2) {
-    var names = ['hg', 'bjdx', 'bbwcqjy', 'ejy', 'yh', 'kd', 'zy', 'ca', 'hw', 'gdlz',
+    /* V324：移除「广西一禾投资管理」（用户指定），两行各 12 个保持均衡 */
+    var names = ['hg', 'bjdx', 'bbwcqjy', 'ejy', 'kd', 'zy', 'ca', 'hw', 'gdlz',
       'szsm', 'nd', 'ld', 'dx', 'hsdz', 'jsy', 'wps', 'tj', 'liyade', 'maxhub',
       'hk', 'dj', 'aqg', 'qm', 'yt'];
 
@@ -136,8 +137,8 @@
       el.innerHTML = h + h; /* 复制一份以实现无缝滚动 */
     }
 
-    row(mq1, names.slice(0, 13));
-    row(mq2, names.slice(13));
+    row(mq1, names.slice(0, 12));
+    row(mq2, names.slice(12));
   }
 
 })();
