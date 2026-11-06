@@ -19,6 +19,9 @@
 .dhero-media img.dhero-img--agri{object-position:60% 66%}
 .dhero-media img.dhero-img--jyt{object-position:58% 70%}
 .dhero-media img.dhero-img--nongyi{object-position:58% 66%}
+/* V319 新闻中心换成高调报纸摄影：300px 横槽里只有取到原图下半段才认得出
+   报纸文字栏 + 蓝色圆弧 + 桌面文件夹；垂直 100% 底部对齐，水平居中兼顾窄屏竖向构图 */
+.dhero-media img.dhero-img--news{object-position:50% 100%}
 /* V139 标题改为居中，遮罩由「左深右浅」改成横向均匀压深：
    原来的 90° 渐变到右侧只剩 .02，居中标题的右半会落在亮图上读不清 */
 /* V291 用户指令：蓝色遮罩太重，背景图只剩一团深蓝、没有场景氛围。
