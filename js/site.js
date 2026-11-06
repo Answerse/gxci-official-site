@@ -508,8 +508,16 @@
     var hIsMobile = function () { return window.matchMedia('(max-width:899px)').matches; };
     var hCanHover = function () { return window.matchMedia('(hover:hover) and (pointer:fine)').matches && !hIsMobile(); };
 
-    function hGo(n, byUser) {
+    function hGo(n, byUser, dir) {
+      var oldIdx = hIdx;
       hIdx = ((n % hTotal) + hTotal) % hTotal;
+      /* V331：方向决定详情从哪一侧进、往哪一侧出 —— 前进（自动轮播 / 右箭头 / 更晚年份）
+         新详情自右进、旧详情往左出；后退（左箭头 / 更早年份）反过来。
+         .out 只挂在刚切走的那一项上，下一次切换时统一清掉，不会累积。 */
+      hacc.setAttribute('data-hdir', (dir ? dir === 'fwd' : n >= oldIdx) ? 'fwd' : 'back');
+      var oldItem = hItems[oldIdx];
+      hItems.forEach(function (it) { it.classList.remove('out'); });
+      if (oldIdx !== hIdx && oldItem) oldItem.classList.add('out');
       hItems.forEach(function (it, k) { it.classList.toggle('on', k === hIdx); });
       hBtns.forEach(function (b, k) {
         var on = k === hIdx;
@@ -532,7 +540,7 @@
       hStop();
       if (hReduce || hIsMobile()) return;
       hTimer = setInterval(function () {
-        if (!hPaused && hVisible) hGo(hIdx + 1);
+        if (!hPaused && hVisible) hGo(hIdx + 1, false, 'fwd');
       }, H_DUR);
     }
 
@@ -542,16 +550,16 @@
       b.addEventListener('mouseenter', function () { if (hCanHover()) hGo(k, true); });
     });
     var hPrev = $('.hacc-axis .prev', histBox), hNext = $('.hacc-axis .next', histBox);
-    if (hPrev) hPrev.addEventListener('click', function () { hGo(hIdx - 1, true); });
-    if (hNext) hNext.addEventListener('click', function () { hGo(hIdx + 1, true); });
+    if (hPrev) hPrev.addEventListener('click', function () { hGo(hIdx - 1, true, 'back'); });
+    if (hNext) hNext.addEventListener('click', function () { hGo(hIdx + 1, true, 'fwd'); });
 
     histBox.addEventListener('mouseenter', function () { hPaused = true; });
     histBox.addEventListener('mouseleave', function () { hPaused = false; });
     histBox.addEventListener('focusin', function () { hPaused = true; });
     histBox.addEventListener('focusout', function () { hPaused = false; });
     histBox.addEventListener('keydown', function (e) {
-      if (e.key === 'ArrowRight') { hGo(hIdx + 1, true); e.preventDefault(); }
-      if (e.key === 'ArrowLeft') { hGo(hIdx - 1, true); e.preventDefault(); }
+      if (e.key === 'ArrowRight') { hGo(hIdx + 1, true, 'fwd'); e.preventDefault(); }
+      if (e.key === 'ArrowLeft') { hGo(hIdx - 1, true, 'back'); e.preventDefault(); }
     });
     document.addEventListener('visibilitychange', function () { hPaused = document.hidden; });
 
