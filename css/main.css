@@ -217,7 +217,7 @@ body.dark-hero .nav:not(.on) .burger i{background:#fff}
    否则缩放时遮罩边缘会露白、点阵会被拉散。原 banner-first.webp 仍供党建 .phero 使用。 */
 .hero-bg{position:absolute;inset:0;z-index:0;overflow:hidden}
 .hero-media{position:absolute;inset:-6%;z-index:0;
-  background:url("../assets/img/hero-guokong.webp?v=339") center/cover no-repeat;
+  background:url("../assets/img/hero-guokong.webp?v=346") center/cover no-repeat;
   transform-origin:50% 50%;animation:kenburns 16s ease-in-out infinite alternate;will-change:transform}
 /* V341 用户指令：缩放平移要更明显、更快，方向由下往上（缓慢上摇）。
    原 26s / scale 1→1.09 / 位移 -1.2%,-1% 几乎看不出，改成 16s /
