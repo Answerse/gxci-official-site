@@ -25,13 +25,39 @@
 .ipane-h{font-size:clamp(1.5rem,2.4vw,2rem);font-weight:600;line-height:1.4;letter-spacing:.02em}
 .ipane-hd-gap{margin-top:clamp(56px,8vh,88px)}
 
+/* V366：信息公开三块分块分区（用户指令）。
+   ① 企业基本信息：标题撤掉，只留带框表格，不铺底色；
+   ② 公司组织架构：极浅中性灰底；
+   ③ 公司治理结构：极浅品牌蓝底。两块都用 4px 圆角（全站容器统一），
+   块间留白代替原来 .ipane-hd-gap 的 56–88px 硬间距，标题居中保留。 */
+/* V382：三块背景通栏（full-bleed）——背景铺满整行视口宽，内容靠 padding-inline 自动内缩到版心，
+   与 .wrap 对齐；圆角去掉（通栏不留左右圆角缺口）。 */
+.info-block{
+  width:100vw;
+  margin-left:calc(50% - 50vw);
+  border-radius:0;
+  padding:clamp(28px,4vh,44px) max(var(--pad),calc((100vw - var(--maxw)) / 2));
+}
+/* V384：三块色带连续相接（像首页整条色带），不加块间留白；白/浅灰/白 两色交错即可区分板块。 */
+.info-block+.info-block{margin-top:0}
+.info-block--base{background:#fff}
+.info-block--org{background:rgba(0,0,0,.04)}
+.info-block--gov{background:#fff}
+.info-block--org .ipane-hd,.info-block--gov .ipane-hd{margin-bottom:clamp(18px,2.4vh,26px)}
+/* 防 100vw 在垂直滚动条下横向溢出 */
+.sec-tight-top{overflow-x:clip}
+
 .info-tbl{width:100%;border-collapse:separate;border-spacing:0;border:1px solid rgba(0,0,0,.08);border-radius:4px;padding:clamp(18px,2.6vh,28px) clamp(22px,2.2vw,30px)}
-.info-tbl th,.info-tbl td{padding:clamp(8px,1.1vh,11px) 0;border-top:1px solid var(--line);text-align:left;vertical-align:baseline}
-.info-tbl tr:first-child th,.info-tbl tr:first-child td{padding-top:0;border-top:0}
-.info-tbl th{width:216px;padding-right:40px;font-size:0.8125rem;font-weight:400;line-height:1.7;letter-spacing:.14em;color:var(--mut)}
-.info-tbl td{padding-left:4px;padding-right:0;font-size:1.0625rem;line-height:1.75;color:var(--ink)}
-.info-tbl tr:first-child td{font-size:1.3125rem;font-weight:600;letter-spacing:.01em}
-.info-tbl td.long{font-size:0.9375rem;line-height:1.9;color:var(--ink2)}
+.info-tbl td{padding:clamp(12px,1.4vh,16px) 0;border-top:1px solid var(--line);text-align:left;vertical-align:top}
+.info-tbl tr:first-child td{padding-top:0;border-top:0}
+/* V385：整张表内首行三列（成立时间/法定代表人/信用代码）每格标签在上、值在下；
+   其余字段也标题在上、内容在下；标签与值统一 14px/400，仅以颜色区分（标签灰、值墨），节省横向空间。 */
+.info-tbl .ck{display:block;margin:0 0 7px;font-size:0.875rem;font-weight:400;line-height:1.5;letter-spacing:.02em;color:var(--mut)}
+.info-tbl .cv{display:block;font-size:0.875rem;font-weight:400;line-height:1.85;color:var(--ink)}
+.info-tbl .cv.long{line-height:1.95;color:var(--ink2)}
+/* 首行三列并排，列间留白 */
+.info-tbl .row-3 td:not(:last-child){padding-right:clamp(20px,3vw,44px)}
+.nobr{white-space:nowrap}
 /* V208 用户「基本信息高度缩到现有 40%」：经营范围（许可+一般合并一行）默认收起 2 行，
    底部渐隐，按钮叠在渐隐区右下（不占行高），内容一字未删 */
 
@@ -89,22 +115,18 @@
 .gov-i .cn{display:block;font-size:0.8125rem;letter-spacing:.18em;color:var(--mut)}
 .gov-i h3{margin-top:16px;font-size:1.125rem;font-weight:600;line-height:1.5;letter-spacing:.02em}
 .gov-i p{margin-top:10px;font-size:1rem;line-height:2;color:var(--ink2)}
-@media (max-width:1000px){
-  /* 中等宽度：版心变窄后 300px 的右侧留白会把值列挤成一条，收回留白、同时收窄标签列 */
-  .info-tbl th{width:170px;padding-right:24px}
-  .info-tbl td{padding-right:0}
-}
 @media (max-width:760px){
-  /* 窄屏表格拆成「标签一行 + 值一段」的上下排，避免窄列把法务长文挤成竖条 */
+  /* 窄屏表格拆成字段块上下排，避免窄列把法务长文挤成竖条；首行三列自然降单列 */
   .ipane{max-width:none}
-  .info-tbl,.info-tbl tbody,.info-tbl tr,.info-tbl th,.info-tbl td{display:block;width:auto}
+  .info-tbl,.info-tbl tbody,.info-tbl tr,.info-tbl td{display:block;width:auto}
   .info-tbl tr{padding:18px 0;border-top:1px solid var(--line)}
   .info-tbl tr:first-child{padding-top:0;border-top:0}
-  .info-tbl th,.info-tbl td{padding:0;border:0}
-  .info-tbl th{margin-bottom:8px;line-height:1.7}
-  .info-tbl tr:first-child td{font-size:1.25rem}
+  .info-tbl td{padding:0;border:0}
+  .info-tbl .ck{margin-bottom:8px}
+  .info-tbl .row-3 td:not(:last-child){padding-right:0}
   .gov-grid{grid-template-columns:1fr;gap:30px}
   .gov-i{padding:20px}
+  .info-block+.info-block{margin-top:0}
 }
 
 /* 公司简介（V205 重构）：沿革段 → 发展定位 → 愿景/使命/价值观独立一栏（水平 3 列等高、无标题栏）；
@@ -202,29 +224,26 @@
   .job-card h4{margin-top:26px}
 }
 
-/* 联系方式（V302 用户指令）
-   原版：电话与地址各占半屏、地图全宽 16:9 压在下面 —— 有效信息被稀释，
-   地图反倒成了页面主角。现在改成「信息在左、地图在右且收窄」：
-   左列电话/邮箱 + 地址/公交两条纵向排，右列 3:2 小地图，一屏内读完。 */
+/* 联系方式（V371 用户指令：层级整体重构）
+   旧版 V302 三条各用一套字号字重 —— 电话 22–27px/600、地址卡 h4 17px/600、
+   公交两行 16px，且服务热线与举报邮箱挤在同一块，用户原话「样式层级一团糟」。
+   现在全页只有两级：小标题 13px/400/灰、正文 16px/400/墨，一律不放大不加粗。
+   每条信息 = 水平「图标 + 文字块」，文字块内部垂直「标题 + 正文」；
+   右侧地图卡的地址说明用同一套两级，图标不再是 46px 蓝色圆形色块。 */
 .ct-row{display:grid;grid-template-columns:minmax(0,1fr) clamp(288px,28vw,404px);
   gap:clamp(44px,5.6vw,84px);align-items:start;padding-top:clamp(18px,2.6vh,30px)}
-.ct-info{display:grid;gap:clamp(26px,3.6vh,42px)}
-.ct-lead{display:flex;gap:20px;align-items:flex-start}
-.ct-lead-body small{display:block;font-size:0.8125rem;letter-spacing:.22em;color:var(--mut);margin-bottom:6px}
-.ct-lead-body b{font-family:var(--num);font-size:clamp(1.375rem,1.9vw,1.6875rem);font-weight:600;letter-spacing:.02em}
-.ct-lead-body p{margin-top:6px;font-size:1rem;color:var(--ink2)}
-.ct-card{display:flex;gap:20px;align-items:flex-start}
-.ct-card-body h4{font-size:1.0625rem;font-weight:600;letter-spacing:.05em}
-.ct-card-body p{margin-top:6px;font-size:1rem;line-height:1.85;color:var(--ink2)}
-.ct-card-body .ct-sub{margin-top:8px;font-size:0.8125rem;line-height:1.85;color:var(--mut)}
-/* 图标改圆形 + 标准蓝（原深色 4px 方块，色太重、形状太硬） */
-.ct-ico{flex:none;width:46px;height:46px;border-radius:999px;background:var(--accent);color:#fff;
-  display:flex;align-items:center;justify-content:center}
-.ct-ico svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-/* 地图收成 3:2 小卡，说明条一并压扁 */
+.ct-info{display:grid;gap:clamp(22px,3vh,30px)}
+.ct-item{display:flex;gap:16px;align-items:flex-start}
+.ct-ico{flex:none;width:24px;height:24px;color:#2b3a92;display:flex;align-items:center;justify-content:center}
+.ct-ico svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.ct-body{display:flex;flex-direction:column;gap:6px;min-width:0}
+.ct-body small{margin:0;font-size:0.8125rem;font-weight:400;line-height:1.5;letter-spacing:0;color:var(--mut)}
+.ct-body p{margin:0;font-size:1rem;font-weight:400;line-height:1.7;color:var(--ink)}
+/* 地图仍是 3:2 小卡；说明条与左侧同一套两级文字 */
 #pane-contact .map-card img{aspect-ratio:3/2}
-#pane-contact .map-card .mc-b{padding:12px 16px;font-size:0.9375rem;line-height:1.8}
-#pane-contact .map-card .mc-b b{font-size:1rem;margin-bottom:2px}
+#pane-contact .map-card .mc-b{padding:16px 18px;font-size:1rem;line-height:1.7;color:var(--ink)}
+#pane-contact .map-card .mc-b small{display:block;margin:0 0 6px;font-size:0.8125rem;font-weight:400;line-height:1.5;color:var(--mut)}
+#pane-contact .map-card .mc-b p{margin:0;font-size:1rem;font-weight:400;line-height:1.7;color:var(--ink)}
 /* 联系页内容少，底部不需要和别的 tab 一样的收尾留白 */
 #pane-contact{padding-bottom:clamp(16px,2.4vh,28px)}
 @media (max-width:900px){

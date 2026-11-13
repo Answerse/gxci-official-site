@@ -10,6 +10,7 @@ BASE = os.environ.get("SITE_BASE", "http://127.0.0.1:8410/")  # 可指向 file:/
 CDP_PORT = os.environ.get("CDP_PORT", "9335")  # 新版 Chrome 需 --remote-allow-origins=* 才接受 ws
 GOLD_RGB = ("200,164,93", "184,134,11")  # --gold / --gold-d
 BLUE_RGB = ("43,58,146",)                # --accent #2b3a92（浅底交互）
+BLUE6_RGB = ("43,58,146,0.06",)          # 标准蓝 6%（V370 导航子菜单 hover 底）
 BLUE2_RGB = ("124,140,232",)             # --accent2 #7c8ce8（深底交互，纯 --accent 在深蓝上不可见）
 GHOST_RGB = ("247,248,250",)             # ghost-num 淡灰水印 #f7f8fa
 INK_RGB = ("20,20,20",)                  # --ink 正文墨色（中性标签 hover 加深）
@@ -21,7 +22,9 @@ TINT_RGB = ("46,74,109",)                # 首页业务卡 --t1 藏蓝（取自 
 # 期望色：gold=交互金  blue=蓝结构块的蓝 hover（块内同色系）
 CASES = [
     ("index.html", '.menu a.m[data-nav="business"]', '.menu a.m[data-nav="business"]', '::after', 'backgroundColor', 'blue', '导航主项 hover 下划线（白底态改标准蓝，2026-10-26；深底透明态仍金）'),
-    ("index.html", '.ml', '.ml b', None, 'color', 'blue', '子菜单卡片 hover 子模块标题转蓝（V184 卡片式：图标与标题同步变蓝）'),
+    # V367 用户指令：子菜单四栏统一 400 字重 + #000，hover 只加 5% 标准蓝底。
+    # 原「hover 子模块标题转蓝（V184）」的断言随之作废 —— 标题不再随 hover 变色。
+    ("index.html", '.ml', '.ml', None, 'backgroundColor', 'blue6', '子菜单项 hover 6% 标准蓝底（V370；hover 标题转标准蓝）'),
     ("index.html", '.bcard', '.bcard h3', None, 'color', 'white', '首页业务卡 hover 标题保持白色（V160 图片渐变卡：不再转蓝、不出描边，只浮出摘要）'),
     ("index.html", '.bcard--ent', '.bcard--ent', None, 'backgroundImage', 'tint', '首页业务卡渐变压在卡图主色上（V160：--t1 藏蓝已生效）'),
     ("index.html", '.smore', '.smore', None, 'color', 'blue', '板块“查看更多”hover（V93 金改蓝）'),
@@ -57,7 +60,7 @@ IMGHOVER_RGB = {  # V194 产品卡 hover 铭牌色（按各卡配图取主色压
 def ok_color(v, which):
     if which.startswith("pc:"):
         return IMGHOVER_RGB[which[3:]] in str(v).replace(" ", "")
-    rgb = {"gold": GOLD_RGB, "blue": BLUE_RGB, "blue2": BLUE2_RGB, "ghost": GHOST_RGB, "ink": INK_RGB, "mut": MUT_RGB, "white": WHITE_RGB, "tint": TINT_RGB}[which]
+    rgb = {"gold": GOLD_RGB, "blue": BLUE_RGB, "blue2": BLUE2_RGB, "blue6": BLUE6_RGB, "ghost": GHOST_RGB, "ink": INK_RGB, "mut": MUT_RGB, "white": WHITE_RGB, "tint": TINT_RGB}[which]
     return any(g in str(v).replace(" ", "") for g in rgb)
 
 

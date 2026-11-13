@@ -6,9 +6,9 @@
 <title>关于我们 - 广西计算机有限责任公司</title>
 <meta name="description" content="广西计算机有限责任公司前身系 1986 年经广西壮族自治区人民政府批准设立的广西壮族自治区计算机公司，是广西最早开展计算机及配套产品技术服务的企业，现为广西国控资本运营集团有限公司下属国有全资三级子企业。">
 <link rel="icon" type="image/png" href="assets/img/_img_index_bbw-logo.png?v=351">
-<link rel="stylesheet" href="css/main.min.css?v=352">
-<link rel="stylesheet" href="css/pages.min.css?v=352">
-<link rel="stylesheet" href="css/sub.min.css?v=352">
+<link rel="stylesheet" href="css/main.min.css?v=381">
+<link rel="stylesheet" href="css/pages.min.css?v=359">
+<link rel="stylesheet" href="css/sub.min.css?v=356">
 </head>
 <body class="dark-hero" data-page="about">
 
@@ -25,8 +25,6 @@
   <div class="wrap">
     <div class="atabs rv">
       <button data-t="profile" class="act">公司简介</button>
-      <button data-t="history">发展历程</button>
-      <button data-t="jobs">招聘信息</button>
       <button data-t="contact">联系我们</button>
       <button data-t="open">信息公开</button>
     </div>
@@ -51,67 +49,36 @@
       </div>
     </div>
 
-    <!-- 发展历程 -->
-    <div class="apane" id="pane-history">
-      <div class="hist-head rv">
-        <p class="hh-tag">SINCE 1986</p>
-        <h3 class="hh-title">发展历程</h3>
-      </div>
-      <div class="htl" id="hist-list"></div>
-    </div>
-
-    <!-- 招聘信息 -->
-    <div class="apane" id="pane-jobs">
-      <div class="job-grid rv">
-        <a class="job-card" href="news-detail.html?id=118">
-          <span class="jc-tag">招聘启事</span>
-          <h4>广西计算机有限责任公司<br>2023 年人才招聘启事</h4>
-          <span class="jc-meta"><span class="jc-date">2023-03-16</span><span class="jc-arrow">→</span></span>
-        </a>
-        <a class="job-card" href="news-detail.html?id=118">
-          <span class="jc-tag">录用公示</span>
-          <h4>关于 2022 年上半年招聘<br>拟录用人员名单公示</h4>
-          <span class="jc-meta"><span class="jc-date">2022-07-20</span><span class="jc-arrow">→</span></span>
-        </a>
-        <a class="job-card" href="news-detail.html?id=118">
-          <span class="jc-tag">招聘启事</span>
-          <h4>广西计算机有限责任公司<br>2022 年上半年招聘启事</h4>
-          <span class="jc-meta"><span class="jc-date">2022-06-01</span><span class="jc-arrow">→</span></span>
-        </a>
-      </div>
-      <p class="note-muted">＊招聘公告详情以公司官方发布渠道为准。</p>
-    </div>
-
     <!-- 联系我们 -->
     <div class="apane" id="pane-contact">
       <div class="ct-row rv">
-        <!-- V302：信息在左、地图在右并收窄 —— 联系页的主语是电话/地址，不是地图 -->
+        <!-- V371：左侧每条 = 水平「图标 + 文字块」，文字块垂直「小标题 + 正文」；
+             全页统一两级字号字重，服务热线与举报邮箱不再挤在同一块 -->
         <div class="ct-info">
-          <div class="ct-lead">
+          <div class="ct-item">
             <span class="ct-ico" aria-hidden="true">
               <svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8 9.6a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2z"/></svg>
             </span>
-            <div class="ct-lead-body">
+            <div class="ct-body">
               <small>服务热线</small>
-              <b>0771-5851825</b>
-              <p>举报邮箱：gxcc@bbwcq.com</p>
+              <p>0771-5851825</p>
             </div>
           </div>
-          <div class="ct-card">
+          <div class="ct-item">
             <span class="ct-ico" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 7 8.5 6 8.5-6"/></svg>
             </span>
-            <div class="ct-card-body">
-              <h4>广西计算机公司</h4>
-              <p>南宁市青秀区枫林路18号</p>
+            <div class="ct-body">
+              <small>举报邮箱</small>
+              <p>gxcc@bbwcq.com</p>
             </div>
           </div>
-          <div class="ct-card">
+          <div class="ct-item">
             <span class="ct-ico" aria-hidden="true">
               <svg viewBox="0 0 24 24"><path d="M5 16V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10"/><path d="M3 16h18"/><path d="M7 16v3"/><path d="M17 16v3"/><path d="M5 10h14"/><circle cx="9" cy="13" r="1"/><circle cx="15" cy="13" r="1"/></svg>
             </span>
-            <div class="ct-card-body">
-              <h4>附近公交</h4>
+            <div class="ct-body">
+              <small>附近公交</small>
               <p>枫林百花岭路口站（约 500 米）103 / 52 / 94 / K209 路</p>
               <p>云景枫林路口站（约 220 米）28 / B127 / B128 / 106 路</p>
             </div>
@@ -119,7 +86,7 @@
         </div>
         <div class="map-card">
           <img src="assets/img/_img_other_map.jpg?v=96" alt="公司位置地图" loading="lazy" decoding="async">
-          <div class="mc-b"><b>广西计算机公司</b>南宁市青秀区枫林路18号</div>
+          <div class="mc-b"><small>广西计算机有限责任公司</small><p>南宁市青秀区枫林路18号</p></div>
         </div>
       </div>
     </div>
@@ -127,25 +94,27 @@
     <!-- 信息公开 -->
     <div class="apane" id="pane-open">
       <div class="ipane">
-        <header class="ipane-hd rv">
-          <h3 class="ipane-h">企业基本信息</h3>
-        </header>
-        <table class="info-tbl rv">
-          <tr><th>公司名称</th><td>广西计算机有限责任公司</td></tr>
-          <tr><th>统一社会信用代码</th><td>914500001982207618</td></tr>
-          <tr><th>法定代表人</th><td>邹树胜</td></tr>
-          <tr><th>成立时间</th><td>1990 年 04 月 21 日</td></tr>
-          <tr><th>注册地址</th><td>中国（广西）自由贸易试验区南宁片区凯旋路 15 号南宁绿地中心 5 号楼 6 层</td></tr>
-          <tr class="info-biz"><th>经营范围<br>（营业执照）</th><td class="long">
+        <div class="info-block info-block--base rv">
+          <table class="info-tbl">
+            <tr><td colspan="3"><span class="ck">公司名称</span><span class="cv">广西计算机有限责任公司</span></td></tr>
+            <tr class="row-3">
+              <td><span class="ck">成立时间</span><span class="cv">1990 年 04 月 21 日</span></td>
+              <td><span class="ck">法定代表人</span><span class="cv">邹树胜</span></td>
+              <td><span class="ck">统一社会信用代码</span><span class="cv">914500001982207618</span></td>
+            </tr>
+            <tr><td colspan="3"><span class="ck">注册地址</span><span class="cv">中国（广西）自由贸易试验区南宁片区凯旋路 15 号南宁绿地中心 5 号楼 6 层</span></td></tr>
+            <tr><td colspan="3"><span class="ck">经营范围（营业执照）</span><span class="cv long">
               <p>许可项目：互联网上网服务；互联网新闻信息服务；专利代理；第二类增值电信业务。（依法须经批准的项目，经相关部门批准后方可开展经营活动，具体经营项目以相关部门批准文件或许可证件为准）</p>
               <p>一般项目：云计算设备销售；数据处理服务；技术服务、技术开发、技术咨询、技术交流、技术转让、技术推广；大数据服务；互联网数据服务；区块链技术相关软件和服务；网络技术服务；信息技术咨询服务；电子产品销售；新能源原动设备销售；计算器设备销售；计算机软硬件及辅助设备批发、零售；计算机软硬件及外围设备制造；信息系统集成服务；软件开发；互联网销售（除销售需要许可的商品）；数据处理和存储支持服务；国内贸易代理；信息咨询服务（不含许可类信息咨询服务）；安全咨询服务；以自有资金从事投资活动；社会经济咨询服务；市场营销策划；融资咨询服务；广告制作、设计、代理；数字内容制作服务（不含出版发行）；知识产权服务（专利代理服务除外）；版权代理；法律咨询（不含依法须律师事务所执业许可的业务）；人工智能双创服务平台；合同能源管理；在线能源计量技术研发；新兴能源技术研发；科技中介服务；企业管理咨询；物联网设备制造、研发、应用服务、销售；配电开关控制设备销售；电气设备销售；电力电子元器件销售；风力发电技术服务；电子、机械设备维护（不含特种设备）；物联网技术服务。（除依法须经批准的项目外，凭营业执照依法自主开展经营活动）</p>
-          </td></tr>
-        </table>
+            </span></td></tr>
+          </table>
+        </div>
 
-        <header class="ipane-hd ipane-hd-gap rv">
+        <div class="info-block info-block--org rv">
+        <header class="ipane-hd">
           <h3 class="ipane-h">公司组织架构</h3>
         </header>
-        <div class="org rv">
+        <div class="org">
           <div class="org-top">
             <span class="org-box">北部湾产权交易所集团股份有限公司</span>
             <span class="org-box">广西宏桂资本运营集团有限公司</span>
@@ -179,21 +148,23 @@
             </div>
           </div>
         </div>
+        </div>
 
-        <header class="ipane-hd ipane-hd-gap rv">
+        <div class="info-block info-block--gov rv">
+        <header class="ipane-hd">
           <h3 class="ipane-h">公司治理结构</h3>
         </header>
-        <div class="gov-grid rv">
+        <div class="gov-grid">
           <div class="gov-i"><span class="cn">党支部</span><h3>支部书记</h3><p>彭燕</p></div>
-          <div class="gov-i"><span class="cn">董事会</span><h3>董事长 / 董事</h3><p>董事长：邹树胜<br>董事：王海牢、何露、龚骏毅（职工董事）</p></div>
+          <div class="gov-i"><span class="cn">董事会</span><h3>董事长 / 董事</h3><p>董事长：邹树胜<br>董事：王海牢、何露、龚骏毅（<span class="nobr">职工董事</span>）</p></div>
           <div class="gov-i"><span class="cn">经营管理层</span><h3>总经理 / 副总经理</h3><p>总经理：邹树胜<br>副总经理：龚骏毅</p></div>
+        </div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<script src="js/site.js?v=354"></script>
-<script src="js/about.js?v=156"></script>
+<script src="js/site.js?v=363"></script>
 </body>
 </html>

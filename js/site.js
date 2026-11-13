@@ -34,8 +34,10 @@
   };
 
   /* ---------- 导航 & 页脚 ---------- */
-  /* 线形图标集（V184）：24×24 / 1.4 描边 / 圆头圆角，颜色一律 currentColor。
-     只定义一次，子菜单卡片用 <use href="#id"> 引用。 */
+  /* 图标集（V184 线性 / V283 面性）：24×24 / 1.6 描边 / 圆头圆角，颜色一律 currentColor。
+     只定义一次，<use href="#id"> 引用。线性版供业务详情页「具体服务内容」卡片等使用；
+     面性版（id 加 -f）V369 起是导航子菜单的常态图标 —— 线性 symbol 带 fill="none"，
+     不能直接当填充图标用。 */
   var SPRITE = '<svg class="ico-sprite" aria-hidden="true" focusable="false">'
     + '<symbol id="ic-org" viewBox="1.8 1.8 20.4 20.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
     + '<rect x="9" y="3" width="6" height="5.4" rx="1"/><rect x="3" y="15.6" width="6" height="5.4" rx="1"/><rect x="15" y="15.6" width="6" height="5.4" rx="1"/><path d="M12 8.4V12M6 15.6V12h12v3.6"/></symbol>'
@@ -167,30 +169,52 @@
   /* V325：茧易通换成用户提供的卡通 Logo（透明底 PNG），其余四枚仍是 Figma 导出的 SVG。
      扩展名按 slug 查表，不为单个资源在拼串里写死分支。 */
   var LOGO_EXT = { cocoon: 'png' };
-  function mega(items) {
-    /* data-n 只作钩子保留：V297 曾据此给 2 项菜单收窄列宽，V301 用户要求「尺寸自适应」，
-       已改回 1fr 均分，列宽跟着面板走。 */
-    var h = '<div class="mega"><div class="wrap"><div class="mega-cards" data-n="' + items.length + '">';
-    items.forEach(function (it) {
-      /* V317：产品中心这一栏改用各产品自己的彩色 Logo（it[4] 有值即走图片分支），
-         其余四栏仍用线性 / 面性双 svg 交叉淡入（V283）。两者共用 .ml-ico 盒子，
-         卡片级配色由 data-logo 在 CSS 里指定，不写行内样式。
-         V325：Logo 资源统一升 v325，扩展名由 LOGO_EXT 决定。 */
-      var logo = it[4];
-      var ext = logo ? (LOGO_EXT[logo] || 'svg') : '';
-      /* V351：茧易通是位图，重压过（320px/137KB → 96px/19KB），单独升版本；
-         其余四枚 SVG 没变，保持原版本号，避免无谓重下。 */
-      var lv = logo === 'cocoon' ? '351' : '325';
-      var ico = logo
-        ? '<img class="ml-logo-img" src="assets/img/prod/logo-' + logo + '.' + ext + '?v=' + lv + '" alt="" aria-hidden="true">'
-        : '<svg class="ml-ic" aria-hidden="true" focusable="false"><use href="#' + it[3] + '"></use></svg>'
-          + '<svg class="ml-ic-f" aria-hidden="true" focusable="false"><use href="#' + it[3] + '-f"></use></svg>';
-      h += '<a class="ml' + (logo ? ' ml-logo' : '') + '"'
-        + (logo ? ' data-logo="' + logo + '"' : '') + ' href="' + it[1] + '">'
-        + '<span class="ml-ico">' + ico + '</span>'
-        + '<b>' + it[0] + '</b><small>' + it[2] + '</small></a>';
-    });
-    return h + '</div></div></div>';
+  /* V376：把单条菜单项的 HTML 抽成 mlItem()，业务网格与产品双栏共用，避免重复拼串。 */
+  function mlItem(it) {
+    /* V317：产品中心一栏（含子产品）用各产品自己的彩色 Logo（it[4] 有值即走图片分支），
+       用户明确保留；其余三栏（业务/新闻/关于）用线性图标：V369 曾改面性填充、V374 后
+       用户要求改回线性，故此处用 #id（线性版，fill=none + 描边）。
+       两者共用 .ml-ico 盒子，彩色 Logo 走 .ml-logo-img，卡片级配色由 data-logo 在 CSS 指定。
+       V325：Logo 资源统一升 v325；V351：茧易通位图单独升 v351。 */
+    var logo = it[4];
+    var ext = logo ? (LOGO_EXT[logo] || 'svg') : '';
+    var lv = logo === 'cocoon' ? '351' : '325';
+    var ico = logo
+      ? '<img class="ml-logo-img" src="assets/img/prod/logo-' + logo + '.' + ext + '?v=' + lv + '" alt="" aria-hidden="true">'
+      : '<svg class="ml-ic" aria-hidden="true" focusable="false"><use href="#' + it[3] + '"></use></svg>';
+    return '<a class="ml' + (logo ? ' ml-logo' : '') + '"'
+      + (logo ? ' data-logo="' + logo + '"' : '') + ' href="' + it[1] + '">'
+      + '<span class="ml-ico">' + ico + '</span>'
+      + '<b>' + it[0] + '</b></a>';
+  }
+  function mega(items, cls) {
+    /* data-n 只作钩子保留（V297/V301 列宽已改回 1fr 自适应）。
+       cls 挂在外层 .mega 上：业务领域传 'mega-biz' 切成 3×2 网格；其余栏不传，保持竖排。
+       V363：面板挂在标签正下方窄下拉，说明文字不再渲染（数组第 3 项仅保留数据）。 */
+    var h = '<div class="mega' + (cls ? ' ' + cls : '') + '"><div class="mega-cards" data-n="' + items.length + '">';
+    items.forEach(function (it) { h += mlItem(it); });
+    return h + '</div></div>';
+  }
+  /* V376：产品中心按两条产品线分左右两栏。左栏 桂农易通产品线（标题 + 小字说明 +
+     垂直列出 茧易通/陈皮通/林易通），右栏 桂资通产品线（标题 + 小字说明 + 桂资通）。
+     桂农易通/桂资通 标题保留原链接（product-nongyi.html / case-house.html），
+     原 5 条产品数据一条没删，只是重新分组到两条产品线之下。 */
+  function megaProducts() {
+    function col(head, sub, href, subs) {
+      var items = subs.map(mlItem).join('');
+      return '<div class="mega-col">'
+        + '<a class="ml-head" href="' + href + '"><b>' + head + '</b><small>' + sub + '</small></a>'
+        + '<div class="mega-cards">' + items + '</div></div>';
+    }
+    return '<div class="mega mega-prod"><div class="mega-cols">'
+      + col('桂农易通', '特色农产品产业平台', 'product-nongyi.html',
+          [['桂农易通', 'product-nongyi.html', '特色农产品产业服务平台', 'ic-leaf', 'nongyi'],
+           ['茧易通', 'case-jiayitong.html', '桑蚕茧丝绸产业服务平台', 'ic-cocoon', 'cocoon'],
+           ['陈皮通', 'case-chenpitong.html', '浦北陈皮产业服务平台', 'ic-orange', 'chenpi'],
+           ['林易通', 'case-linyitong.html', '林产品交易线上综合平台', 'ic-tree', 'forest']])
+      + col('桂资通', '资产运营平台', 'case-house.html',
+          [['桂资通', 'case-house.html', '国企房产资产统一登记', 'ic-house', 'house']])
+      + '</div></div>';
   }
 
   var NAV = SPRITE
@@ -210,18 +234,12 @@
       ['人工智能与智能应用', 'area-ai.html', '大模型与智能审核', 'ic-cap'],
       ['信息基础设施服务', 'area-infra.html', '机房、网络与云资源', 'ic-build'],
       ['国产化产品与服务', 'area-domestic.html', '国产终端与基础软件', 'ic-chip']
-    ])
+    ], 'mega-biz')
     + '</li>'
     + '<li class="has-mega"><a class="m" data-nav="products" href="products.html">产品中心</a>'
-    /* V181：桂资通是业务领域（area-asset.html），不进产品中心，故原「桂资通」分组撤掉；
-       菜单与 products.html 的 5 张卡一一对应，桂农易通既是业务也是产品，这里作为产品条目 */
-    + mega([
-      ['桂农易通', 'product-nongyi.html', '特色农产品产业服务平台', 'ic-leaf', 'nongyi'],
-      ['茧易通', 'case-jiayitong.html', '桑蚕茧丝绸产业服务平台', 'ic-cocoon', 'cocoon'],
-      ['陈皮通', 'case-chenpitong.html', '浦北陈皮产业服务平台', 'ic-orange', 'chenpi'],
-      ['林易通', 'case-linyitong.html', '林产品交易线上综合平台', 'ic-tree', 'forest'],
-      ['桂资通', 'case-house.html', '国企房产资产统一登记', 'ic-house', 'house']
-    ])
+    /* V376：产品中心按两条产品线分左右两栏（见 megaProducts()），不再平铺 5 条。
+       桂农易通/桂资通 标题保留原链接，原 5 条产品数据全部保留、重新分组。 */
+    + megaProducts()
     + '</li>'
     + '<li class="has-mega"><a class="m" data-nav="news" href="news.html">新闻中心</a>'
     /* V352 用户指令：党建工作回到新闻中心当一个分类标签，党建独立页 party.html
@@ -235,8 +253,6 @@
     + '<li class="has-mega"><a class="m" data-nav="about" href="about.html">关于我们</a>'
     + mega([
       ['公司简介', 'about.html?s=profile', '定位、使命与价值主张', 'ic-pen'],
-      ['发展历程', 'about.html?s=history', '1986—2026 四个十年', 'ic-clock'],
-      ['招聘信息', 'about.html?s=jobs', '人才招聘与录用公示', 'ic-user'],
       ['联系我们', 'about.html?s=contact', '地址、热线与交通', 'ic-pin'],
       ['信息公开', 'about.html?s=open', '企业信息公开', 'ic-doc']
     ])
@@ -354,8 +370,9 @@
     if (jumpTo(u.hash)) { history.replaceState(null, '', u.hash); e.preventDefault(); }
   });
 
-  /* ---------- 通栏子菜单：展开时页头转白（深色首屏上也保持可读），
-     同时给页面内容加黑色半透明遮罩（body.mega-open，V193）。
+  /* ---------- 子菜单：展开时页头转白（深色首屏上也保持可读）。
+     V363：按用户指令撤掉全屏黑色半透明遮罩（body.mega-open 已删），
+     面板改为标签正下方的窄下拉；页头转白、反白 logo 换回彩色仍由 .mega-on 负责。
      V213：关闭延迟 350ms（纯 CSS :hover 移出一帧即消失，长距离移动
      误出就全关）；面板显隐改由 JS 类 .open 控制，:hover 只管链接配色 ---------- */
   var navEl = $('.nav');
@@ -365,11 +382,36 @@
   var MEGA_INTENT = 180;
   function megaSet(on) {
     navEl.classList.toggle('mega-on', on);
-    document.body.classList.toggle('mega-open', on);
   }
-  /* V229：面板已展开时在触发项之间切换，旧/新面板都跳过过渡（瞬切）——
-     各面板几何全同（同位同尺寸同白底），瞬切后视觉即「面板不动、只换内容」，
-     消除收起又展开的闪动；从关闭态首次唤出仍保留淡入动画 */
+  /* V382：面板默认以 hovered 标签为中心（让用户明确当前 hover 的是哪个标签），
+     相对触发 li 计算居中位置 desiredLeft = li.width/2 - panel.width/2；
+     空间不足（居中后会超出视口任一边）时向内的方向拉回，保证不被裁切：
+     - 右溢：左移使右缘不超 vw-pad；
+     - 左溢：右移使左缘不低于 pad（最左标签 + 宽面板居中会把左缘推出视口，对称处理）。
+     两端都钳制即覆盖全部桌面场景。绝不改用视口居中（那会让面板脱离标签跑到屏幕中间、对不上）。 */
+  function megaClamp(li) {
+    var m = li.querySelector('.mega');
+    if (!m) return;
+    m.style.right = '';
+    m.style.left = '';
+    var r = li.getBoundingClientRect();
+    var w = m.offsetWidth;
+    var vw = window.innerWidth || document.documentElement.clientWidth;
+    var pad = 8;
+    /* 1. 默认：以标签为中心 */
+    var left = r.width / 2 - w / 2;
+    /* 2. 右溢则左移 */
+    var rightEdge = r.left + left + w;
+    if (rightEdge > vw - pad) left -= (rightEdge - (vw - pad));
+    /* 3. 左溢则右移（居中 + 宽面板在最左标签时会飞出左边，对称钳制） */
+    var leftEdge = r.left + left;
+    if (leftEdge < pad) left += (pad - leftEdge);
+    m.style.left = left + 'px';
+  }
+  /* V229：面板已展开时在触发项之间切换，旧/新面板都跳过过渡（瞬切），
+     消除收起又展开的闪动；从关闭态首次唤出仍保留淡入动画。
+     V363：面板改为跟随标签居中后，各栏位置不再相同，瞬切时面板会随标签横移；
+     这是新布局的固有行为，未改交互逻辑。 */
   function megaQuickClear() {
     clearTimeout(megaQ);
     megaQ = setTimeout(function () {
@@ -390,6 +432,7 @@
     megaCur = li;
     li.classList.add('open');
     megaSet(true);
+    megaClamp(li);
   }
   function megaCloseSoon() {
     clearTimeout(megaT);
@@ -426,6 +469,10 @@
   if (navEl) navEl.addEventListener('mouseleave', function () {
     clearTimeout(megaIntentT);   /* 否则鼠标已离开，待切换的定时器仍会把面板掀开 */
     megaCloseSoon();
+  });
+  /* 窗口尺寸变化时若正展开某面板则重新钳制位置（窄屏拉宽后可能悬空右溢）。 */
+  window.addEventListener('resize', function () {
+    if (megaCur && megaCur.classList.contains('open')) megaClamp(megaCur);
   });
 
   /* ---------- 汉堡 ---------- */
@@ -500,7 +547,15 @@
     var hItems = $$('.hacc-item', hacc);
     var hBtns = $$('.hacc-btn', hacc);
     var hTotal = hItems.length;
-    var hIdx = 0, hTimer = null, hPaused = false, hVisible = false;
+    /* V360 用户指令：默认激活时间轴上最新的年份，不再从 1986 起。
+       按按钮文字取最大年份的索引（不写死最后一项），日后新增年份自动生效；
+       解析不到年份时退回最后一项。按钮与详情项一一对应。 */
+    var hLatest = hTotal - 1, hMaxYr = -Infinity;
+    hBtns.forEach(function (b, k) {
+      var y = parseInt((b.textContent || '').trim(), 10);
+      if (!isNaN(y) && y > hMaxYr) { hMaxYr = y; hLatest = k; }
+    });
+    var hIdx = hLatest, hTimer = null, hPaused = false, hVisible = false;
     /* V320 用户指令：切换间隔缩短一点。详情入场约 0.7s（含错峰延迟），
        3s 一轮仍能留出 2.3s 稳定阅读时间；再短就会变成「来不及看清就翻页」。 */
     var H_DUR = 3000;
@@ -508,7 +563,19 @@
     var hIsMobile = function () { return window.matchMedia('(max-width:899px)').matches; };
     var hCanHover = function () { return window.matchMedia('(hover:hover) and (pointer:fine)').matches && !hIsMobile(); };
 
-    function hGo(n, byUser, dir) {
+    /* 窄屏时间轴横向可滑：把当前年份滚进视野。instant=true 用于初始化 /
+       进入该屏时定位，避免页面刚加载就播一段看不见的平滑滚动。 */
+    function hScrollCurrent(instant) {
+      if (!hIsMobile() || !hBtns[hIdx]) return;
+      var b = hBtns[hIdx], ax = b.parentNode;
+      var bl = b.offsetLeft, br = bl + b.offsetWidth;
+      if (bl < ax.scrollLeft || br > ax.scrollLeft + ax.clientWidth) {
+        ax.scrollTo({ left: bl - (ax.clientWidth - b.offsetWidth) / 2,
+          behavior: instant ? 'auto' : 'smooth' });
+      }
+    }
+
+    function hGo(n, byUser, dir, instant) {
       var oldIdx = hIdx;
       hIdx = ((n % hTotal) + hTotal) % hTotal;
       /* V331：方向决定详情从哪一侧进、往哪一侧出 —— 前进（自动轮播 / 右箭头 / 更晚年份）
@@ -525,14 +592,7 @@
         b.setAttribute('aria-expanded', on ? 'true' : 'false');
       });
       /* V316：进度条与计数已撤，翻年只靠两侧箭头 */
-      /* 窄屏时间轴可横向滑动，把当前年份滚进视野 */
-      if (hIsMobile() && hBtns[hIdx]) {
-        var b = hBtns[hIdx], ax = b.parentNode;
-        var bl = b.offsetLeft, br = bl + b.offsetWidth;
-        if (bl < ax.scrollLeft || br > ax.scrollLeft + ax.clientWidth) {
-          ax.scrollTo({ left: bl - (ax.clientWidth - b.offsetWidth) / 2, behavior: 'smooth' });
-        }
-      }
+      hScrollCurrent(instant);
       if (byUser) hStart();
     }
     function hStop() { if (hTimer) { clearInterval(hTimer); hTimer = null; } }
@@ -566,10 +626,13 @@
     if ('IntersectionObserver' in window) {
       new IntersectionObserver(function (es) {
         hVisible = es[0].isIntersecting;
-        if (hVisible) hStart(); else hStop();
+        if (hVisible) { hStart(); hScrollCurrent(true); } else hStop();
       }, { threshold: 0.2 }).observe(histBox);
     }
-    hGo(0);
+    /* 初始就停在最新年份：hIdx 已等于 hLatest，oldIdx === hIdx，
+       不会给任何一项挂 .out、不会播一次「1986 退场」的动画。 */
+    hGo(hLatest, false, 'fwd', true);
+    requestAnimationFrame(function () { hScrollCurrent(true); });
   }
 
   /* ---------- 新闻列表（新闻中心 / 党建列表共用） ---------- */
@@ -783,7 +846,7 @@
     art.style.opacity = 0; art.style.transition = 'opacity .5s';
   }
 
-  /* ---------- 页内标签：关于我们（5 项） ---------- */
+  /* ---------- 页内标签：关于我们（V366 起 3 项：公司简介 / 联系我们 / 信息公开） ---------- */
   var at = $('.atabs, .bztabs');
   if (at) {
     var tabs = $$('button', at);

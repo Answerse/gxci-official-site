@@ -82,15 +82,15 @@ body.dark-hero .nav.dark-clear:not(.mega-on) .logo .lg-w{display:block}
    党建页面里 hover「产品中心」也会跟着变红。--mc = 标准色，--mc2 = 深底页头上的提亮版。 */
 .menu>li{position:relative;display:flex;align-items:center;--mc:#2b3a92;--mc2:#7c8ce8}
 .menu>li.mega-party{--mc:#9a2026;--mc2:#e6a8a8}
-.menu>li.has-mega{position:static;padding:0 10px;margin:0 -10px}
+.menu>li.has-mega{position:relative;padding:0 10px;margin:0 -10px}
 .menu a.m{display:flex;align-items:center;height:100%;padding:0 2px;font-size:clamp(1.0625rem,1.3vw,1.1875rem);letter-spacing:.06em;color:var(--ink);position:relative;transition:color .3s;white-space:nowrap}
 /* 激活 / 悬停下划线：落到页头底边，压住 1px 分隔线 */
 .menu a.m::after{content:"";position:absolute;left:0;bottom:-1px;width:0;height:3px;background:var(--gold-d);transition:width .35s var(--ease)}
-.menu>li:hover a.m::after,.menu a.m.act::after{width:100%}
+.menu a.m.act::after{width:100%}
 /* 悬停细一档、当前页实一档，两条线同时在底边时能分出主次；
    hover 用该模块自己的色（V315），当前页 active 保持金色（用户 2026-10-26 明确）。
    下划线直接取 currentColor：文字是什么色，线就是什么色，深底/浅底不必各写一条。 */
-.menu>li:hover a.m::after{height:2px;background:currentColor}
+/* V374：hover 下划线撤除 —— 仅保留 V315 的「模块色文字变化」作为悬停反馈，避免与「当前页」金/蓝线混淆（用户指令「hover 不需要下划线，会让人发生歧义」）。 */
 .menu>li:hover a.m{color:var(--mc)}
 /* 页头已转白（滚动后 / mega 展开）：mega-on 的 ink 规则权重更高，这里补一条压住它，
    否则普通页面展开子菜单时 hover 不变色（旧规则只给 dark-hero 写了这条）。 */
@@ -111,68 +111,101 @@ body.dark-hero .nav.mega-on .menu>li:hover a.m{color:var(--mc)}
 /* 展开子菜单时页头是白板，.nav.mega-on 的 ink 规则权重高，会顺手把激活标签压成黑字；
    补一条只在「该 li 未被 hover」时生效的规则，hover 仍走 V315 的模块专色。 */
 .nav.mega-on .menu>li:not(:hover) a.m.act{color:#2b3a92}
-/* 通栏子菜单：整幅白板自页头下方落下，内容与 logo 同左缘（沿用页头通栏边距） */
-.mega{position:absolute;top:100%;left:0;right:0;background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);box-shadow:0 28px 44px rgba(10,20,40,.07);opacity:0;visibility:hidden;transform:translateY(-10px);transition:opacity .32s var(--ease),transform .32s var(--ease),visibility .32s;z-index:99}
-.mega .wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:var(--pad)}
-.menu>li.open .mega,.menu>li:focus-within .mega{opacity:1;visibility:visible;transform:none}
+/* V363：子菜单由「整幅通栏白板」改为「挂在触发标签正下方的窄下拉」，V374 起左对齐到标签下方（不再水平居中）。
+   V364：常态底色删除、图标统一 24px（V369 起收为 20px）、标题统一 15px/600；面板白底与阴影不变。
+   li 自己是定位参考（高 80px，与页头同高）；V370 起 top:calc(100% + 10px)，
+   面板上沿落在 y=90，与导航栏留 10px 间隔。 */
+.mega{position:absolute;top:calc(100% + 10px);left:0;width:max-content;min-width:160px;max-width:360px;background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);border-radius:4px;box-shadow:0 20px 40px rgba(18,32,60,.10),0 2px 8px rgba(18,32,60,.04);opacity:0;visibility:hidden;transform:translate(0,-10px);transition:opacity .32s var(--ease),transform .32s var(--ease),visibility .32s;z-index:99}
+.menu>li.open .mega,.menu>li:focus-within .mega{opacity:1;visibility:visible;transform:translate(0,0)}
 .menu>li.mega-quick .mega{transition:none}
-/* ---------- 子菜单：一行卡片（V184） ----------
-   原来左列是「模块名 + 简介 + 查看全部」占 230–300px，右侧条目挤成 2–3 列还得折行。
-   一级导航项本身就是模块索引页的入口，面板里再写一遍模块名和「查看全部」是把同一件事说两遍；
-   左列整块撤掉，条目改为一行铺开：线形图标在上，子模块标题、一行说明依次往下。 */
-/* V260：面板顶部留白加高（60→76），内容整体下沉；
-   注意：这不能消除「在标签高度带内横移」的误触（那由 site.js 的 180ms 停留判定解决），
-   作用只是让人更自然地从标签垂直下移到内容区 */
-.mega-cards{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:clamp(8px,1vw,12px);padding:clamp(52px,5.6vw,76px) 0 clamp(44px,4.6vw,60px)}
-/* V283：子菜单项常态 = 浅蓝底 + 0%（全透明）蓝描边——描边保留 1px 占位但不显示，
-   靠浅蓝底界定块面；hover 时描边升到 50% 蓝、图标由线性换成面性（见下方 .ml-ico 说明）。
-   V286 用户指令：常态底色由 8% 收到 5%（更淡，仍能读出块面）。
-   V287 再收到 4%。
-   透明度全部走 color-mix，主色一改整套跟着变。 */
-.ml{display:flex;flex-direction:column;padding:clamp(16px,1.7vw,22px) clamp(14px,1.5vw,20px);
-  background:color-mix(in srgb,var(--accent) 4%,transparent);
-  border:1px solid color-mix(in srgb,var(--accent) 0%,transparent);border-radius:4px;
-  transition:background-color .3s var(--ease),border-color .3s var(--ease),transform .35s var(--ease)}
-/* 图标位：线性 / 面性两个 svg 绝对定位叠在同一个 32×32 盒子里，hover 交叉淡入。
-   面性版是独立 symbol（id 加 -f），靠 evenodd 挖孔表达细节，不是给线性版填色
-   —— 线性 symbol 上写了 fill="none"，继承填不进去，硬填只会得到黑块。 */
-.ml-ico{position:relative;display:block;width:32px;height:32px;flex:none;color:var(--accent)}
-.ml-ic,.ml-ic-f{position:absolute;inset:0;width:32px;height:32px;transition:opacity .26s var(--ease)}
-.ml-ic-f{opacity:0}
-.ml b{margin-top:clamp(12px,1.4vw,16px);font-size:clamp(0.9375rem,1.15vw,1.0625rem);font-weight:600;letter-spacing:.02em;line-height:1.45;color:var(--accent);transition:color .3s}
-/* V293：1200 以下每张卡只剩 140–150px 内容宽，「信息化规划与咨询服务」10 个字刚好放不下，
-   折成两行后同排卡的图标/说明整体错位。这里统一预留两行标题位：
-   该折的折、不该折的也不会把下面顶上去，五张卡永远对齐。 */
-@media (max-width:1200px){.ml b{min-height:2.9em}}
-.ml small{margin-top:9px;font-size:0.8125rem;line-height:1.65;color:var(--accent)}
-.ml:hover{border-color:color-mix(in srgb,var(--accent) 50%,transparent);transform:translateY(-2px)}
-.ml:hover .ml-ic{opacity:0}
-.ml:hover .ml-ic-f{opacity:1}
+/* 关于我们及其他面板的右溢，统一由 js/site.js 的 megaClamp() 在打开时钳制，不再用 CSS right:0（避免与 JS 左移冲突）。 */
+/* ---------- 子菜单：竖排一列，图标 + 文字项（V363 布局 / V367 排版 / V368 动效 / V374 左对齐 / V376 业务网格 + 产品双栏） ----------
+   V374 用户指令：菜单项左右内边距 20px、下拉整体左对齐到标签（不再水平居中）。
+   V374 曾撤掉全部单色图标，现用户要求加回线性图标（20px）；产品中心彩色 Logo 一直保留。
+   线性图标（业务/新闻/关于三栏）由 .ml-ico 渲染 ic-* 线性 symbol（currentColor，随模块色变蓝/红）；
+   产品中心 5 枚彩色 Logo 走 .ml-logo，不属「图标」，不受影响。
+   面板左缘 = li 左缘（left:0）；图标左缘 = 面板左缘 + 项左内距 10px（图标随之内缩，与标签左缘留出间距）
+   （标签自身左内缩 12px：li 10 + a 2）；图标与文字间距 12px（.ml 的 flex gap）。
+   hover 6% 标准蓝底 + 标题转标准蓝、背景淡入淡出、与导航栏 10px 间隔、双层阴影均不变。
+   常态 = 纯白无底、1px 全透明描边只占位；hover = 6% 标准蓝底 + 蓝字，淡入淡出 .3s，不位移、不换图标。
+   面板按自身内容撑宽（业务 780px 上限 / 产品 480px 上限 / 其余 360px），说明文字已撤（V363）。
+   V376：业务领域不再是竖排 —— 切成 3×2 网格（见 .mega.mega-biz，5 项自然空出第二行末格），
+   面板放宽容长标签、网格内文字禁止折行（nowrap）、图标顶对齐；产品中心切成左右两栏
+   （.mega.mega-prod → .mega-cols），每栏「标题 + 小字说明 + 垂直子列表」，见下方 .mega-cols/.ml-head。 */
+/*    V377：面板内边距恢复 20px（上下左右——用户明确要求「面板要有 20px 内边距，上下左右」，
+   V374 把左右设成 0 是我理解错了，现撤掉）。grid 行距仍是 4px；菜单项 上/下 内距 9px、右内距 20px、
+   左内距 10px（V387 用户要求左侧改 10px），图标与标题的间隙仅产品栏 Logo 用到。文字禁止折行（nowrap），长标签靠面板加宽容纳。 */
+.mega-cards{display:grid;grid-auto-flow:row;grid-template-columns:1fr;gap:4px;padding:20px}
+.ml{display:flex;flex-direction:row;align-items:center;justify-content:flex-start;text-align:left;
+  gap:12px;min-height:44px;padding:9px 20px 9px 10px;
+  background:transparent;border:1px solid transparent;border-radius:4px;
+  transition:background-color .3s var(--ease)}
+/* ---------- V376：业务领域 3×2 网格 + 产品中心左右双栏 ---------- */
+/* 业务领域：5 项排成 3 列，第二行只放 2 项、末格自动空出（grid 默认逐行填充）。
+   面板上限放宽到 780px 容下「信息化规划与咨询服务」这类长标签（不换行需更宽）；网格内文字禁止折行
+   （nowrap）、图标与文字垂直居中、项内边距收小，否则三栏会被挤爆。其余三栏（新闻/关于）仍是默认竖排 1fr，不变。 */
+.mega.mega-biz{max-width:780px}
+.mega.mega-biz .mega-cards{grid-template-columns:repeat(3,1fr);gap:10px 14px}
+.mega.mega-biz .ml{align-items:center;padding:8px 10px}
+/* 产品中心：左右两栏，每栏 = 产品线标题（.ml-head：标题 + 小字说明）+ 垂直子列表。
+   标题保留原链接（桂农易通→product-nongyi.html，桂资通→case-house.html）。
+   两栏 1fr 等宽；V378 起中缝加一条 8% 透明竖向分割线（用户明确要求，覆盖「无装饰分割线」默认），
+   用 .mega-cols::before 画在水平中线、落在 28px 列间距正中，不改两栏宽度。 */
+.mega.mega-prod{max-width:480px}
+.mega-cols{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:0 28px;padding:20px}
+/* V378：中缝 8% 透明竖向分割线（rgba(0,0,0,.08)）；绝对定位不占布局、不影响 1fr 等宽，
+   left:50% 取 .mega-cols 水平中线（padding 对称故与两栏边界重合），落在 28px 列间距正中。 */
+.mega-cols::before{content:"";position:absolute;top:0;bottom:0;left:50%;width:1px;transform:translateX(-.5px);background:rgba(0,0,0,.08);pointer-events:none}
+.mega-col{display:flex;flex-direction:column;min-width:0}
+.mega-col .mega-cards{padding:0}
+.mega-col .ml{padding-left:10px;padding-right:20px}
+.ml-head{display:flex;flex-direction:column;gap:4px;padding:0 20px 12px 10px;margin-bottom:6px;
+  text-decoration:none;transition:color .3s var(--ease)}
+.ml-head b{font-size:1rem;font-weight:600;letter-spacing:.02em;color:#000;line-height:1.3}
+.ml-head small{font-size:.8125rem;letter-spacing:.04em;color:var(--mut)}
+.ml-head:hover b{color:#2b3a92}
+/* 图标位：V369 四栏统一 20px（含产品中心彩色 Logo）。V374 曾把单色图标整体隐藏，
+   现用户要求加回线性图标：site.js 渲染线性 #id（fill=none + 描边），一个 svg 撑满盒子。
+   线性 symbol 写了 fill="none"，只靠 stroke 成形；面性 -f 版是 V369 的短暂方案，已不用。
+   产品中心彩色 Logo 走 .ml-logo 不在本类，仍显示。 */
+.ml-ico{display:block;position:relative;width:20px;height:20px;flex:none;color:var(--accent)}
+.ml-ic{display:block;width:100%;height:100%}
+/* V367：四栏标题统一 400（normal）字重 + 黑色 #000，不再跟模块色走。
+   写死 #000 而不用 var(--accent)：面板下层有 .mega{--accent:var(--mc)} 的模块色代理，
+   用变量会让四栏各是一种颜色，只有字面值才能保证任何页面都同一种黑。 */
+.ml b{margin-top:0;white-space:nowrap;font-size:0.9375rem;font-weight:400;letter-spacing:.02em;line-height:1.45;color:#000;transition:color .3s var(--ease)}
+/* V370：hover 底 6% 标准蓝（rgba(43,58,146,.06)）、标题转标准蓝 #2b3a92。
+   两处都写死字面值 —— .mega 把 --accent 指向各模块 --mc，用变量会让四栏各是一种色。 */
+/* V368/V370：hover 只做背景淡入淡出（.3s），不再上移；.ml 上没有 transform，
+   transition 不含 transform。标题加同速 color 过渡，避免底色渐入时文字突变。 */
+.ml:hover{background:rgba(43,58,146,.06)}
+.ml:hover b{color:#2b3a92}
 .ml:focus-visible{border-color:color-mix(in srgb,var(--accent) 50%,transparent);outline:2px solid var(--accent);outline-offset:2px}
-/* ---------- V321 产品中心子菜单：统一黑色半透明底 + 黑字 ----------
-   用户指令：五张卡统一 4% 透明度黑色背景、文字改黑色；
-   hover 为 30% 透明度黑色描边 + 5% 透明度黑色背景。其余模块完全不变。
-   只作用于带 data-logo 的产品卡；全部写字面 rgba / #000，不读 --accent、--mc ——
-   党建页 body.party 的红色变量、V315 的模块色都渗不进来，五张卡在任何页面都同色。 */
-.mega .ml[data-logo]{
-  background:rgba(0,0,0,.04);
-  border-color:rgba(0,0,0,0)}
-.mega .ml[data-logo] :is(b,small){color:#000}
-.mega .ml[data-logo]:hover,
-.mega .ml[data-logo]:focus-visible{
-  background:rgba(0,0,0,.05);
-  border-color:rgba(0,0,0,.3)}
-.mega .ml[data-logo]:focus-visible{outline-color:#000}
-/* 彩色 Logo 缩到 32px 细节会糊，只把这一栏的图标盒放大；其余四栏仍是 32px sprite */
-.mega .ml-logo .ml-ico{width:48px;height:48px}
+/* ---------- 产品中心：V367 起不再单独设色 ----------
+   V321「4% 黑底 + 黑字 / hover 5% 黑底 + 30% 黑描边」与 V364「删常态底色」的
+   覆盖规则已整体撤掉：V367 用户指令把四栏统一成「400 字重 + #000 + hover 5% 标准蓝」，
+   产品中心与其余三栏同色同底，V369 起图标尺寸也统一 20px，只剩彩色 Logo 这一处差异。
+   别再按 data-logo 单独写 bg / color / border —— 任何 [data-logo]:hover 规则
+   特异性都高于 .ml:hover，写回去就会把四栏的统一打破。 */
+/* V369：产品彩色 Logo 与其余三栏面性图标统一 20px（V364 起的 24px 已收），
+   V317 的 5 个 200×200 原图资源不变。 */
+.mega .ml-logo .ml-ico{width:20px;height:20px}
 .mega .ml-logo-img{display:block;width:100%;height:100%;object-fit:contain}
 /* 图标 sprite 只做定义，不占位 */
 .ico-sprite{position:absolute;width:0;height:0;overflow:hidden}
+/* V382：面板默认以 hovered 标签为中心（面板中心对齐标签中心），空间不足时由 js/site.js 的 megaClamp()
+   向内的方向拉回（右溢左移、左溢右移），保证不被裁切又不脱离标签。
+   绝不改用视口居中（那会让面板脱离标签跑到屏幕中间、对不上）。
+   更窄手机（≤720）把业务 3×2 与产品双栏降单列，避免网格挤压长标签溢出卡片。 */
+@media (max-width:720px){
+  .mega.mega-biz .mega-cards{grid-template-columns:1fr}
+  .mega.mega-prod .mega-cols{grid-template-columns:1fr;gap:20px 0}
+  .mega.mega-prod .mega-cols::before{display:none}
+}
 /* 子菜单展开时页头转白，保证深色首屏上文字可读 */
 .nav.mega-on{background:rgba(255,255,255,.97);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-color:var(--line)}
-/* V193：子菜单展开时，页面内容（导航与面板之外）盖黑色半透明遮罩 */
-body::after{content:"";position:fixed;inset:0;z-index:90;background:rgba(8,12,28,.45);opacity:0;visibility:hidden;transition:opacity .32s var(--ease),visibility .32s;pointer-events:none}
-body.mega-open::after{opacity:1;visibility:visible}
+/* V363：全屏遮罩撤掉（用户指令「菜单出现时不要遮罩」）。
+   .nav.mega-on 的白页头必须保留：深色首屏上它负责把导航文字转黑、反白 logo 换回彩色。 */
 .nav.mega-on .menu a.m{color:var(--ink)}
 .nav.mega-on .burger i{background:var(--ink)}
 /* 深色首屏上的导航（Logo 走整图反白版，见上方 .lg-w 规则） */
@@ -271,6 +304,15 @@ body.dark-hero .nav:not(.on) .burger i{background:#fff}
 .hero h1 em{font-style:normal;color:#fff}
 .hero-sub{margin:clamp(20px,3.4vh,40px) auto 0;max-width:46em;text-wrap:balance;color:rgba(255,255,255,.8);font-size:clamp(1.0625rem,1.3vw,1.1875rem);line-height:2}
 .hero-cta{margin-top:clamp(28px,4.6vh,52px);width:100%;display:flex;gap:18px;flex-wrap:wrap;justify-content:center}
+/* V394：首屏两个框改为纯静态展示 —— 不是链接、不可点击（cursor:default）。
+   V396：恢复原 hero 描边按钮的 hover 视觉 —— 金色填充自右扫入 + 描边转金，文字恒为白；
+   仅视觉反馈，仍无 href / tabindex / role / 点击事件，不会跳转。
+   伪元素靠 isolation + z-index:-1 压在文字之下，无需在 span 里再包一层，HTML 结构不动。
+   下方 .hero .btn* 四条规则不命中（元素不带 .btn 类），保留供其它页 .btn 使用。 */
+.hero-badge{display:inline-flex;align-items:center;justify-content:center;width:228px;padding:14px 30px;border:1px solid rgba(255,255,255,.55);color:#fff;font-size:1.0625rem;letter-spacing:.14em;white-space:nowrap;cursor:default;position:relative;isolation:isolate;overflow:hidden;transition:color .4s var(--ease),border-color .4s}
+.hero-badge::before{content:"";position:absolute;inset:0;background:var(--gold-d);transform:scaleX(0);transform-origin:right;transition:transform .45s var(--ease);z-index:-1}
+.hero-badge:hover::before{transform:scaleX(1);transform-origin:left}
+.hero-badge:hover{color:#fff;border-color:var(--gold-d)}
 .hero .btn{width:228px;justify-content:center;border-color:rgba(255,255,255,.55);color:#fff}
 .hero .btn span{white-space:nowrap}
 .hero .btn::before{background:var(--gold-d)}
@@ -540,16 +582,16 @@ body.dark-hero .nav:not(.on) .burger i{background:#fff}
 @media (min-width:1280px){
   .hacc-btn:first-child .yr,.hacc-btn:last-child .yr{font-size:1.125rem}
 }
-/* 年份上下错落（延续 V308）：奇偶分挂轴线上下，两侧离轴各 17px，
-   同一条轴上能多排三分之一节点而不粘连。只在桌面横向轴生效。 */
-@media (min-width:1280px){
-  .hacc-btn:nth-child(even) .yr{transform:translateY(calc(0.5em + 17px))}
-}
+/* V390：年份上下错落——所有视口宽度无条件生效（不再包在 min-width:900 里）。
+   奇偶分挂轴线上下，同排相邻年份间距翻倍，同一条轴能排下更多年份。
+   此前只写在 ≥900 断点，用户实际在 ≤899 宽度预览时年份全平铺在轴上方、一点没变；
+   现改为全局规则，≤899 断点里另配窄屏专用偏移与加高轨道容纳下排年份。 */
+.hacc-btn:nth-child(even) .yr{transform:translateY(calc(0.5em + 17px))}
 /* 切换按钮（V316 移到时间轴两侧）：与轴线同一行、垂直居中 */
 .hacc-arrow{flex:none;width:36px;height:36px;border:1px solid rgba(255,255,255,.22);border-radius:4px;color:#fff;
   display:grid;place-items:center;font-size:1rem;transition:all .3s}
 .hacc-arrow:hover{background:var(--gold-d);color:#fff;border-color:var(--gold-d)}
-/* ≤899：详情改上下排（年份在上、事件在下），时间轴横向滑动，年份不再错落 */
+/* ≤899：详情改上下排（年份在上、事件在下），时间轴横向滑动；V390 起年份同样奇偶上下错落 */
 @media (max-width:899px){
   /* 窄屏是自然文档流，详情紧跟标题；上移按同一弹性口径缩到约 1/3，免得挤到标题 */
   .hacc{--rise:clamp(6px,1.2vh,12px);--hshift:clamp(14px,4vw,26px)}
@@ -562,15 +604,21 @@ body.dark-hero .nav:not(.on) .burger i{background:#fff}
   .hacc-item .yr-lg{font-size:clamp(2.25rem,9vw,3rem);line-height:1}
   .hacc-list{padding-top:14px;gap:8px;max-width:none}
   .hacc-list li{font-size:0.875rem;line-height:1.85;color:rgba(255,255,255,.74)}
-  /* 窄屏：横向滑动的是年份轨道本身，两侧箭头固定不动 */
+  /* V390 窄屏：横向滑动的是年份轨道本身，两侧箭头固定不动。
+     同样做奇偶上下错落 —— 轨道 56→96px 容纳上下两排年份（overflow-y:hidden 不裁字），
+     年份最小宽 68→44px：上下错开后同排间距翻倍、不会粘连，一次能看到更多年份。 */
   .hacc-axis{height:auto;gap:8px;margin-top:20px}
-  .hacc-track{overflow-x:auto;overflow-y:hidden;height:56px;scrollbar-width:none;
+  .hacc-track{overflow-x:auto;overflow-y:hidden;height:96px;scrollbar-width:none;
     -webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;
     -webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
     mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
   .hacc-track::-webkit-scrollbar{display:none}
-  .hacc-btn{flex:0 0 auto;min-width:68px;scroll-snap-align:center}
-  .hacc-btn .yr{transform:none;font-size:0.9375rem}
+  .hacc-btn{flex:0 0 auto;min-width:44px;scroll-snap-align:center}
+  /* 奇数年份在轴上方 15px：节点留在轴上，1px 轴线不会从字腰穿过（V366）。 */
+  .hacc-btn .yr{transform:translateY(-15px);font-size:0.9375rem}
+  /* 偶数年份沉到轴下方。与全局 V390 规则同为 (0,3,0)，此处后写者胜；
+     窄屏位移略收，保证 96px 轨道内上下两排都不被裁切。 */
+  .hacc-btn:nth-child(even) .yr{transform:translateY(calc(0.5em + 15px))}
   .hacc-btn:first-child .yr,.hacc-btn:last-child .yr{font-size:1rem}
   .hacc-arrow{width:36px;height:36px;font-size:1rem}
   /* V331：窄屏同样改左右平移，方向沿用父级 data-hdir 的 --enter-x */
@@ -821,8 +869,12 @@ footer{background:#f4f6f9;color:var(--ink);border-top:1px solid var(--line)}
 .numline .n{border:1px solid var(--line);background:#fff;padding:22px 18px;text-align:center}
 
 /* ---------- 关于我们 ---------- */
-.atabs{display:grid;grid-template-columns:repeat(5,1fr);border-bottom:1px solid var(--line)}
-.atabs button{position:relative;padding:24px 10px;font-size:1.0625rem;letter-spacing:.12em;color:var(--mut);transition:color .3s var(--ease)}
+/* V372：V366 删掉「发展历程 / 招聘信息」两个页签后列数没跟着改，仍是 repeat(5,1fr)，
+   三个标签只占 3/5 宽、右侧空出 40%。现按实际 3 项 fill 整行、每项等宽（1fr），
+   文字在格内居中；text-indent 抵掉 letter-spacing 在末字后多算的一个字距，
+   否则居中会偏左。列数以后随标签数一起改，别再留旧值。 */
+.atabs{display:grid;grid-template-columns:repeat(3,1fr);width:100%;border-bottom:1px solid var(--line)}
+.atabs button{position:relative;padding:24px 10px;font-size:1.0625rem;letter-spacing:.12em;text-align:center;text-indent:.12em;color:var(--mut);transition:color .3s var(--ease)}
 .atabs button::after{content:"";position:absolute;left:0;bottom:-1px;width:100%;height:3px;background:var(--accent);transform:scaleX(0);transform-origin:center;transition:transform .4s var(--ease),background .3s,height .3s}
 .atabs button:hover{color:var(--accent)}
 /* 悬停下划线：与当前项同一套几何（整格等宽、底线贴齐标签栏），只差粗细与颜色。
@@ -832,9 +884,10 @@ footer{background:#f4f6f9;color:var(--ink);border-top:1px solid var(--line)}
 .atabs button.act{color:var(--gold-d);font-weight:600}
 .atabs button.act::after{transform:scaleX(1);height:3px;background:var(--gold-d)}
 /* 双项标签栏（业务聚焦：业务领域 / 场景聚焦）：与关于我们同款，两项各占半幅、文字居中。
-   标签名是模块级信息，字号比 5 项的关于我们稍大一号，撑得住半幅宽度。 */
+   标签名是模块级信息，字号比 3 项的关于我们稍大一号，撑得住半幅宽度。
+   字距改 .16em 时缩进补偿要同步，否则同上的居中偏移。 */
 .atabs.pair{grid-template-columns:repeat(2,1fr)}
-.atabs.pair button{padding:26px 10px;font-size:1.1875rem;letter-spacing:.16em}
+.atabs.pair button{padding:26px 10px;font-size:1.1875rem;letter-spacing:.16em;text-indent:.16em}
 @media (max-width:700px){
   :root{--sec-pad:48px;--shead-gap:32px}
   /* 板块标题：窄屏保持居中 */
@@ -842,12 +895,13 @@ footer{background:#f4f6f9;color:var(--ink);border-top:1px solid var(--line)}
   /* 首屏标题锁定单行：375 宽下 10 字须降到 31.5px 才放得下 */
   .hero h1{font-size:clamp(1.75rem,8.4vw,2.375rem)}
   .hero-cta{flex-direction:column;align-items:stretch;gap:12px}
+  .hero-badge{width:100%}
   .hero .btn{width:100%}
-  .atabs{grid-template-columns:repeat(2,1fr)}
+  /* V372：3 项在窄屏也是等宽 3 列，不再让最后一项跨满两列
+     （那是 5 项时代为了收尾奇数项写的，现在会把三项拉成两行、宽度不齐）。 */
+  .atabs{grid-template-columns:repeat(3,1fr)}
   .atabs button{padding:17px 6px;font-size:1.0625rem}
-  .atabs button:last-child{grid-column:1/-1}
   .atabs.pair button{padding:20px 6px;font-size:1.125rem}
-  .atabs.pair button:last-child{grid-column:auto}
 }
 .apane{display:none;padding:clamp(36px,6vh,64px) 0}
 .apane.act{display:block;animation:fadein .5s var(--ease)}
@@ -898,11 +952,14 @@ footer{background:#f4f6f9;color:var(--ink);border-top:1px solid var(--line)}
   .row .cat{letter-spacing:.06em}
 }
 
-/* ---------- 统一圆角 4px ---------- */
+/* ---------- 统一圆角 4px（V154 铁律） ----------
+   全站容器统一 4px；新写的容器类必须登记进下方清单，或自带 border-radius:4px，否则就是直角。
+   V365 漏 .mega、V391b 漏 .pcol、V397 漏 .hero-badge，三次都是「换了类名没登记」。 */
 img{border-radius:4px}
 /* 锚点跳转时避开固定页头 */
 [id]{scroll-margin-top:96px}
 .btn,
+.hero-badge,
 .card,
 .numline .n,
 .biz-head .ic,
@@ -954,6 +1011,52 @@ html.pg-on{scroll-behavior:auto}
    只在 ≥900px 生效 —— 与整屏滚动（home-scroll.js 的 min-width:900 + pointer:fine）同一条线。
    用 min-height 而不是 height：内容天然超过一屏时（1024 的新闻列表）区块自己撑高，
    由 home-scroll.js 给超高的块补一个底部停靠点，不会把内容裁掉。 */
+
+/* V389 首页产品中心：按 Figma 官网设计 node 105:18（1920×1080 画板）还原。
+   稿内参数（取自 Figma API 节点数据，未自造）：整屏底 #F0F4F5；两张白卡 x=30/710、
+   各 640×568、间距 40、内边距 40、4px 圆角、无描边（V391b 补齐：全站卡片统一 4px，
+   见「统一圆角 4px」段，V389 曾误写成无圆角）；卡内 VERTICAL 布局 itemSpacing 40、
+   水平居中。标题块 = 主 Logo 120（内含 108 图形）+ 40px/520 产品名 + 14px/305 简介，
+   块内间距 15；「产品列表」分割线 = 左右各 246×1 水平线 + 12px/520 #777 标签，间距 10；
+   子产品块 = 3 项（各 173 宽、Logo 80 + 20px/450 名称、间距 10、项间 57 高竖线），
+   桂资通栏仅 1 项占满 560。文字 #000，「产品列表」#777，线为浅灰。
+   注：本站默认禁装饰分割线、字号下限 13px，此处分割线/12px/14px 系用户点定版式本体，照稿保留。
+   V391：用户要求板块加标题「产品中心」，撤掉 V389 的视觉隐藏，标题与首页其他屏的 .shead 一致。 */
+.sec-prod{background:#F0F4F5}
+/* V389 曾按稿把 h2 视觉隐藏；V391 恢复显示。h2 仍是 home-scroll.js 取屏指示器标签的来源。 */
+.prod-cols{display:grid;grid-template-columns:1fr;gap:24px;width:100%;max-width:1320px;margin-inline:auto}
+.pcol{background:#fff;border-radius:4px;padding:40px;display:flex;flex-direction:column;align-items:center;gap:40px;text-align:center}
+.phead{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:15px;text-decoration:none;color:inherit;width:100%;min-height:275px}
+.phead .plogo{width:120px;height:120px;display:grid;place-items:center}
+.phead .plogo img{width:108px;height:108px;object-fit:contain}
+/* 稿内文本框高度：名称 65、简介 60（2 行 × 18.56）；用行盒/内距把 40/14px 文字精确落到稿内高度，
+   两张卡标题块恒为 275，故「产品列表」分割线在左右卡严格同一水平线。 */
+.pname{font-size:40px;font-weight:600;line-height:65px;letter-spacing:0;color:#000}
+.pdesc{font-size:14px;font-weight:400;line-height:18.56px;padding:11.5px 0;color:#000}
+.phead:hover .pname{color:var(--accent)}
+.pdiv{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;max-width:560px}
+.pdiv-line{flex:1 1 0;height:1px;background:rgba(0,0,0,.14)}
+.pdiv-t{font-size:12px;font-weight:600;color:#777;letter-spacing:.02em;white-space:nowrap}
+.psubs{display:flex;align-items:flex-start;justify-content:center;gap:10px;width:100%;max-width:560px}
+.psub{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:10px;text-decoration:none;color:inherit}
+.psub-ic{width:80px;height:80px;display:grid;place-items:center}
+.psub-ic img{max-width:80px;max-height:80px;object-fit:contain}
+.psub-n{font-size:20px;font-weight:500;line-height:1.33;color:#000;white-space:nowrap}
+.psub:hover .psub-n{color:var(--accent)}
+.psep{flex:0 0 1px;width:1px;height:57px;align-self:center;background:rgba(0,0,0,.14)}
+/* 桂资通产品线仅一个子产品：占满 560 宽、Logo 与名称居中（稿内 105:174 同构） */
+.psubs--single .psub{flex:0 1 560px}
+@media (max-width:899px){
+  .pcol{padding:clamp(24px,5vw,40px);gap:clamp(24px,5vw,40px)}
+  .phead .plogo{width:88px;height:88px}
+  .phead .plogo img{width:80px;height:80px}
+  .pname{font-size:clamp(28px,6vw,40px)}
+  .psubs{gap:8px}
+  .psub-ic{width:clamp(52px,13vw,80px);height:clamp(52px,13vw,80px)}
+  .psub-ic img{max-width:100%;max-height:100%}
+  .psub-n{font-size:clamp(15px,3.6vw,20px)}
+}
+
 @media (min-width:900px){
   body[data-page="index"] :is(.sec-biz,.sec-news,.hist,.sec-partners){
     min-height:100vh;height:auto;box-sizing:border-box;
@@ -1004,6 +1107,23 @@ html.pg-on{scroll-behavior:auto}
      1440 不变（309 < 331），1920 落到 331，整块正好 900。 */
   body[data-page="index"] .biz{
     grid-auto-rows:min(clamp(258px,21.5vw,338px),calc((100vh - 250px) / 2))}
+  /* V389 首页产品中心（按 Figma 105:18）：整屏浅灰底 + 两张等宽白卡，
+     卡间距 40（稿内 x=30 到 710 = 640 + 40），整组屏内垂直居中；
+     grid stretch 让两卡等高，卡内内容按稿从顶部依次排布。 */
+  body[data-page="index"] .sec-prod{
+    background:#F0F4F5;
+    min-height:100vh;height:auto;box-sizing:border-box;
+    display:flex;flex-direction:column;
+    padding-top:clamp(76px,11.1vh,100px);
+    padding-bottom:clamp(36px,6vh,54px)}
+  body[data-page="index"] .sec-prod > .wrap{
+    flex:1 1 auto;display:flex;flex-direction:column;min-height:0;width:100%}
+  body[data-page="index"] .sec-prod .shead{margin-bottom:0}
+  body[data-page="index"] .prod-cols{
+    margin-top:auto;margin-bottom:auto;
+    grid-template-columns:1fr 1fr;
+    gap:40px}
+  body[data-page="index"] .pcol{justify-content:flex-start}
 }
 
 /* ============================================================

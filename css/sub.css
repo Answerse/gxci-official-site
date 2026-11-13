@@ -135,13 +135,20 @@ body[data-page="business"] .dhero-shade{background:
    作用域限定 body.biz-detail：产品/案例页的「更多产品」（.dsub-h--c）与 4 个平台页的
    「成功案例」维持原样，不在本次指令范围内。
    40px 只在 1429px 以上成立，窄屏按 2.8vw 逐级收到 28px，避免手机上一行塞不下。 */
-body.biz-detail :is(.dpanel-h,.dsub-h){font-size:clamp(1.875rem,2.8vw,2.5rem);font-weight:700;
-  line-height:1.3;letter-spacing:.02em;text-align:center}
+body.biz-detail :is(.dpanel-h,.dsub-h){font-size:24px;font-weight:700;
+  line-height:1.4;letter-spacing:.02em;text-align:center}
 body.biz-detail .dpanel-h{margin-bottom:clamp(18px,2.4vh,26px)}
 /* 标题后紧跟正文时不再叠一层段落上边距（原来 20+24=44px，比标题本身还高） */
 body.biz-detail .dpanel-h + .dtext{margin-top:0}
 /* 40px 标题上方的呼吸量比 19px 小节多一档，标题才不被上面的内容挤住 */
 body.biz-detail .dsub-h{margin-top:clamp(44px,5.6vh,62px)}
+
+/* ---------- V366 用户指令：所有详情页的节标题字号统一收小到 24px ----------
+   原状三档并存：case 页 .jyt-h 40px；带 biz-detail 的 5 个领域页 40px；
+   agri/asset/enterprise/procure 的 .dpanel-h 30px；case/product 页「更多产品」的
+   .dsub-h 19.44px。统一为 24px（固定值，不再随视口浮动），层级靠 24 > 19.44 > 16 维持。
+   作用域 body.detail：15 个详情页专属，business/products/news/about 四个索引页不受影响。 */
+body.detail :is(.jyt-h,.dpanel-h,.dsub-h){font-size:24px;line-height:1.4}
 
 /* ---------- 业务详情页内容块（V127：只服务四个 area 页，内容全部来自宣传册） ---------- */
 /* 概览只有正文段落、没有大号导语时：首段去掉上边距，「概览」压回正文墨迹顶 */
@@ -302,11 +309,14 @@ figure.bfig figcaption{margin-top:12px;font-size:0.8125rem;line-height:1.7;lette
 
 /* V257：紧凑化——标题与正文之间原被 align-items:center 拉开（手机图 280 高、文字块仅 ~160 高，
    居中后正文上浮出 ~60px 空白）；改为顶对齐，条间改用 8% 黑细分隔线（用户指定要线） */
-.pvert{max-width:1040px;margin-inline:auto}
-.pv+.pv{margin-top:clamp(30px,3.8vh,46px);padding-top:clamp(30px,3.8vh,46px);
+/* V362：上方桂农易通架构图 1040 宽；下方三个子产品收窄一档并向内缩进，
+   条间留白减半、标题降一档字号，用几何关系表达「底座 → 落地平台」的从属层级。
+   不新增标题、不改文案；8% 黑细分隔线沿用 V257 用户指定。 */
+.pvert{max-width:960px;margin-inline:auto}
+.pv+.pv{margin-top:clamp(14px,1.8vh,22px);padding-top:clamp(14px,1.8vh,22px);
   border-top:1px solid rgba(0,0,0,.08)}
 .pv-hd{display:flex;align-items:baseline;gap:clamp(10px,1.2vw,16px)}
-.pv-hd h3{font-size:1.3125rem;font-weight:600;letter-spacing:.01em;color:var(--ink)}
+.pv-hd h3{font-size:1.125rem;font-weight:600;letter-spacing:.01em;color:var(--ink)}
 .pv-time{font-size:0.8125rem;letter-spacing:.02em;color:var(--mut)}
 .pv-in{margin-top:12px;display:grid;
   grid-template-columns:minmax(0,1fr) clamp(150px,19vw,216px) clamp(112px,14vw,152px);
@@ -611,4 +621,52 @@ body[data-page="business"] .bcard:focus-visible{box-shadow:none}
   body[data-page="business"] .biz{grid-template-columns:1fr}
   body[data-page="business"] .bcard .bfig{aspect-ratio:16/9}
   body[data-page="business"] .bcard .bbody{min-height:52px}
+}
+
+/* ---------- V357 茧易通详情页 · 按 tcloudit 耘立方页重排板块节奏（仅本页） ----------
+   四个居中结构名大标题：平台介绍 / 平台功能 / 功能说明 / 更多产品
+   （V357 用户放宽 V356 的「不许概括」：允许参考页同款结构名做 h2）。
+   原有 6 个元素内容与顺序一字未动；架构图与 8 张卡片沿用 V356。
+   卡片顶部一行 = 线性图标 + 原文端名（按端归类；不拆成 4 个独立分组，
+   否则管理端 / 平台端各只有 1 张卡会留下一整行空白）。
+   只取参考页的标题层级与大留白，不铺色块、不加装饰线、不写营销腔。 */
+.jyt-sec{padding-block:clamp(52px,7.4vh,88px)}
+.jyt-h{margin:0 0 clamp(34px,4.8vh,56px);text-align:center;
+  font-size:clamp(1.875rem,2.8vw,2.5rem);font-weight:700;
+  line-height:1.35;letter-spacing:.02em}
+.jyt-h + .dtext,.jyt-h + .jyt-fig,.jyt-h + .jyt-cards,.jyt-h + .pmore{margin-top:0}
+/* 「平台介绍」板块内部再松一档，贴近参考页的大留白；只改间距，元素与顺序不变 */
+.jyt-sec--intro .bfig{margin-top:clamp(30px,4.2vh,48px)}
+.jyt-sec--intro .pstat{margin-top:clamp(34px,4.6vh,52px)}
+.jyt-sec--intro .p-qr{margin-top:clamp(38px,5.2vh,58px)}
+.jyt-defs{position:absolute;width:0;height:0;overflow:hidden}
+.jyt-ic{width:26px;height:26px;flex:none;fill:none;stroke:currentColor;stroke-width:1.6;
+  stroke-linecap:round;stroke-linejoin:round}
+figure.bfig.jyt-fig{max-width:min(1160px,100%);margin-inline:auto}
+.jyt-fig picture{display:block}
+.jyt-fig img{display:block}
+.jyt-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:clamp(14px,1.6vw,22px);margin-top:clamp(8px,1.4vh,14px)}
+.jyt-card{min-width:0;padding:clamp(22px,2.4vw,30px) clamp(18px,2vw,26px);
+  background:#fff;border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);
+  border-radius:4px;transition:border-color .25s var(--ease),transform .25s var(--ease)}
+.jyt-card .jyt-ic{width:34px;height:34px;margin-bottom:clamp(18px,2.2vh,26px);
+  color:var(--accent);stroke-width:1.5;opacity:.8}
+.jyt-ctop{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin-bottom:clamp(18px,2.2vh,26px)}
+.jyt-ctop .jyt-ic{margin-bottom:0}
+.jyt-end{font-size:0.8125rem;line-height:1.6;color:var(--mut);white-space:nowrap}
+.jyt-card h3{font-size:1.0625rem;font-weight:600;line-height:1.55;letter-spacing:.01em}
+.jyt-card p{margin-top:10px;font-size:0.9375rem;line-height:1.9;
+  color:var(--ink2);text-wrap:pretty}
+@media (hover:hover){
+  .jyt-card:hover{border-color:color-mix(in srgb,var(--accent) 42%,transparent);
+    transform:translateY(-2px)}
+}
+@media (max-width:1100px){
+  .jyt-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:560px){
+  .jyt-cards{grid-template-columns:minmax(0,1fr)}
+  .jyt-h{font-size:clamp(1.625rem,7vw,1.875rem)}
 }

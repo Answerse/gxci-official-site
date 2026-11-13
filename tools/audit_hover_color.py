@@ -21,7 +21,10 @@ COLOR_PROPS = ("color", "background", "background-color", "background-image",
                "border-left-color", "border-right-color", "box-shadow")
 
 BLUE_HINTS = ("--accent", "--accent2", "#2b3a92", "#7c8ce8", "#1e2a70",
-              "#6a7ade", "#4353c0", "#9aa8f0", "143,196,240")
+              "#6a7ade", "#4353c0", "#9aa8f0", "143,196,240",
+              # V367 用户指令：导航子菜单 hover = 5% 标准色蓝，写死字面值
+              # rgba(43,58,146,.05)（不读 --accent，避免被 .mega 的模块色代理改掉）
+              "43,58,146")
 NEUTRAL = ("#fff", "#ffffff", "white", "transparent", "inherit", "none",
            "rgba(255,255,255", "rgba(20,20,20", "rgba(15,25,45", "var(--ink)", "var(--ink2)",
            "var(--line)", "var(--panel)", "var(--panel-2)", "#e9ecf2", "currentcolor", "var(--dark)", "var(--dark2)",
