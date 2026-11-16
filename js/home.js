@@ -1,47 +1,65 @@
 /* ============================================================
-   首页脚本：新闻中心（左固定头条 + 右列标签/列表 + 下方 3 卡）+ 合作伙伴滚动
+   首页脚本：新闻中心（V403 回到两栏：左焦点图 / 右三个标签栏）
+     焦点图**保留 V401 新样式**：图在上、标题单独一行（不覆盖图上、无背景、黑字），
+     标题下三条横条指示器按剩余停留时间递减；3 张轮播、横版优先，
+     首张固定为真实稿件「成立四十周年发展座谈会」（V404 用户点名）。
+     右列 = 站内原来的 .news-tabs 三个可切换标签（公司动态/行业资讯/党建工作）
+     + 统一「标题 + 日期 + 细线」列表（V401 用户点定，首条不再带摘要）。
+   + 合作伙伴滚动
    ============================================================ */
 (function () {
   'use strict';
 
-  /* 与新闻页 site.js 的 CATS 完全同一口径（V354：两边都不再有「全部」，
-     标签、顺序、默认选中项一一对应）。主题教育(17) 没有标签，两边都不收。 */
   var CATS = { 3: '公司动态', 4: '行业资讯', 5: '党建工作' };
-  var DEFAULT_CAT = +Object.keys(CATS)[0];
+  var DEFAULT_CAT = 3;   /* 默认高亮第一个标签，与新闻中心页口径一致 */
   var DEFAULT_COVER = 'assets/img/_img_index_news-header-bg.png?v=96';
-  var LIST_MAX = 5; /* 右侧列表总条数（含带摘要的首条）；V144 由 6 收到 5，压新闻区高度 */
+  var LIST_MAX = 6;      /* V407：右列列表补到 6 条，与左侧焦点图列高度视觉对齐 */
+  var FEAT_MAX = 3;      /* 焦点轮播固定 3 张 */
+  var FEAT_DUR = 5200;   /* 每张停留 5.2s */
+  /* V404：用户点名「默认要 40 周年座谈会」。这是真实稿件，不是编的 —— 标题、
+     日期、链接来自 2026-10-23「北部湾产权交易所集团」公众号原文，封面取自同篇
+     座谈会现场照（大屏写明「成立40周年发展座谈会」），已本地化并去掉公众号水印。
+     正式域名下新闻索引优先读云数据库（js/cloud-news.js 会覆盖 window.NEWS_INDEX），
+     只往 data/news-index.js 里加一条线上不会生效，所以首张在这里固定。 */
+  var FEAT_FIRST = {
+    title: '【国企四十载 奋进新征程】广西计算机公司召开成立四十周年发展座谈会',
+    date: '2026-10-23',
+    external: true,
+    url: 'https://mp.weixin.qq.com/s?__biz=MzI5MDYxNjY0Mw==&mid=2247487079&idx=1&sn=0e7f2a4e48b5cf79acf4a6c7537c96ff&chksm=edd480c0ad2d873a25d9623037a7757d68ebfda7751e8aa18650b055f5e04d0867e68fbcb297',
+    cover: 'assets/img/news/topic/20261023/40th-forum.webp?v=404'
+  };
 
   function esc(s) {
     return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
   }
+  function attrEsc(s) {
+    return esc(s).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
   function hrefOf(x) { return x.external ? x.url : ('news-detail.html?id=' + x.id); }
   function attrOf(x) { return x.external ? ' target="_blank" rel="noopener"' : ''; }
-  function dateParts(d) {
-    var p = (d || '').split('-');
-    return { y: p[0] || '', m: p[1] || '', d: p[2] || '' };
-  }
 
-  var tabsEl = document.getElementById('home-news-tabs');
   var gridEl = document.getElementById('home-news');
+  var tabsEl = document.getElementById('home-news-tabs');
   var listEl = document.getElementById('hn-list');
+  var moreEl = document.querySelector('.news-bar .smore');
 
-  if (gridEl && listEl) {
+  if (gridEl && tabsEl && listEl) {
     var dataAll = [];
-
-    /* ---------- V340 左侧焦点新闻：3 张淡入淡出轮播 ----------
-       取新闻数据里按日期倒序的前 3 条带封面稿件（与右列同一数据源，不新增内容）。
-       自动 5.2s 切换；鼠标悬停、键盘聚焦、标签页隐藏时暂停；点圆点立即切换；
-       prefers-reduced-motion 下不自动播，仍可手动点。 */
-    var FEAT_MAX = 3;
-    var FEAT_DUR = 5200;
     var featBox = document.getElementById('hn-feat');
     var slidesEl = document.getElementById('hn-feat-slides');
     var dotsEl = document.getElementById('hn-feat-dots');
-    var featSlides = [], featDots = [], featIdx = 0, featTimer = null;
+    var titleEl = document.getElementById('hn-feat-title');
+    var featItems = [], featSlides = [], featDots = [], featIdx = 0;
     var featReduce = window.matchMedia &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var attrEsc = function (s) {
-      return esc(s).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    /* 剩余停留时间：rAF 驱动，暂停（hover / 聚焦 / 切后台）时进度条停住 */
+    var rafId = null, remain = FEAT_DUR, lastTs = 0, paused = true;
+
+    var setFill = function (pct) {
+      featDots.forEach(function (b, i) {
+        var f = b.querySelector('.fill');
+        if (f) f.style.width = (i === featIdx ? Math.max(0, Math.min(100, pct)) : 0) + '%';
+      });
     };
 
     var featGo = function (n) {
@@ -52,37 +70,55 @@
         b.classList.toggle('act', i === featIdx);
         b.setAttribute('aria-selected', i === featIdx ? 'true' : 'false');
       });
+      var x = featItems[featIdx];
+      if (x && titleEl) {
+        titleEl.textContent = x.title;
+        titleEl.setAttribute('href', hrefOf(x));
+        if (x.external) titleEl.setAttribute('target', '_blank');
+        else titleEl.removeAttribute('target');
+      }
+      remain = FEAT_DUR; lastTs = 0; setFill(100);
     };
-    var featStop = function () {
-      if (featTimer) { clearInterval(featTimer); featTimer = null; }
+
+    var tick = function (ts) {
+      if (paused) return;
+      if (!lastTs) lastTs = ts;
+      remain -= (ts - lastTs);
+      lastTs = ts;
+      if (remain <= 0) featGo(featIdx + 1);
+      else setFill(remain / FEAT_DUR * 100);
+      rafId = window.requestAnimationFrame(tick);
     };
     var featPlay = function () {
-      if (featTimer || featReduce || featSlides.length < 2 || document.hidden) return;
-      featTimer = setInterval(function () { featGo(featIdx + 1); }, FEAT_DUR);
+      if (featReduce || document.hidden || featSlides.length < 2) return;
+      if (!paused && rafId) return;
+      paused = false; lastTs = 0;
+      rafId = window.requestAnimationFrame(tick);
+    };
+    var featStop = function () {
+      paused = true;
+      if (rafId) { window.cancelAnimationFrame(rafId); rafId = null; }
     };
 
     var buildFeature = function (list) {
-      if (!slidesEl || !dotsEl || !list.length) return;
+      if (!slidesEl || !dotsEl || !titleEl || !list.length) return;
+      featItems = list.slice(0, FEAT_MAX);
       var h = '', d = '';
-      list.forEach(function (x, i) {
-        var dp = dateParts(x.date);
+      featItems.forEach(function (x, i) {
         h += '<a class="feat-slide' + (i === 0 ? ' on' : '') + '" href="' +
-          attrEsc(hrefOf(x)) + '"' + attrOf(x) + '>' +
+          attrEsc(hrefOf(x)) + '"' + attrOf(x) + ' aria-label="' + attrEsc(x.title) + '">' +
           '<img src="' + attrEsc(x.cover || DEFAULT_COVER) + '" alt="" ' +
-          'loading="eager" decoding="async">' +
-          '<div class="cap"><span class="fd"><b>' + dp.d + '</b><span>' +
-          dp.y + '-' + dp.m + '</span></span>' +
-          '<span class="cap-txt"><b>' + esc(x.title) + '</b></span></div></a>';
+          'loading="eager" decoding="async"></a>';
         d += '<button type="button" role="tab" data-i="' + i + '" class="' +
-          (i === 0 ? 'act' : '') + '" aria-selected="' + (i === 0) +
-          '" aria-label="第 ' + (i + 1) + ' 条焦点新闻"></button>';
+          (i === 0 ? 'act' : '') + '" aria-selected="' + (i === 0 ? 'true' : 'false') +
+          '" aria-label="第 ' + (i + 1) + ' 条焦点新闻"><span class="fill"></span></button>';
       });
       slidesEl.innerHTML = h;
       dotsEl.innerHTML = d;
       featSlides = Array.prototype.slice.call(slidesEl.children);
       featDots = Array.prototype.slice.call(dotsEl.children);
 
-      /* 封面外链偶有失效：回退到站点自带兜底图，避免空白蓝块 */
+      /* 封面外链偶有失效：回退到站点自带兜底图，避免空白 */
       featSlides.forEach(function (s) {
         var im = s.querySelector('img');
         if (!im) return;
@@ -108,48 +144,30 @@
       featIdx = 0; featGo(0); featPlay();
     };
 
-    /* 「更多新闻 →」跟着当前标签走，点进去落在新闻中心的同一个分类上 */
-    var moreEl = document.querySelector('.news-bar .smore');
+    /* 右列：「更多新闻 →」跟着当前标签走，点进去落在新闻中心的同一分类 */
     var syncMore = function (catId) {
       if (!moreEl) return;
       moreEl.setAttribute('href', catId === DEFAULT_CAT ? 'news.html' : 'news.html?cat=' + catId);
     };
 
-    /* 右侧列表：首条带摘要 + 其余，随标签切换 */
+    /* 统一列表：标题左 + 日期右 + 细线，无摘要、无首条展开（V401 用户点定） */
     var renderList = function (catId) {
       syncMore(catId);
       var set = dataAll.filter(function (x) { return x.cat_id === catId; });
-
       if (!set.length) {
-        listEl.innerHTML = '<li><span class="t">该栏目暂无内容。</span></li>';
+        listEl.innerHTML = '<li><a><span class="t">该栏目暂无内容。</span><span class="d"></span></a></li>';
         return;
       }
-
       var h = '';
-      set.slice(0, LIST_MAX).forEach(function (x, i) {
-        var href = hrefOf(x), attr = attrOf(x);
-        if (i === 0) {
-          var dp = dateParts(x.date);
-          var sum = (x.summary || '').replace(/\s+/g, ' ').trim();
-          if (sum.length > 96) sum = sum.slice(0, 96) + '…';
-          h += '<li class="lead"><a href="' + href + '"' + attr + '>' +
-            '<span class="lmain">' +
-              '<span class="t">' + esc(x.title) + '</span>' +
-              /* 摘要节点恒定存在（无摘要时留空占位），保证首条高度不随稿件变化 */
-              '<span class="sum">' + esc(sum) + '</span>' +
-            '</span>' +
-            '<span class="fd"><b>' + dp.d + '</b><span>' + dp.y + '-' + dp.m + '</span><i>→</i></span>' +
-            '</a></li>';
-        } else {
-          h += '<li><a href="' + href + '"' + attr + '>' +
-            '<span class="t">' + esc(x.title) + '</span>' +
-            '<span class="d">' + x.date + '</span></a></li>';
-        }
+      set.slice(0, LIST_MAX).forEach(function (x) {
+        h += '<li><a href="' + attrEsc(hrefOf(x)) + '"' + attrOf(x) + '>' +
+          '<span class="t">' + esc(x.title) + '</span>' +
+          '<span class="d">' + esc(x.date) + '</span></a></li>';
       });
       listEl.innerHTML = h;
     };
 
-    /* 直接复用新闻页 .ntabs 的按钮结构与口径（V354：默认高亮第一个分类） */
+    /* 站内原来的三个标签：默认高亮第一个，点击切换右列列表 */
     var buildTabs = function () {
       Object.keys(CATS).forEach(function (k, i) {
         var btn = document.createElement('button');
@@ -166,31 +184,90 @@
       });
     };
 
-    /* V351：新闻索引 209KB（gzip 后 54KB）原来随首屏一起拉，但新闻板块在第 3 屏。
-       改成进入视口前 600px 才加载，首屏少一个请求、也少一次 200KB JSON 解析；
-       不支持 IntersectionObserver 的内核仍按原逻辑立即加载。 */
+    /* 焦点图取图：首张固定 FEAT_FIRST（40 周年座谈会）；其余优先横版照片封面。
+       新闻库里不少封面是 1260×2161 的整页文章截图，铺进 16/10 焦点框会变成一屏正文，
+       所以预探测宽高比 >= 1.15 的横版图优先，竖版长截图退后；3.2s 超时按已探明结果渲染。
+       V403：外链封面常比 3.2s 慢，超时时先扫一次 Image.complete（onload 可能没触发），
+       仍一张都没探明则延后 2.2s 再判，避免「横版优先」退化成按原顺序、首张变成长截图。 */
+    var pickFeature = function (list, cb) {
+      /* 首张固定为 40 周年座谈会；若数据源里也同步了同一篇，剔除避免重复轮播 */
+      var rest = list.filter(function (x) {
+        return x.cover && x.url !== FEAT_FIRST.url && x.title !== FEAT_FIRST.title;
+      });
+      /* 站点自有图优先（微信封面常是缩略图 / 防盗链占位） */
+      var own = rest.filter(function (x) { return x.cover && x.cover.indexOf('www.gxci.com.cn/') >= 0; });
+      var other = rest.filter(function (x) { return x.cover && x.cover.indexOf('www.gxci.com.cn/') < 0; });
+      var cand = own.concat(other).slice(0, 8);
+      var meta = [], imgs = [], left = cand.length, done = false, retried = false, timer = null;
+
+      var probe = function (k) {
+        if (meta[k]) return meta[k];
+        var im = imgs[k];
+        if (im && im.complete && im.naturalWidth > 0) {
+          meta[k] = { x: cand[k], r: im.naturalWidth / Math.max(1, im.naturalHeight) };
+        }
+        return meta[k];
+      };
+      var finish = function () {
+        if (done) return;
+        var known = 0;
+        for (var q = 0; q < cand.length; q++) if (probe(q)) known++;
+        if (!known && !retried && cand.length) {
+          retried = true;
+          timer = window.setTimeout(finish, 2200);
+          return;
+        }
+        done = true;
+        window.clearTimeout(timer);
+        /* 稀疏数组不能用 forEach（会跳过未探明的洞），这里显式按索引遍历 */
+        var wide = [], slight = [], long = [];
+        for (var k = 0; k < cand.length; k++) {
+          var m = probe(k);
+          if (!m) continue;
+          if (m.r >= 1.15) wide.push(m.x);
+          else if (m.r >= 0.75) slight.push(m.x);
+          else long.push(m.x);
+        }
+        var seq = [FEAT_FIRST];
+        var add = function (x) {
+          if (seq.length < FEAT_MAX && x && seq.indexOf(x) < 0) seq.push(x);
+        };
+        wide.concat(slight, long).forEach(add);
+        /* 超时未探明的按原顺序补足，保证恒为 3 张 */
+        for (var k2 = 0; k2 < cand.length && seq.length < FEAT_MAX; k2++) add(cand[k2]);
+        cb(seq.length ? seq : cand.slice(0, FEAT_MAX));
+      };
+      timer = window.setTimeout(finish, 3200);
+      if (!cand.length) { finish(); return; }
+      cand.forEach(function (x, i) {
+        var im = new Image();
+        imgs[i] = im;
+        var put = function (r) {
+          meta[i] = { x: x, r: r };
+          if (--left === 0) finish();
+        };
+        im.onload = function () { put(im.naturalWidth / Math.max(1, im.naturalHeight)); };
+        im.onerror = function () { put(0); };
+        im.src = x.cover;
+      });
+    };
+
+    /* V351：新闻索引 209KB 原随首屏一起拉，但新闻板块在第 3 屏；
+       改成进入视口前 600px 才加载。不支持 IntersectionObserver 的内核立即加载。 */
     var loadNews = function () {
       window.__loadNews()
         .then(function () {
-          /* 只收有标签的分类，和新闻中心页 filtered() 同一口径 */
-          dataAll = (window.NEWS_INDEX || []).filter(function (x) {
-            return !x.external && CATS[x.cat_id];
-          });
+          dataAll = (window.NEWS_INDEX || []).filter(function (x) { return CATS[x.cat_id]; });
           if (!dataAll.length) {
-            listEl.innerHTML = '<li><span class="t">新闻数据加载失败，请稍后重试。</span></li>';
+            listEl.innerHTML = '<li><a><span class="t">新闻数据加载失败，请稍后重试。</span><span class="d"></span></a></li>';
             return;
           }
-          /* 封面优先取站点自有图源：微信 mmbiz.qpic.cn 的封面常是 140px 缩略图或
-             防盗链占位，轮到时会糊掉；不足 3 张再按原顺序补其它来源。 */
-          var covers = dataAll.filter(function (x) { return x.cover; });
-          var own = covers.filter(function (x) { return x.cover.indexOf('www.gxci.com.cn/') >= 0; });
-          var other = covers.filter(function (x) { return x.cover.indexOf('www.gxci.com.cn/') < 0; });
-          buildFeature(own.concat(other).slice(0, FEAT_MAX));
           buildTabs();
           renderList(DEFAULT_CAT);
+          pickFeature(dataAll.filter(function (x) { return x.cover; }), buildFeature);
         })
         .catch(function () {
-          listEl.innerHTML = '<li><span class="t">新闻数据加载失败，请稍后重试。</span></li>';
+          listEl.innerHTML = '<li><a><span class="t">新闻数据加载失败，请稍后重试。</span><span class="d"></span></a></li>';
         });
     };
 
