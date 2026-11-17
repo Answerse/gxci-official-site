@@ -143,9 +143,11 @@ body.dark-hero .nav.mega-on .menu>li:hover a.m{color:var(--mc)}
 /* ---------- V376：业务领域 3×2 网格 + 产品中心左右双栏 ---------- */
 /* 业务领域：5 项排成 3 列，第二行只放 2 项、末格自动空出（grid 默认逐行填充）。
    面板上限放宽到 780px 容下「信息化规划与咨询服务」这类长标签（不换行需更宽）；网格内文字禁止折行
-   （nowrap）、图标与文字垂直居中、项内边距收小，否则三栏会被挤爆。其余三栏（新闻/关于）仍是默认竖排 1fr，不变。 */
+   （nowrap）、图标与文字垂直居中、项内边距收小，否则三栏会被挤爆。其余三栏（新闻/关于）仍是默认竖排 1fr，不变。
+   V420（用户「菜单项间隔要加大，现在像连在一起」）：网格间距 10×14 → **16px 行 / 20px 列**。
+   列距加大后每列 (780-40-2×20)/3 ≈ 233px，最长标签 202px 仍不折行；行距加大靠面板自动变高吸收。 */
 .mega.mega-biz{max-width:780px}
-.mega.mega-biz .mega-cards{grid-template-columns:repeat(3,1fr);gap:10px 14px}
+.mega.mega-biz .mega-cards{grid-template-columns:repeat(3,1fr);gap:16px 20px}
 .mega.mega-biz .ml{align-items:center;padding:8px 10px}
 /* 产品中心：左右两栏，每栏 = 产品线标题（.ml-head：标题 + 小字说明）+ 垂直子列表。
    标题保留原链接（桂农易通→product-nongyi.html，桂资通→case-house.html）。
