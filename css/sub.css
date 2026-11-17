@@ -566,66 +566,69 @@ figure.bfig figcaption{margin-top:12px;font-size:0.8125rem;line-height:1.7;lette
 }
 
 /* ============================================================
-   V333 业务领域索引页（business.html）：一行 5 卡 · 统一上图下文 · 蓝实色文字块
-   用户指令：「改成上图下文的卡片样式，文字用标准色蓝色背景，文字反白」。
-   在 V330 的五列栅格上取消 2/4 卡的 column-reverse 交替，五张卡一律图在上、
-   文字块在下；文字块用首页 V313 同款标准蓝 var(--accent) 实色，标题反白。
-   只作用于 body[data-page="business"] —— 首页 .biz 仍是 V313 的蓝实色文字块 + 2+3 错格。
-   图与文彻底分离：不压图、不要渐变蒙版；文字块只留业务名称标题
-   （.btags / .bsum 隐藏，DOM 不动），标题全档强制单行 → 5 张卡行数一致。
+   V414 业务领域索引页（business.html）：2 列 × 3 行卡片 · 左题图 + 右标题简介
+   用户指令：「版式改成 2*3 的卡片布局，每个卡片左侧正方形 4:3 的题图，
+   跟首页的业务板块用同一张资源，不要遮罩；右侧是业务标题和业务简介，
+   简介小字、固定两行、溢出省略号，保证一屏内能看完这 5 块卡片。」
+   —— 取代 V333 的「一行 5 卡 · 上图下文 · 蓝实色文字块」。
+   题图与首页业务板块共用 assets/img/biz/home-biz-*.avif / card-procure.avif，
+   去掉一切遮罩（mask-image + .bfig::after 雾 + .bcard::after 压暗），
+   图是完整原图；右侧只留标题 + 简介两行（关键词标签行按新布局撤掉）。
+   浅灰底 + 白卡，靠面块区分卡片，不加边框（极简铁律）。
    ============================================================ */
+body[data-page="business"] .sec-biz{background:#F0F4F5;
+  /* 收紧上下留白：默认 .sec 用 --sec-pad（80px），2×3 卡片区要保证
+     1440×900 一屏看完 5 块卡片（dhero 300 + 上留白 + 三行卡 ≤ 900）。 */
+  padding-top:clamp(24px,3.4vh,40px);padding-bottom:clamp(24px,3.4vh,40px)}
 body[data-page="business"] .biz{
-  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
-  grid-auto-rows:auto;gap:clamp(10px,1.2vw,16px);align-items:stretch}
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  grid-auto-rows:auto;gap:clamp(12px,1.3vw,20px);align-items:stretch}
 body[data-page="business"] .biz .bcard:first-child{grid-column:auto}
+/* 卡片：横向排布（左图右文），白底 + 4px 圆角，无描边、无阴影 */
 body[data-page="business"] .biz .bcard{
-  aspect-ratio:auto;height:auto;display:flex;flex-direction:column;justify-content:flex-start;
-  overflow:hidden;border-radius:4px;background:var(--accent);color:#fff;box-shadow:none}
+  aspect-ratio:auto;height:auto;display:flex;flex-direction:row;align-items:stretch;
+  gap:0;overflow:hidden;border-radius:4px;background:#fff;color:var(--ink);box-shadow:none;
+  padding:clamp(13px,1.3vw,20px)}
 body[data-page="business"] .bcard::after,
 body[data-page="business"] .bcard .bfig::after{content:none}
+/* 题图：固定宽度、4:3，无遮罩（-webkit-mask-image:none） */
 body[data-page="business"] .bcard .bfig{
-  position:relative;inset:auto;flex:0 0 auto;width:100%;max-width:none;
-  aspect-ratio:4/3;overflow:hidden;border-radius:0;background:none}
+  position:relative;inset:auto;flex:0 0 auto;
+  width:clamp(132px,12.4vw,178px);aspect-ratio:4/3;
+  overflow:hidden;border-radius:4px;background:none}
 body[data-page="business"] .bcard .bfig img{
-  height:100%;-webkit-mask-image:none;mask-image:none}
-/* 文字块：标准蓝实色（#2b3a92）+ 反白，与首页 V313 蓝块同色。
-   高度由内边距与 min-height 撑，五张卡标题同为单行，块状高度自然一致；
-   flex:1 让 grid 等高拉伸时多出来的高度落在蓝块上，图片比例不变。 */
+  width:100%;height:100%;object-fit:cover;-webkit-mask-image:none;mask-image:none}
+/* 文字块：右侧，标题 + 简介（两行省略） */
 body[data-page="business"] .bcard .bbody{
-  position:relative;z-index:auto;flex:1 0 auto;
-  min-height:clamp(64px,5vw,76px);display:flex;flex-direction:column;justify-content:center;
-  padding:clamp(12px,1.4vw,18px) 6px;text-align:center;
-  background:var(--accent);color:#fff;transition:background-color .35s var(--ease)}
-/* 5 个标题统一单行：字号 15–17px，nowrap 兜底；蓝底上恒为白字 */
+  position:relative;z-index:auto;flex:1 1 auto;min-width:0;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:0 clamp(13px,1.3vw,22px);text-align:left;
+  background:none;color:var(--ink);transition:none}
 body[data-page="business"] .bcard :is(h2,h3){
-  font-size:clamp(0.9375rem,1.15vw,1.0625rem);font-weight:600;line-height:1.45;
-  letter-spacing:.01em;white-space:nowrap;color:#fff;transition:color .3s}
-body[data-page="business"] .bcard :is(.btags,.bsum){display:none}
-/* 蓝底上不能用 V330 的「标题转蓝」hover（蓝字落进蓝底会消失）：
-   改为色块轻微提亮，标题始终保持反白；图片缩放沿用 main.css 的反馈 */
+  font-size:clamp(0.9375rem,1.1vw,1.0625rem);font-weight:600;line-height:1.5;
+  letter-spacing:.01em;color:var(--ink);transition:color .3s;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* 简介：13px 小字，固定两行，超出省略号 */
+body[data-page="business"] .bcard .bsum{
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  margin-top:7px;max-height:none;min-height:0;opacity:1;overflow:hidden;
+  font-size:0.8125rem;line-height:1.85;color:var(--ink2);text-overflow:ellipsis}
+body[data-page="business"] .bcard :is(.btags){display:none}
+/* 反馈沿用全站口径：可点元素才变色（标题转标准蓝），图片轻微放大 */
 @media (hover:hover){
-  body[data-page="business"] .bcard:hover .bbody{background:color-mix(in srgb,var(--accent) 88%,#fff)}
-  body[data-page="business"] .bcard:hover :is(h2,h3){color:#fff}
+  body[data-page="business"] .bcard:hover :is(h2,h3){color:var(--accent)}
   body[data-page="business"] .bcard:hover{box-shadow:none}
 }
-body[data-page="business"] .bcard:focus-visible .bbody{background:color-mix(in srgb,var(--accent) 88%,#fff)}
-body[data-page="business"] .bcard:focus-visible :is(h2,h3){color:#fff}
+body[data-page="business"] .bcard:focus-visible :is(h2,h3){color:var(--accent)}
 body[data-page="business"] .bcard:focus-visible{box-shadow:none}
-/* 5 列只在 ≥1101 保持；窄屏按 3 / 2 / 1 列折行。
-   1100 时单卡仍有约 187px，10 字标题 15px 单行不溢出；再窄就必须折行。
-   这些断点要显式写，否则会落到 main.css 的 ≤760 单列 + 4/3 压图规则。 */
-@media (max-width:1100px){
-  body[data-page="business"] .biz{grid-template-columns:repeat(3,minmax(0,1fr))}
-}
-@media (max-width:760px){
-  body[data-page="business"] .biz{grid-template-columns:repeat(2,minmax(0,1fr))}
-  body[data-page="business"] .bcard .bbody{min-height:56px}
-  body[data-page="business"] .bcard :is(h2,h3){font-size:0.9375rem}
+/* 窄屏折行：2 列 → 1 列；≤700 改 1 列后题图放大占位，简介仍两行 */
+@media (max-width:900px){
+  body[data-page="business"] .biz{grid-template-columns:1fr}
+  body[data-page="business"] .bcard .bfig{width:clamp(150px,26vw,210px)}
 }
 @media (max-width:520px){
-  body[data-page="business"] .biz{grid-template-columns:1fr}
-  body[data-page="business"] .bcard .bfig{aspect-ratio:16/9}
-  body[data-page="business"] .bcard .bbody{min-height:52px}
+  body[data-page="business"] .bcard .bfig{width:clamp(118px,30vw,160px)}
+  body[data-page="business"] .bcard :is(h2,h3){font-size:0.9375rem}
 }
 
 /* ---------- V357 茧易通详情页 · 按 tcloudit 耘立方页重排板块节奏（仅本页） ----------

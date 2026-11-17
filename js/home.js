@@ -26,7 +26,7 @@
     date: '2026-10-23',
     external: true,
     url: 'https://mp.weixin.qq.com/s?__biz=MzI5MDYxNjY0Mw==&mid=2247487079&idx=1&sn=0e7f2a4e48b5cf79acf4a6c7537c96ff&chksm=edd480c0ad2d873a25d9623037a7757d68ebfda7751e8aa18650b055f5e04d0867e68fbcb297',
-    cover: 'assets/img/news/topic/20261023/40th-forum.webp?v=404'
+    cover: 'assets/img/news/topic/20261023/40th-forum.webp?v=414'
   };
 
   function esc(s) {
@@ -307,10 +307,14 @@
       var boxW = (el.parentNode && el.parentNode.clientWidth) || window.innerWidth;
       var reps = Math.max(2, 2 * Math.ceil(boxW / unitW));
       var h = '';
+      /* V414：广西数据集团 Logo 重做为 3 倍分辨率（官网原图 30000×7439 一次缩到
+         242×60 是 124:1 极限缩放，边缘出锯齿；改分步缩放后存 484×120），
+         所以它的 URL 要单独升版本，其余 11 家仍走 353，避免整墙 logo 全部重下。 */
+      var HQ_V = { sjjt: '414' };
       list.forEach(function (n) {
         /* V351：PNG 转 WebP（306KB → 110KB），并加 lazy —— 合作屏在第 5 屏，
            原来冷启动就一次性拉完（约 250KB / 31 个请求），拖慢首屏。 */
-        h += '<span class="mq-item"><img src="assets/img/hzhb_' + n + '.webp?v=353" alt="" loading="lazy" decoding="async"></span>';
+        h += '<span class="mq-item"><img src="assets/img/hzhb_' + n + '.webp?v=' + (HQ_V[n] || '353') + '" alt="" loading="lazy" decoding="async"></span>';
       });
       var all = '';
       for (var i = 0; i < reps; i++) all += h;   /* 整数份，-50% 位移仍落在整份边界上 */

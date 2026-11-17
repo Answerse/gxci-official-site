@@ -253,9 +253,9 @@ body.dark-hero .nav:not(.on) .burger i{background:#fff}
    画质差异不可见）。先写 webp 给不认 image-set 的旧内核兜底，再用 image-set 让支持
    AVIF 的浏览器走小图；position/size/repeat 留在 shorthand 里，第二条只换图源。 */
 .hero-media{position:absolute;inset:-6%;z-index:0;
-  background:url("../assets/img/hero-guokong.webp?v=351") center/cover no-repeat;
+  background:url("../assets/img/hero-guokong.webp?v=414") center/cover no-repeat;
   background-image:image-set(url("../assets/img/hero-guokong.avif?v=351") type("image/avif"),
-    url("../assets/img/hero-guokong.webp?v=351") type("image/webp"));
+    url("../assets/img/hero-guokong.webp?v=414") type("image/webp"));
   transform-origin:50% 50%;animation:kenburns 16s ease-in-out infinite alternate;will-change:transform}
 /* V341 用户指令：缩放平移要更明显、更快，方向由下往上（缓慢上摇）。
    原 26s / scale 1→1.09 / 位移 -1.2%,-1% 几乎看不出，改成 16s /
@@ -471,7 +471,7 @@ body.dark-hero .nav:not(.on) .burger i{background:#fff}
      实测时间轴带白字对比 9.7–14.5:1（蒙版反而比原渐变更暗，所以对比还升了） */
   background:
     linear-gradient(180deg,rgba(15,20,62,.87) 0%,rgba(15,20,62,.83) 56%,rgba(13,17,54,.79) 100%),
-    url("../assets/img/deco/hist-wave.webp") center 58%/cover no-repeat,
+    url("../assets/img/deco/hist-wave.webp?v=414") center 58%/cover no-repeat,
     linear-gradient(160deg,#171f66 0%,#2b3a92 58%,#232f86 100%)}
 /* V262：给大面积渐变加两样极轻的东西，去掉「塑料平滑」感——
    ① 颗粒：96px 透明噪点平铺（白/黑点，alpha 1–9 ≈ 3.5%）。
@@ -876,13 +876,15 @@ footer{background:#f4f6f9;color:var(--ink);border-top:1px solid var(--line)}
 .atabs{display:grid;grid-template-columns:repeat(3,1fr);width:100%;border-bottom:1px solid var(--line)}
 .atabs button{position:relative;padding:24px 10px;font-size:1.0625rem;letter-spacing:.12em;text-align:center;text-indent:.12em;color:var(--mut);transition:color .3s var(--ease)}
 .atabs button::after{content:"";position:absolute;left:0;bottom:-1px;width:100%;height:3px;background:var(--accent);transform:scaleX(0);transform-origin:center;transition:transform .4s var(--ease),background .3s,height .3s}
-.atabs button:hover{color:var(--accent)}
+.atabs button:hover{color:var(--gold-d)}
 /* 悬停下划线：与当前项同一套几何（整格等宽、底线贴齐标签栏），只差粗细与颜色。
    原来是 scaleX(.35) 左对齐的短线——文字在格内居中、线却从格左边缘画出 35%，两项半幅时
    35% 能拉到 227px，长度与文字毫无关系，看着就像画错了（2026-10-26 用户指出）。 */
-.atabs button:hover::after{transform:scaleX(1);height:2px;background:var(--accent)}
-.atabs button.act{color:var(--gold-d);font-weight:600}
-.atabs button.act::after{transform:scaleX(1);height:3px;background:var(--gold-d)}
+/* V414 用户指令：hover 与 active 颜色对调 —— active 走标准蓝，hover 走金色。
+   蓝色写死 #2b3a92（不引用 var(--accent)：body.party 会把 --accent 改成深红）。 */
+.atabs button:hover::after{transform:scaleX(1);height:2px;background:var(--gold-d)}
+.atabs button.act{color:#2b3a92;font-weight:600}
+.atabs button.act::after{transform:scaleX(1);height:3px;background:#2b3a92}
 /* 双项标签栏（业务聚焦：业务领域 / 场景聚焦）：与关于我们同款，两项各占半幅、文字居中。
    标签名是模块级信息，字号比 3 项的关于我们稍大一号，撑得住半幅宽度。
    字距改 .16em 时缩进补偿要同步，否则同上的居中偏移。 */
@@ -1159,7 +1161,7 @@ body.party .dhero-shade{background:
 .dhero-media img.dhero-img--party{object-position:50% 62%}
 /* 党建稿件详情页：正文页复用新闻详情模板，深蓝 hero 也换成红绸，
    否则从红色模块点进正文会突然跳回蓝色 */
-body.party .phero{background:#7d1519 url("../assets/img/banners/party.webp?v=296") center/cover}
+body.party .phero{background:#7d1519 url("../assets/img/banners/party.webp?v=414") center/cover}
 body.party .phero::before{background:linear-gradient(110deg,rgba(50,8,12,.92) 0%,rgba(96,15,20,.86) 55%,rgba(140,26,32,.72) 100%)}
 /* V303 用户指令：党建模块的标签栏 + 搜索栏与新闻中心完全一致，只换配色。
    做法是让 party.html 与 news.html 共用同一套列表结构（site.js 的 mountList），
