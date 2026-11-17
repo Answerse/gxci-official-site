@@ -496,10 +496,13 @@ figure.bfig figcaption{margin-top:12px;font-size:0.8125rem;line-height:1.7;lette
    标题、副标、产品介绍合并成第一行最左那一格，主产品卡跨 2 格紧随其后；
    三个扩展产品各占 1 格落在第二行。两条线都按 3 等分栅格走，行内不留偏置。 */
 .pline{padding-top:clamp(36px,5vh,56px)}
-.pline+.pline{padding-top:clamp(48px,7vh,76px)}
+/* V430：两条产品线是两组并列的产品，组与组之间要明显断开。
+   组内（主牌→三张图标卡）只留 50px，组间放到 ~100px，两层节奏拉开，
+   桂资通才不会被读成桂农易通的延续（原来组间 63px ≈ 组内 58px，几乎分不开）。 */
+.pline+.pline{padding-top:clamp(80px,11vh,132px)}
 /* V311：两线大标题直接写产品名（桂农易通 / 桂资通），字号提到与卡片标题拉开一档；
    标题下的灰色小字（原 .pline-k）按用户指令删除 */
-.pline-h{font-size:clamp(1.75rem,2.4vw,2.25rem);font-weight:600;letter-spacing:.04em;line-height:1.3}
+.pline-h{font-size:clamp(2rem,2.73vw,2.46rem);font-weight:600;letter-spacing:.04em;line-height:1.3}
 /* V413：两条产品线标题左侧各加一枚产品 Logo（80px），用户目的为视觉强调。
    Logo 走原色，不加底色/描边容器（极简铁律）；与首页 .psub-ic 用同一尺寸口径，
    SVG 自身留白（桂农易通 10%、桂资通 9%）沿用首页既有比例，不额外放大。 */
@@ -509,20 +512,31 @@ figure.bfig figcaption{margin-top:12px;font-size:0.8125rem;line-height:1.7;lette
 /* V427 产品索引页改版（用户截图）：左文字 + 右内容两栏。
    右栏自上而下 = 主产品宽幅图（铭牌叠在图底边）+ 三个子产品白卡（图标在上、名称与说明在下）。
    子产品从原来「照片 + 图下铭牌」改为「彩色 Logo + 白卡」，图标落在主产品下方。 */
+/* V430 按 Figma node 161:2184 校准产品索引页两栏版式。
+   稿中 pline-body 宽 1296 = 站点 1440 版心，数值 1:1 可用。
+   ① 左文字块与右侧大图卡「顶对齐」：稿中 pline-intro 顶 383 = pcard 顶 383
+      （原来 align-self:center 让文字块掉到卡片中部，视觉不平衡）；
+   ② 两栏宽度按稿：左 410.66 / 右 853.33 / 列间距 32；
+   ③ 主牌底 → 子卡顶 50px（稿中 663.93 → 714），子卡三张 271 宽、间距 20。 */
 .pline-body{
   display:grid;
-  grid-template-columns:minmax(0,1fr) minmax(0,2fr);
+  grid-template-columns:minmax(0,0.48fr) minmax(0,1fr);
   grid-template-areas:"intro main" "intro subs";
-  gap:clamp(26px,3.2vh,40px) clamp(24px,2.4vw,36px);
+  row-gap:50px;
+  column-gap:clamp(20px,2.2vw,32px);
   align-items:start}
-.pline-intro{grid-area:intro;align-self:center;padding-right:clamp(0px,1vw,16px)}
-.pline-note{margin-top:clamp(18px,2.3vh,26px);font-size:0.9375rem;line-height:2;color:var(--ink2)}
-/* 主产品：铭牌叠在图底边（牌心与图底对齐），下半张牌探出图外，
-   .pline-main 的下内边距为探出部分留位（hover 展开标签时牌变高也不越界）。 */
-.pline-main{grid-area:main;position:relative;padding-bottom:clamp(72px,9vh,96px)}
+.pline-intro{grid-area:intro;align-self:start;padding-right:0}
+.pline-note{margin-top:20px;font-size:1.0254rem;line-height:2;color:var(--ink2)}
+/* 主产品：铭牌叠在图底边（牌心与图底对齐），下半张牌探出图外。
+   V430 按 Figma node 161:2184 改为「底部定位」：牌底 = 图底 +50（探出量 = 牌高 105 的一半），
+   .pline-main 的下内边距同为 50px 用来给探出的牌留位，行间距 50px 再把子卡往下拉开，
+   三段合计：图底 → 牌底 50 → 子卡顶 50（稿中 614.25 → 663.93 → 714）。 */
+.pline-main{grid-area:main;position:relative;padding-bottom:50px}
 .pline-main .pcard{padding-bottom:0}
-.pline-main .pcard-plate{left:0;right:0;bottom:0;margin-inline:auto;width:min(440px,64%);
-  transform:translateY(50%)}
+/* 铭牌跨在图底边上：牌底固定在图底之下 50px（稿中 614.25 → 663.93），
+   牌高约 104，故牌顶落在图底之上 54px（稿中 558.71），即上下各半。
+   用 bottom 定位而非 translateY，hover 时铭牌向上生长不往下顶。 */
+.pline-main .pcard-plate{left:0;right:0;bottom:-50px;margin-inline:auto;width:min(440px,64%)}
 /* 三个子产品白卡（V428 按 Figma node 161:2338 重做）：
    稿中三卡 271×120、白底、圆角 4、无阴影；图标 80×80 水平居中、上缘探出卡片 32px（破形）；
    标题 20px/weight 450 居中；标题下方按 V427 用户要求保留「服务平台」说明一行。
@@ -530,20 +544,19 @@ figure.bfig figcaption{margin-top:12px;font-size:0.8125rem;line-height:1.7;lette
    破形图标探出的 32px 由 .pline-body 的行间距让位：稿中主牌底 664 → 子卡顶 714（50px），
    图标顶 682 落在主牌底之下 18px，两者不打架，故 .pline-subs 不再额外加 margin-top。 */
 .pline-subs{grid-area:subs;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:clamp(16px,1.6vw,24px)}
+  gap:clamp(16px,1.4vw,20px)}
 .pcsub{
   position:relative;overflow:visible;
   background:#fff;border-radius:4px;
-  height:120px;
-  padding:58px clamp(12px,1.2vw,18px) 0;
+  min-height:120px;
+  padding:58px clamp(12px,1.2vw,18px) 20px;
   display:flex;flex-direction:column;align-items:center;text-align:center;
-  transition:background-color .38s var(--ease),color .38s var(--ease)}
-/* 图标：80×80 绝对定位居中，上移 32px 探出卡片上缘（破形）。
+  transition:background-color .38s var(--ease),color .38s var(--ease)}/* 图标：80×80 绝对定位居中，上移 32px 探出卡片上缘（破形）。
    .pcsub-icw 是包裹层，给 .pcsub-ic 提供定位参照，避免图标相对卡片定位时受 flex 影响。 */
 .pcsub-icw{position:absolute;left:50%;top:-32px;transform:translateX(-50%);
   width:80px;height:80px;display:block}
 .pcsub-ic{width:80px;height:80px;display:block;object-fit:contain}
-.pcsub .pplate-h{font-size:1.25rem;font-weight:500;line-height:1.326;letter-spacing:0;color:var(--ink)}
+.pcsub .pplate-h{font-size:1.25rem;font-weight:450;line-height:1.326;letter-spacing:0;color:var(--ink)}
 /* 卡内标题下保留「服务平台」说明一行（用户 V427 要求），排版随标题上移让位 */
 .pcsub .pplate-k{margin-top:6px;font-size:0.8887rem;line-height:1.6;color:var(--mut)}
 /* V194 同口径：子卡 hover 沿用各产品主色，与主卡铭牌 hover 的反馈一致 */
