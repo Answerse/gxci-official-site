@@ -126,7 +126,12 @@
 .org-depts--solo{margin-top:24px;padding-top:0;grid-template-columns:auto;justify-content:center}
 .org-depts--solo::before,.org-depts--solo .org-box--leaf::before{display:none}
 .org-depts--solo::after{top:-24px;height:24px}
-.org-depts--solo .org-box--leaf{white-space:normal;max-width:300px}
+/* V434 用户指令：1440 下「广西壮族自治区数字证书认证中心有限公司（广西 CA）」
+   出现不合理折行（断在「公司」中间）。原因：这里限宽 300px，而这串文字单行需 328px
+   （含内边距 356px），而该列实际有 458px —— 限宽纯属多余。
+   改为不折行、按内容宽度走，1440 下一行放得下。
+   窄屏（≤700）单列时列宽不足以容纳，交回可折行，避免横向溢出。 */
+.org-depts--solo .org-box--leaf{white-space:nowrap;max-width:none}
 @media (max-width:700px){
   .org-top{grid-template-columns:1fr;gap:8px}
   .org-merge::before{display:none}
@@ -139,6 +144,8 @@
   .org-depts{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding-top:0;margin-top:12px}
   .org-depts::before,.org-depts::after,.org-box--leaf::before{display:none}
   .org-box--leaf{white-space:normal}
+  /* V434：窄屏单列时该串文字（356px）放不下一行，交回可折行，否则会横向溢出 */
+  .org-depts--solo .org-box--leaf{white-space:normal;max-width:100%}
   .org-depts--solo{margin-top:12px}
   .org-depts--solo::after{display:none}
 }
