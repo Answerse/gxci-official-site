@@ -360,6 +360,40 @@ figure.bfig figcaption{margin-top:12px;font-size:0.8125rem;line-height:1.7;lette
 .p-qr img{display:block;width:112px;height:112px;flex:none}
 .p-qr figcaption{font-size:0.8125rem;line-height:1.8;letter-spacing:.02em;color:var(--mut)}
 
+/* V429 用户指令（按 Figma node 161:2376 / dark-hero 161:2372 稿）：
+   产品详情页的二维码从「内容区里」提到「内容区与 banner 之间」——白卡跨在 banner 底边。
+   稿中数值（Figma 画布 1920、版心 1440 = 站点版心，1:1）：
+     · 白卡 152×152、正圆（radius 999 → 50%）、纯白、无阴影
+     · 内嵌二维码 112×112、圆角 4px，卡内四周留白 20px
+     · 白卡顶在 banner 底边之上 46px（卡底落在 banner 底边之下 106px）
+     · 说明文字紧接白卡下方（2px）、居中；站点字号 0.8125rem = 14.22px（1920 下）与稿一致
+   实现：.p-qr--over 用负 margin 把白卡顶到 banner 底边之上 46px；
+   随后的首个 .dsec 收掉上内距（白卡已占掉 134px），整体比原来紧凑。 */
+.p-qr--over{
+  position:relative;z-index:3;
+  margin-top:-46px;
+  max-width:none;gap:2px;
+}
+.p-qr--over .p-qr-card{
+  width:152px;height:152px;flex:none;border-radius:50%;
+  background:#fff;display:flex;align-items:center;justify-content:center;
+}
+.p-qr--over .p-qr-card img{width:112px;height:112px;border-radius:4px}
+.p-qr--over figcaption{margin:0}
+/* 白卡下沿到首块正文的净间距 ≈ 31px（稿：caption 底 +134 → 正文顶 +165） */
+.p-qr--over + .dsec{padding-top:clamp(24px,2vw,31px)}
+/* 窄屏：白卡与 banner 的跨接幅度收小，避免在小屏上压掉过多内容 */
+@media (max-width:900px){
+  .p-qr--over{margin-top:-34px}
+  .p-qr--over + .dsec{padding-top:26px}
+}
+@media (max-width:600px){
+  .p-qr--over{margin-top:-26px}
+  .p-qr--over .p-qr-card{width:132px;height:132px}
+  .p-qr--over .p-qr-card img{width:96px;height:96px}
+  .p-qr--over + .dsec{padding-top:22px}
+}
+
 /* V292 用户指令：成功案例改成「图片 + 文字」的卡片，父级弹性布局、一行最多四张、文字居中。
    .bcase（图文两栏）仍被 4 个平台页使用，保留原样不动。 */
 .acases{--g:clamp(14px,1.6vw,20px);margin-top:clamp(18px,2.4vh,26px);
@@ -701,7 +735,6 @@ body[data-page="business"] .bcard:focus-visible .bsum{color:var(--accent)}
 /* 「平台介绍」板块内部再松一档，贴近参考页的大留白；只改间距，元素与顺序不变 */
 .jyt-sec--intro .bfig{margin-top:clamp(30px,4.2vh,48px)}
 .jyt-sec--intro .pstat{margin-top:clamp(34px,4.6vh,52px)}
-.jyt-sec--intro .p-qr{margin-top:clamp(38px,5.2vh,58px)}
 .jyt-defs{position:absolute;width:0;height:0;overflow:hidden}
 .jyt-ic{width:26px;height:26px;flex:none;fill:none;stroke:currentColor;stroke-width:1.6;
   stroke-linecap:round;stroke-linejoin:round}
