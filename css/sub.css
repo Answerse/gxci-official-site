@@ -489,32 +489,36 @@ figure.bfig figcaption{margin-top:12px;font-size:0.8125rem;line-height:1.7;lette
 .pline-main .pcard{padding-bottom:0}
 .pline-main .pcard-plate{left:0;right:0;bottom:0;margin-inline:auto;width:min(440px,64%);
   transform:translateY(50%)}
-/* 三个子产品白卡：Logo 在上、名称在中、定位说明与功能词在下 */
+/* 三个子产品白卡（V428 按 Figma node 161:2338 重做）：
+   稿中三卡 271×120、白底、圆角 4、无阴影；图标 80×80 水平居中、上缘探出卡片 32px（破形）；
+   标题 20px/weight 450 居中；标题下方按 V427 用户要求保留「服务平台」说明一行。
+   Figma 版心 1296 = 站点 1440 下版心宽，故稿中数值可 1:1 直接落地。
+   破形图标探出的 32px 由 .pline-body 的行间距让位：稿中主牌底 664 → 子卡顶 714（50px），
+   图标顶 682 落在主牌底之下 18px，两者不打架，故 .pline-subs 不再额外加 margin-top。 */
 .pline-subs{grid-area:subs;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
   gap:clamp(16px,1.6vw,24px)}
 .pcsub{
+  position:relative;overflow:visible;
   background:#fff;border-radius:4px;
-  padding:clamp(22px,2.8vh,32px) clamp(16px,1.7vw,24px);
+  height:120px;
+  padding:58px clamp(12px,1.2vw,18px) 0;
   display:flex;flex-direction:column;align-items:center;text-align:center;
-  box-shadow:0 6px 18px rgba(20,30,60,.05);
   transition:background-color .38s var(--ease),color .38s var(--ease)}
-.pcsub-ic{width:64px;height:64px;flex:none;object-fit:contain;
-  margin-bottom:clamp(12px,1.6vh,16px)}
-.pcsub .pplate-h{font-size:clamp(1.0625rem,1.25vw,1.1875rem)}
-.pcsub .pplate-k{margin-top:8px}
-/* 子卡的定位说明与功能词常驻显示（主卡的功能词仍在 hover 时展开，两处行为不同）。
-   功能词不再用描边 chip（极简铁律：禁描边容器），收成一行灰色小字，用「·」分隔。 */
-.pcsub .pplate-tags{display:block;max-height:none;opacity:1;overflow:visible;margin-top:10px;
-  font-size:0.8125rem;line-height:1.8;color:var(--mut)}
-.pcsub .pplate-tags li{display:inline;padding:0;border:0}
-.pcsub .pplate-tags li+li::before{content:"·";margin:0 6px}
+/* 图标：80×80 绝对定位居中，上移 32px 探出卡片上缘（破形）。
+   .pcsub-icw 是包裹层，给 .pcsub-ic 提供定位参照，避免图标相对卡片定位时受 flex 影响。 */
+.pcsub-icw{position:absolute;left:50%;top:-32px;transform:translateX(-50%);
+  width:80px;height:80px;display:block}
+.pcsub-ic{width:80px;height:80px;display:block;object-fit:contain}
+.pcsub .pplate-h{font-size:1.25rem;font-weight:500;line-height:1.326;letter-spacing:0;color:var(--ink)}
+/* 卡内标题下保留「服务平台」说明一行（用户 V427 要求），排版随标题上移让位 */
+.pcsub .pplate-k{margin-top:6px;font-size:0.8887rem;line-height:1.6;color:var(--mut)}
 /* V194 同口径：子卡 hover 沿用各产品主色，与主卡铭牌 hover 的反馈一致 */
 .pcsub:hover{background:var(--accent);color:#fff}
 .pcsub--cocoon:hover{background:#3a5c3a}
 .pcsub--chenpi:hover{background:#854200}
 .pcsub--forest:hover{background:#216321}
+.pcsub:hover .pplate-h{color:#fff}
 .pcsub:hover .pplate-k{color:rgba(255,255,255,.76)}
-.pcsub:hover .pplate-tags{color:rgba(255,255,255,.76)}
 /* V314 用户指令：主产品卡（桂农易通／桂资通）的图片高度要收成与下方扩展卡一致。
    两张卡图现在同为 16:9，可主卡宽两格 → 高度也是别人的两倍，一屏里看着比下面一排高一截。
    扩展卡图高 = 列宽 × 9/16；主卡宽 = 2×列宽 + 列间距，于是主卡图的比例
@@ -539,13 +543,17 @@ figure.bfig figcaption{margin-top:12px;font-size:0.8125rem;line-height:1.7;lette
 .pcard{position:relative;display:block;min-width:0;padding-bottom:clamp(38px,4.6vh,52px)}
 .pcard-fig{aspect-ratio:16/9;overflow:hidden;background:#f4f6f9;border-radius:4px}
 .pcard-fig img{width:100%;height:100%;object-fit:cover;transition:transform .7s var(--ease)}
+/* V428 按 Figma node 161:2195 校准主白牌：440×105、圆角 4、无阴影；
+   标题 26.25px/600、小字 14.2px/400，牌内上下留白按稿（21px 上 / 19px 下）。
+   Figma 版心 1296 = 站点 1440 下版心宽，稿中数值 1:1 落地。 */
 .pcard-plate{position:absolute;left:clamp(18px,2.2vw,32px);right:clamp(20px,2.4vw,34px);bottom:0;
-  background:#fff;color:var(--ink);padding:clamp(16px,2vh,22px) clamp(16px,1.7vw,24px) clamp(14px,1.8vh,20px);
+  background:#fff;color:var(--ink);
+  padding:21px clamp(16px,1.7vw,24px) 19px;
   text-align:center;border-radius:4px;
-  box-shadow:0 10px 24px rgba(20,30,60,.07);
+  box-shadow:none;
   transition:background-color .38s var(--ease),color .38s var(--ease)}
-.pplate-h{font-size:clamp(1.1875rem,1.55vw,1.5rem);font-weight:600;line-height:1.35;letter-spacing:.01em}
-.pplate-k{margin-top:6px;font-size:0.8125rem;line-height:1.6;color:var(--mut);transition:color .38s var(--ease)}
+.pplate-h{font-size:1.6406rem;font-weight:600;line-height:1.35;letter-spacing:.01em}
+.pplate-k{margin-top:6px;font-size:0.8887rem;line-height:1.6;color:var(--mut);transition:color .38s var(--ease)}
 .pplate-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;max-height:0;overflow:hidden;opacity:0;margin-top:0;
   transition:max-height .42s var(--ease),opacity .3s var(--ease),margin-top .42s var(--ease)}
 .pplate-tags li{padding:4px 10px;border:1px solid color-mix(in srgb,currentColor 26%,transparent);
