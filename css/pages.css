@@ -239,7 +239,7 @@
    现在全页只有两级：小标题 13px/400/灰、正文 16px/400/墨，一律不放大不加粗。
    每条信息 = 水平「图标 + 文字块」，文字块内部垂直「标题 + 正文」；
    右侧地图卡的地址说明用同一套两级，图标不再是 46px 蓝色圆形色块。 */
-.ct-row{display:grid;grid-template-columns:minmax(0,1fr) clamp(288px,34vw,500px);
+.ct-row{display:grid;grid-template-columns:minmax(0,1fr) clamp(288px,44vw,520px);
   gap:clamp(44px,5.6vw,84px);align-items:start;padding-top:clamp(18px,2.6vh,30px)}
 .ct-info{display:grid;gap:clamp(22px,3vh,30px)}
 .ct-item{display:flex;gap:16px;align-items:flex-start}
@@ -254,9 +254,10 @@
 #pane-contact .map-card .mc-b small{display:block;margin:0 0 6px;font-size:0.8125rem;font-weight:400;line-height:1.5;color:var(--mut)}
 #pane-contact .map-card .mc-b p{margin:0;font-size:1rem;font-weight:400;line-height:1.7;color:var(--ink)}
 /* V416（用户二次纠正）：办公区信息要「加在原地址上」——即与地址同一行、紧随地址右侧，
-   不是另起一行。地址 16px（9 汉字+2 数字≈162px）+ 小字 13px（19 全角≈247px）同行需 ~421px，
-   原地图卡内容宽只有 367px 放不下，故把地图卡宽度上限从 404px 放宽到 500px（34vw）。
-   flex-wrap 兜底：更窄的屏上小字自动落到地址下一行，仍属于同一段地址文本。 */
+   不是另起一行。地址 16px（9 汉字+2 数字≈176px）+ 小字 13px（16 全角≈208px）同行需 ~396px，
+   原地图卡内容宽只有 367px 放不下，故把地图卡列宽从 404px 放宽到 clamp(288px,44vw,520px)
+   （1440 下卡宽 520px、内容宽 484px）。flex-wrap 兜底：更窄的屏上小字自动落到地址下一行，
+   仍属于同一段地址文本。 */
 #pane-contact .map-card .mc-b .mc-line{display:flex;flex-wrap:wrap;align-items:baseline;
   gap:2px 12px;margin:0;font-size:1rem;line-height:1.7;color:var(--ink)}
 #pane-contact .map-card .mc-b .mc-addr{white-space:nowrap}
