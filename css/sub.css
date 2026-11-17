@@ -110,8 +110,9 @@ body[data-page="business"] .dhero-shade{background:
 .apane.bz-pane{padding-top:clamp(44px,7vh,76px)}
 /* ---------- 索引卡组件：业务领域 business.html + 产品中心 products.html 共用（V132 建，V159 产品页并入）
    图 + 标题 + 三行小字，分块靠留白、不用分割线；整卡可点，hover 标题转蓝、图微放大 ---------- */
-/* V427：内容区背景改浅灰（#F0F4F5，与首页业务板块同色），子产品白卡浮在其上 */
-.bizgrid-sec{padding:clamp(32px,4.6vh,56px) 0 clamp(40px,5.4vh,64px);background:#F0F4F5}
+/* V427：内容区背景改浅灰（#F0F4F5，与首页业务板块同色），子产品白卡浮在其上
+   V431：上内边距收小，配合 .pline 上内边距，banner 底 → 内容顶由 86px 收到 ~50px */
+.bizgrid-sec{padding:clamp(16px,2.2vh,28px) 0 clamp(40px,5.4vh,64px);background:#F0F4F5}
 
 /* ---------- 业务领域索引页（V284）：用户指令「改成首页的样式」——
    索引页不再另立宫格，直接复用首页 .sec-biz + .biz 2+3 错格（首卡跨两列）
@@ -495,11 +496,17 @@ figure.bfig figcaption{margin-top:12px;font-size:0.8125rem;line-height:1.7;lette
    取消原来「左列产品线名 + 右列卡片区」的两栏（左列只有 190px，标题下半截全是空），
    标题、副标、产品介绍合并成第一行最左那一格，主产品卡跨 2 格紧随其后；
    三个扩展产品各占 1 格落在第二行。两条线都按 3 等分栅格走，行内不留偏置。 */
-.pline{padding-top:clamp(36px,5vh,56px)}
+/* V431 用户指令：内容区离 banner 的间隔缩小。
+   原来 = .bizgrid-sec 上内边距 41.4 + .pline 上内边距 45 = 86px，太松。
+   现在两处各收一半，总间隔约 56px（banner 底 → 第一组内容顶）。 */
+.pline{padding-top:clamp(24px,3.4vh,42px)}
 /* V430：两条产品线是两组并列的产品，组与组之间要明显断开。
    组内（主牌→三张图标卡）只留 50px，组间放到 ~100px，两层节奏拉开，
    桂资通才不会被读成桂农易通的延续（原来组间 63px ≈ 组内 58px，几乎分不开）。 */
-.pline+.pline{padding-top:clamp(80px,11vh,132px)}
+/* V431 用户指令：产品中心两组产品线之间的间隔缩小一点。
+   组内（主牌→三张图标卡）50px，组间由 ~99px 收到 ~72px，仍比组内大一档，
+   桂农易通与桂资通照样读成两组，但整页不再松散。 */
+.pline+.pline{padding-top:clamp(56px,8vh,88px)}
 /* V311：两线大标题直接写产品名（桂农易通 / 桂资通），字号提到与卡片标题拉开一档；
    标题下的灰色小字（原 .pline-k）按用户指令删除 */
 .pline-h{font-size:clamp(2rem,2.73vw,2.46rem);font-weight:600;letter-spacing:.04em;line-height:1.3}
