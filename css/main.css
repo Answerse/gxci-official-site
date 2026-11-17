@@ -1012,39 +1012,40 @@ html.pg-on{scroll-behavior:auto}
    用 min-height 而不是 height：内容天然超过一屏时（1024 的新闻列表）区块自己撑高，
    由 home-scroll.js 给超高的块补一个底部停靠点，不会把内容裁掉。 */
 
-/* V389 首页产品中心：按 Figma 官网设计 node 105:18（1920×1080 画板）还原。
-   稿内参数（取自 Figma API 节点数据，未自造）：整屏底 #F0F4F5；两张白卡 x=30/710、
-   各 640×568、间距 40、内边距 40、4px 圆角、无描边（V391b 补齐：全站卡片统一 4px，
-   见「统一圆角 4px」段，V389 曾误写成无圆角）；卡内 VERTICAL 布局 itemSpacing 40、
-   水平居中。标题块 = 主 Logo 120（内含 108 图形）+ 40px/520 产品名 + 14px/305 简介，
-   块内间距 15；「产品列表」分割线 = 左右各 246×1 水平线 + 12px/520 #777 标签，间距 10；
-   子产品块 = 3 项（各 173 宽、Logo 80 + 20px/450 名称、间距 10、项间 57 高竖线），
-   桂资通栏仅 1 项占满 560。文字 #000，「产品列表」#777，线为浅灰。
-   注：本站默认禁装饰分割线、字号下限 13px，此处分割线/12px/14px 系用户点定版式本体，照稿保留。
-   V391：用户要求板块加标题「产品中心」，撤掉 V389 的视觉隐藏，标题与首页其他屏的 .shead 一致。 */
+/* V410 首页产品中心：按 Figma 官网设计 node 133:2060（新版白卡稿，父画板 133:1956
+   是绿/金彩牌版即 V405 已回滚的那套，**不要**照它做）还原。
+   稿内参数（取自 Figma API 节点数据，未自造）：整屏底 #F0F4F5；两张白卡各 640×546、
+   间距 40、4px 圆角、无描边；卡内左右内边距 30、上下 40，VERTICAL 布局 itemSpacing 40、
+   水平居中。标题块 = 主 Logo 120（内含 108 图形）+ 40px/520 产品名（行高 53.04）
+   + 14px/305 简介（行高 18.564、2 行 = 60），块内间距 15。
+   **V410 相对 V389 的三处版式变化**：
+   ① 删掉「产品列表」分割线行与项间竖线（新版稿没有这两个元素，.pdiv/.psep 已从 HTML 移除）；
+   ② 子产品块改为**浅灰底 #F0F4F5 + 4px 圆角**的小方块（132 宽、151 高），不再是无底色的裸 Logo；
+   ③ 子产品名称 16px/305（V389 是 20px/500）；桂农易通栏由 3 项补为 4 项（含「桂农易通」自身）。
+   注：本站默认禁装饰分割线、字号下限 13px，此处 14/16px 系用户点定版式本体，照稿保留。
+   V391：用户要求板块加标题「产品中心」，标题与首页其他屏的 .shead 一致。 */
 .sec-prod{background:#F0F4F5}
 /* V389 曾按稿把 h2 视觉隐藏；V391 恢复显示。h2 仍是 home-scroll.js 取屏指示器标签的来源。 */
 .prod-cols{display:grid;grid-template-columns:1fr;gap:24px;width:100%;max-width:1320px;margin-inline:auto}
-.pcol{background:#fff;border-radius:4px;padding:40px;display:flex;flex-direction:column;align-items:center;gap:40px;text-align:center}
+.pcol{background:#fff;border-radius:4px;padding:40px 30px;display:flex;flex-direction:column;align-items:center;gap:40px;text-align:center}
 .phead{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:15px;text-decoration:none;color:inherit;width:100%;min-height:275px}
 .phead .plogo{width:120px;height:120px;display:grid;place-items:center}
-.phead .plogo img{width:108px;height:108px;object-fit:contain}
+/* img 填满 120 容器：SVG 自身留白（桂农易通 10%、桂资通 9%）正好补出稿内 108 / 98.4 的图形尺寸，
+   不能再额外缩到 108，否则图形只有 97，比稿内小一圈。 */
+.phead .plogo img{width:120px;height:120px;object-fit:contain}
 /* 稿内文本框高度：名称 65、简介 60（2 行 × 18.56）；用行盒/内距把 40/14px 文字精确落到稿内高度，
-   两张卡标题块恒为 275，故「产品列表」分割线在左右卡严格同一水平线。 */
+   两张卡标题块恒为 275，故下方产品行在左右卡严格同一水平线。 */
 .pname{font-size:40px;font-weight:600;line-height:65px;letter-spacing:0;color:#000}
 .pdesc{font-size:14px;font-weight:400;line-height:18.56px;padding:11.5px 0;color:#000}
 .phead:hover .pname{color:var(--accent)}
-.pdiv{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;max-width:560px}
-.pdiv-line{flex:1 1 0;height:1px;background:rgba(0,0,0,.14)}
-.pdiv-t{font-size:12px;font-weight:600;color:#777;letter-spacing:.02em;white-space:nowrap}
-.psubs{display:flex;align-items:flex-start;justify-content:center;gap:10px;width:100%;max-width:560px}
-.psub{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:10px;text-decoration:none;color:inherit}
+/* 产品行：4 个浅灰小方块（稿内各 132 宽、间距 10、560 居中） */
+.psubs{display:flex;align-items:stretch;justify-content:center;gap:10px;width:100%;max-width:560px}
+.psub{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:10px;padding:20px 10px;background:#F0F4F5;border-radius:4px;text-decoration:none;color:inherit}
 .psub-ic{width:80px;height:80px;display:grid;place-items:center}
 .psub-ic img{max-width:80px;max-height:80px;object-fit:contain}
-.psub-n{font-size:20px;font-weight:500;line-height:1.33;color:#000;white-space:nowrap}
+.psub-n{font-size:16px;font-weight:400;line-height:21.2px;color:#000;white-space:nowrap}
 .psub:hover .psub-n{color:var(--accent)}
-.psep{flex:0 0 1px;width:1px;height:57px;align-self:center;background:rgba(0,0,0,.14)}
-/* 桂资通产品线仅一个子产品：占满 560 宽、Logo 与名称居中（稿内 105:174 同构） */
+/* 桂资通产品线仅一个子产品：占满 560 宽、Logo 与名称居中（稿内同构） */
 .psubs--single .psub{flex:0 1 560px}
 @media (max-width:899px){
   .pcol{padding:clamp(24px,5vw,40px);gap:clamp(24px,5vw,40px)}
@@ -1052,9 +1053,10 @@ html.pg-on{scroll-behavior:auto}
   .phead .plogo img{width:80px;height:80px}
   .pname{font-size:clamp(28px,6vw,40px)}
   .psubs{gap:8px}
+  .psub{padding:14px 6px}
   .psub-ic{width:clamp(52px,13vw,80px);height:clamp(52px,13vw,80px)}
   .psub-ic img{max-width:100%;max-height:100%}
-  .psub-n{font-size:clamp(15px,3.6vw,20px)}
+  .psub-n{font-size:clamp(13px,3.2vw,16px)}
 }
 
 @media (min-width:900px){
@@ -1240,7 +1242,7 @@ body[data-page="index"] .biz .bcard:focus-visible .btags{
 /* ============================================================
    V403 首页新闻中心：回到 V401 之前的两栏版式
    左 = 焦点图（**保留 V401 新样式**：图在上、标题单独一行黑字无背景、
-        标题下三条横条按剩余停留时间递减、3 张轮播）
+        标题下三条横条作播放进度条、3 张轮播）
    右 = 原来的 .news-col + .news-tabs 三个可切换标签 + 统一列表
    列表仍是 V401 用户点定的「标题 + 日期 + 细线」，首条不带摘要。
    V313 蓝实色块 / V340 压图标题条与竖排圆点一律不恢复。
@@ -1301,20 +1303,24 @@ body[data-page="index"] .feat-title{
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   transition:color .25s}
 body[data-page="index"] .feat-title:hover{color:var(--accent)}
-/* 横条指示器：三条等宽，当前条内蓝色部分 = 剩余停留时间（5.2s 递减到 0） */
+/* 圆点指示器（V408 用户指令，横条改圆点）：3 个小圆点，当前项蓝色实心、其余浅灰；
+   不做进度特效，位置在标题下方居中 */
 body[data-page="index"] .feat-dots{
   position:static;z-index:auto;top:auto;right:auto;
-  display:flex;flex-direction:row;gap:8px;width:100%;
+  display:flex;flex-direction:row;gap:12px;
+  align-self:center;width:auto;
   margin-top:clamp(14px,1.8vh,18px)}
 body[data-page="index"] .feat-dots button{
-  flex:1 1 0;height:3px;padding:0;border:0;border-radius:4px;
-  position:relative;overflow:hidden;background:var(--line);
+  flex:0 0 auto;width:8px;height:8px;padding:0;border:0;border-radius:50%;
+  position:relative;background:#d9dde6;
   box-shadow:none;transform:none;cursor:pointer;
   transition:background .3s}
-body[data-page="index"] .feat-dots button.act{background:var(--line);box-shadow:none;transform:none}
-body[data-page="index"] .feat-dots button .fill{
-  position:absolute;left:0;top:0;height:100%;width:0;
-  background:var(--accent);border-radius:4px}
+body[data-page="index"] .feat-dots button.act{background:var(--accent);box-shadow:none;transform:none}
+/* 扩大点击热区（直径 18px < 圆点中心距 20px，互不重叠），不影响视觉圆点 */
+body[data-page="index"] .feat-dots button::after{
+  content:"";position:absolute;inset:-5px;border-radius:50%}
+/* 未激活圆点 hover 加深一档，作为可点反馈 */
+body[data-page="index"] .feat-dots button:not(.act):hover{background:#b7bfd2}
 body[data-page="index"] .feat-dots button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 @media (prefers-reduced-motion:reduce){
   body[data-page="index"] .feat-slide{transition:none}

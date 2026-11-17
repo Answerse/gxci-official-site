@@ -1,7 +1,7 @@
 /* ============================================================
    首页脚本：新闻中心（V403 回到两栏：左焦点图 / 右三个标签栏）
      焦点图**保留 V401 新样式**：图在上、标题单独一行（不覆盖图上、无背景、黑字），
-     标题下三条横条指示器按剩余停留时间递减；3 张轮播、横版优先，
+     标题下三条横条指示器（当前条从左往右走完 5.2s 再切下一张）；3 张轮播、横版优先，
      首张固定为真实稿件「成立四十周年发展座谈会」（V404 用户点名）。
      右列 = 站内原来的 .news-tabs 三个可切换标签（公司动态/行业资讯/党建工作）
      + 统一「标题 + 日期 + 细线」列表（V401 用户点定，首条不再带摘要）。
@@ -52,15 +52,11 @@
     var featItems = [], featSlides = [], featDots = [], featIdx = 0;
     var featReduce = window.matchMedia &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    /* 剩余停留时间：rAF 驱动，暂停（hover / 聚焦 / 切后台）时进度条停住 */
-    var rafId = null, remain = FEAT_DUR, lastTs = 0, paused = true;
-
-    var setFill = function (pct) {
-      featDots.forEach(function (b, i) {
-        var f = b.querySelector('.fill');
-        if (f) f.style.width = (i === featIdx ? Math.max(0, Math.min(100, pct)) : 0) + '%';
-      });
-    };
+    /* 轮播计时：rAF 驱动，每张停留 5.2s 自动切下一张。
+       V408：指示器由横条改为圆点（用户指令），不再做进度特效：
+       圆点只表示当前第几张（蓝色实心 = 当前），其余浅灰。
+       暂停（hover / 聚焦 / 切后台）时计时停住。 */
+    var rafId = null, elapsed = 0, lastTs = 0, paused = true;
 
     var featGo = function (n) {
       if (!featSlides.length) return;
@@ -77,16 +73,15 @@
         if (x.external) titleEl.setAttribute('target', '_blank');
         else titleEl.removeAttribute('target');
       }
-      remain = FEAT_DUR; lastTs = 0; setFill(100);
+      elapsed = 0; lastTs = 0;
     };
 
     var tick = function (ts) {
       if (paused) return;
       if (!lastTs) lastTs = ts;
-      remain -= (ts - lastTs);
+      elapsed += (ts - lastTs);
       lastTs = ts;
-      if (remain <= 0) featGo(featIdx + 1);
-      else setFill(remain / FEAT_DUR * 100);
+      if (elapsed >= FEAT_DUR) featGo(featIdx + 1);
       rafId = window.requestAnimationFrame(tick);
     };
     var featPlay = function () {
@@ -111,7 +106,7 @@
           'loading="eager" decoding="async"></a>';
         d += '<button type="button" role="tab" data-i="' + i + '" class="' +
           (i === 0 ? 'act' : '') + '" aria-selected="' + (i === 0 ? 'true' : 'false') +
-          '" aria-label="第 ' + (i + 1) + ' 条焦点新闻"><span class="fill"></span></button>';
+          '" aria-label="第 ' + (i + 1) + ' 条焦点新闻"></button>';
       });
       slidesEl.innerHTML = h;
       dotsEl.innerHTML = d;
