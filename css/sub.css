@@ -465,6 +465,11 @@ figure.bfig figcaption{margin-top:12px;font-size:0.8125rem;line-height:1.7;lette
 /* V311：两线大标题直接写产品名（桂农易通 / 桂资通），字号提到与卡片标题拉开一档；
    标题下的灰色小字（原 .pline-k）按用户指令删除 */
 .pline-h{font-size:clamp(1.75rem,2.4vw,2.25rem);font-weight:600;letter-spacing:.04em;line-height:1.3}
+/* V413：两条产品线标题左侧各加一枚产品 Logo（80px），用户目的为视觉强调。
+   Logo 走原色，不加底色/描边容器（极简铁律）；与首页 .psub-ic 用同一尺寸口径，
+   SVG 自身留白（桂农易通 10%、桂资通 9%）沿用首页既有比例，不额外放大。 */
+.pline-h{display:flex;align-items:center;gap:clamp(14px,1.4vw,20px)}
+.pline-logo{width:80px;height:80px;flex:none;object-fit:contain}
 .pline-body{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
   gap:clamp(28px,3.6vh,44px) clamp(20px,2.2vw,32px);align-items:start}
 .pline-intro{grid-column:span 1;align-self:center;padding-right:clamp(0px,1vw,16px)}
