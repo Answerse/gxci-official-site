@@ -44,7 +44,16 @@
 /* V384：三块色带连续相接（像首页整条色带），不加块间留白；白/浅灰/白 两色交错即可区分板块。 */
 .info-block+.info-block{margin-top:0}
 .info-block--base{background:#fff}
-.info-block--org{background:rgba(0,0,0,.04)}
+/* V431 用户指令：「组织架构的背景色是通栏铺开的，内容区不变」。
+   即 .info-block--org 的浅灰底色横贯整屏（0→视口右缘），但块内内容
+   （标题「公司组织架构」+ 架构图）仍严格落在版心内、左右缘与标签栏对齐。
+   做法：保留块自身的浅灰底，另用 box-shadow 向外扩散 100vmax 把底色铺满整行，
+   再用 clip-path inset(0 -100vmax) 把左右溢出的部分放出来、垂直方向仍裁在块内。
+   父级 .sec-tight-top 已有 overflow-x:clip，横向不会出滚动条。 */
+.info-block--org{
+  background:rgba(0,0,0,.04);
+  box-shadow:0 0 0 100vmax rgba(0,0,0,.04);
+  clip-path:inset(0 -100vmax)}
 .info-block--gov{background:#fff}
 .info-block--org .ipane-hd,.info-block--gov .ipane-hd{margin-bottom:clamp(18px,2.4vh,26px)}
 /* 防 100vw 在垂直滚动条下横向溢出 */
