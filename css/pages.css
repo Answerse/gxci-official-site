@@ -253,6 +253,10 @@
 #pane-contact .map-card .mc-b{padding:16px 18px;font-size:1rem;line-height:1.7;color:var(--ink)}
 #pane-contact .map-card .mc-b small{display:block;margin:0 0 6px;font-size:0.8125rem;font-weight:400;line-height:1.5;color:var(--mut)}
 #pane-contact .map-card .mc-b p{margin:0;font-size:1rem;font-weight:400;line-height:1.7;color:var(--ink)}
+/* V415：地图说明条在现有地址后补一行办公区信息（用户指定位置：地图下方、现有地址后）。
+   字号 13px 与说明条首行「广西计算机有限责任公司」同级、墨色，与 16px 地址拉开一档；
+   左侧原「办公区」条目已按用户指令删除，办公区信息统一收在地图下方，不再重复。 */
+#pane-contact .map-card .mc-b .mc-add{margin:6px 0 0;font-size:0.8125rem;font-weight:400;line-height:1.7;color:var(--ink)}
 /* 联系页内容少，底部不需要和别的 tab 一样的收尾留白 */
 #pane-contact{padding-bottom:clamp(16px,2.4vh,28px)}
 @media (max-width:900px){
