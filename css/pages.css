@@ -57,6 +57,16 @@
 .info-tbl .cv.long{line-height:1.95;color:var(--ink2)}
 /* 首行三列并排，列间留白 */
 .info-tbl .row-3 td:not(:last-child){padding-right:clamp(20px,3vw,44px)}
+/* V423 信息公开（用户指令：缩小标签栏下方内容和标签栏的间距，删除表格的外边框，保证表格与标签栏
+   和下方容器间隔相同、视觉平衡）。
+   ① 表格外框（1px 描边 + 4px 圆角）整条删掉——表格不再是「盒子」，只是版心里的内容；
+   ② .info-block--base 的上内边距归零：表格自身 23.4px 内边距已充当内容留白，再叠一层就是空；
+   ③ #pane-open 的上内边距 54→32px，把「标签栏底线→首行文字」压到与「末行文字→下方色带」相等。
+   1440×900 实测：改前 上 132.4px / 下 73px（严重头重脚轻）；改后 上 73.4px / 下 73px。
+   只作用于信息公开 tab，公司简介 / 联系我们两 tab 的标签栏间距保持原样。 */
+#pane-open{padding-top:32px}
+.info-block--base{padding-top:0}
+.info-tbl{border:0;border-radius:0}
 .nobr{white-space:nowrap}
 /* V208 用户「基本信息高度缩到现有 40%」：经营范围（许可+一般合并一行）默认收起 2 行，
    底部渐隐，按钮叠在渐隐区右下（不占行高），内容一字未删 */
