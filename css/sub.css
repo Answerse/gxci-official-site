@@ -378,8 +378,13 @@ figure.bfig figcaption{margin-top:12px;font-size:0.8125rem;line-height:1.7;lette
 .p-qr--over .p-qr-card{
   width:152px;height:152px;flex:none;border-radius:50%;
   background:#fff;display:flex;align-items:center;justify-content:center;
+  /* V433 用户指令：圆形白卡必须裁掉溢出的部分，否则方形二维码会顶出白卡边界（很难看）。 */
+  overflow:hidden;
 }
-.p-qr--over .p-qr-card img{width:112px;height:112px;border-radius:4px}
+/* 圆内方图必须整块落在圆内：方图半对角线 = 边长×0.707，要 ≤ 圆半径 76px，边长须 ≤ 107px。
+   故用 104px（与原图尺寸一致），对角线 73.5 < 76，四角留 2.5px 余量不被裁。
+   object-fit:contain 保证二维码模块不被裁切（cover 会切掉三个定位角，扫不出来）。 */
+.p-qr--over .p-qr-card img{width:104px;height:104px;border-radius:4px;object-fit:contain}
 .p-qr--over figcaption{margin:0}
 /* 白卡下沿到首块正文的净间距 ≈ 31px（稿：caption 底 +134 → 正文顶 +165） */
 .p-qr--over + .dsec{padding-top:clamp(24px,2vw,31px)}
@@ -391,7 +396,8 @@ figure.bfig figcaption{margin-top:12px;font-size:0.8125rem;line-height:1.7;lette
 @media (max-width:600px){
   .p-qr--over{margin-top:-26px}
   .p-qr--over .p-qr-card{width:132px;height:132px}
-  .p-qr--over .p-qr-card img{width:96px;height:96px}
+  /* 圆半径 66px → 方图边长须 ≤ 93px，取 88px（对角线 62 < 66，不裁角） */
+  .p-qr--over .p-qr-card img{width:88px;height:88px}
   .p-qr--over + .dsec{padding-top:22px}
 }
 
