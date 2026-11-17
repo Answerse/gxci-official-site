@@ -1037,14 +1037,21 @@ html.pg-on{scroll-behavior:auto}
    两张卡标题块恒为 275，故下方产品行在左右卡严格同一水平线。 */
 .pname{font-size:40px;font-weight:600;line-height:65px;letter-spacing:0;color:#000}
 .pdesc{font-size:14px;font-weight:400;line-height:18.56px;padding:11.5px 0;color:#000}
-.phead:hover .pname{color:var(--accent)}
+/* V412：产品中心 hover 不用文字变色（用户指令「不要用文字变色的形式」）。
+   主产品线标题块（.phead）已由 <a> 改为 <div>（标题上的主产品线 Logo 不再加链接，
+   链接只留在下方产品列表里），它不再是可点元素，因此没有任何 hover 效果。 */
 /* 产品行：4 个浅灰小方块（稿内各 132 宽、间距 10、560 居中） */
 .psubs{display:flex;align-items:stretch;justify-content:center;gap:10px;width:100%;max-width:560px}
-.psub{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:10px;padding:20px 10px;background:#F0F4F5;border-radius:4px;text-decoration:none;color:inherit}
+.psub{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:10px;padding:20px 10px;background:#F0F4F5;border-radius:4px;text-decoration:none;color:inherit;transition:background-color .3s var(--ease)}
 .psub-ic{width:80px;height:80px;display:grid;place-items:center}
-.psub-ic img{max-width:80px;max-height:80px;object-fit:contain}
-.psub-n{font-size:16px;font-weight:400;line-height:21.2px;color:#000;white-space:nowrap}
-.psub:hover .psub-n{color:var(--accent)}
+.psub-ic img{max-width:80px;max-height:80px;object-fit:contain;transition:transform .3s var(--ease)}
+.psub-n{font-size:16px;font-weight:400;line-height:21.2px;color:#000;white-space:nowrap;transition:font-weight .2s var(--ease)}
+/* V412 hover 动效（用户让我斟酌）：底色淡入淡出 + 标识轻微放大 + 名称字重加重，
+   三者都不改文字颜色、不做位移。位移类动效在本项目已被用户否过（V368「不要再添加移动效果」），
+   故此处只保留淡入淡出与极小幅度缩放。 */
+.psub:hover,.psub:focus-visible{background:#E3E9EB}
+.psub:hover .psub-ic img,.psub:focus-visible .psub-ic img{transform:scale(1.05)}
+.psub:hover .psub-n,.psub:focus-visible .psub-n{font-weight:500}
 /* 桂资通产品线仅一个子产品：占满 560 宽、Logo 与名称居中（稿内同构） */
 .psubs--single .psub{flex:0 1 560px}
 @media (max-width:899px){
@@ -1171,9 +1178,10 @@ body.party .phero::before{background:linear-gradient(110deg,rgba(50,8,12,.92) 0%
    若不重声明，在该页展开「产品中心」面板会整片变红。 */
 .mega{--accent:var(--mc);--accent2:var(--mc2)}
 
-/* 首页业务领域加浅灰底（V297 用户指令）：与新闻板块的白底分开一档明度。
+/* V297 曾给首页业务领域加浅灰底（--panel #f6f7f9）与新闻板块的白底分开一档明度；
+   V411 用户指令改为纯白底，直接写 #fff（不引用 --panel，避免以后改 --panel 时连带变化）。
    只作用于首页；business.html 索引页的同一网格保持白底。 */
-body[data-page="index"] .sec-biz{background:var(--panel)}
+body[data-page="index"] .sec-biz{background:#fff}
 
 /* V297：导航加到 6 项（首页/业务领域/产品中心/新闻中心/党建工作/关于我们）后，
    861–1120 这个区间原来的 gap（4.1vw）与 logo 字号会把页头撑爆 ——

@@ -6,8 +6,8 @@
 <title>关于我们 - 广西计算机有限责任公司</title>
 <meta name="description" content="广西计算机有限责任公司前身系 1986 年经广西壮族自治区人民政府批准设立的广西壮族自治区计算机公司，是广西最早开展计算机及配套产品技术服务的企业，现为广西国控资本运营集团有限公司下属国有全资三级子企业。">
 <link rel="icon" type="image/png" href="assets/img/_img_index_bbw-logo.png?v=351">
-<link rel="stylesheet" href="css/main.min.css?v=391">
-<link rel="stylesheet" href="css/pages.min.css?v=359">
+<link rel="stylesheet" href="css/main.min.css?v=393">
+<link rel="stylesheet" href="css/pages.min.css?v=360">
 <link rel="stylesheet" href="css/sub.min.css?v=356">
 </head>
 <body class="dark-hero" data-page="about">
@@ -75,6 +75,15 @@
           </div>
           <div class="ct-item">
             <span class="ct-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9.5 21v-5.5h5V21"/></svg>
+            </span>
+            <div class="ct-body">
+              <small>办公区</small>
+              <p>广西国控大厦（枫林路办公区）二层</p>
+            </div>
+          </div>
+          <div class="ct-item">
+            <span class="ct-ico" aria-hidden="true">
               <svg viewBox="0 0 24 24"><path d="M5 16V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10"/><path d="M3 16h18"/><path d="M7 16v3"/><path d="M17 16v3"/><path d="M5 10h14"/><circle cx="9" cy="13" r="1"/><circle cx="15" cy="13" r="1"/></svg>
             </span>
             <div class="ct-body">
@@ -115,7 +124,13 @@
           <h3 class="ipane-h">公司组织架构</h3>
         </header>
         <div class="org">
-          <div class="org-top">
+          <!-- V411：广西国控资本运营集团有限责任公司为北部湾、宏桂的上级管理公司，
+               按用户指令提到最顶层，向下分叉到两大股东。 -->
+          <div class="org-top org-top--root">
+            <span class="org-box">广西国控资本运营集团有限责任公司</span>
+          </div>
+          <div class="org-fork" aria-hidden="true"></div>
+          <div class="org-top org-top--subs">
             <span class="org-box">北部湾产权交易所集团股份有限公司</span>
             <span class="org-box">广西宏桂资本运营集团有限公司</span>
           </div>
@@ -165,6 +180,6 @@
   </div>
 </section>
 
-<script src="js/site.js?v=363"></script>
+<script src="js/site.js?v=364"></script>
 </body>
 </html>

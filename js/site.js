@@ -169,16 +169,19 @@
   /* V325：茧易通换成用户提供的卡通 Logo（透明底 PNG），其余四枚仍是 Figma 导出的 SVG。
      扩展名按 slug 查表，不为单个资源在拼串里写死分支。 */
   var LOGO_EXT = { cocoon: 'png' };
+  /* V412：陈皮通 Logo 换成用户新提供的 80×80 渐变版（去掉原来的外圈描边），
+     资源文件已覆盖，缓存令牌单独走 412；其余 4 枚沿用旧令牌。 */
+  var LOGO_V = { chenpi: '412', cocoon: '351' };
   /* V376：把单条菜单项的 HTML 抽成 mlItem()，业务网格与产品双栏共用，避免重复拼串。 */
   function mlItem(it) {
     /* V317：产品中心一栏（含子产品）用各产品自己的彩色 Logo（it[4] 有值即走图片分支），
        用户明确保留；其余三栏（业务/新闻/关于）用线性图标：V369 曾改面性填充、V374 后
        用户要求改回线性，故此处用 #id（线性版，fill=none + 描边）。
        两者共用 .ml-ico 盒子，彩色 Logo 走 .ml-logo-img，卡片级配色由 data-logo 在 CSS 指定。
-       V325：Logo 资源统一升 v325；V351：茧易通位图单独升 v351。 */
+       V325：Logo 资源统一升 v325；V351：茧易通位图单独升 v351；V412：陈皮通换新图升 v412。 */
     var logo = it[4];
     var ext = logo ? (LOGO_EXT[logo] || 'svg') : '';
-    var lv = logo === 'cocoon' ? '351' : '325';
+    var lv = LOGO_V[logo] || '325';
     var ico = logo
       ? '<img class="ml-logo-img" src="assets/img/prod/logo-' + logo + '.' + ext + '?v=' + lv + '" alt="" aria-hidden="true">'
       : '<svg class="ml-ic" aria-hidden="true" focusable="false"><use href="#' + it[3] + '"></use></svg>';

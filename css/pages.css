@@ -68,6 +68,13 @@
   background:#fff;line-height:1.6;text-align:center;letter-spacing:.02em}
 .org-box--leaf{padding:8px 13px;font-size:.8125rem;white-space:nowrap;position:relative}
 .org-top{display:grid;grid-template-columns:1fr 1fr;justify-items:center;gap:24px}
+/* V411：最顶层「广西国控资本运营集团有限责任公司」单框居中，向下分叉（⊓）到两大股东。
+   分叉横杆两端竖线对齐 .org-top 两列（gap 24px）的列中线，与 .org-merge 的定位式样一致。 */
+.org-top--root{grid-template-columns:1fr}
+.org-fork{position:relative;height:34px}
+.org-fork::before{content:"";position:absolute;left:calc((100% - 24px)/4);right:calc((100% - 24px)/4);
+  top:12px;bottom:0;border-left:1px solid var(--oln);border-right:1px solid var(--oln);border-top:1px solid var(--oln)}
+.org-fork::after{content:"";position:absolute;left:50%;top:0;height:12px;border-left:1px solid var(--oln)}
 .org-merge,.org-split{position:relative;height:34px}
 /* 两大股东：竖线落到底 → 横线汇中 → 中线接股东会（⊔） */
 .org-merge::before{content:"";position:absolute;left:calc((100% - 24px)/4);right:calc((100% - 24px)/4);
@@ -100,6 +107,8 @@
   .org-top{grid-template-columns:1fr;gap:8px}
   .org-merge::before{display:none}
   .org-merge::after{height:100%}
+  .org-fork::before{display:none}
+  .org-fork::after{height:100%}
   .org-branch{grid-template-columns:1fr;gap:30px}
   .org-split::before{display:none}
   .org-link{width:32px}
