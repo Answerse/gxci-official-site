@@ -581,6 +581,9 @@ figure.bfig figcaption{margin-top:12px;font-size:0.8125rem;line-height:1.7;lette
 .pcsub--cocoon:hover{background:#3a5c3a}
 .pcsub--chenpi:hover{background:#854200}
 .pcsub--forest:hover{background:#216321}
+/* V437 用户指令：首页桂资通板块的小卡 hover 用金色（深金 --gold-d，白字对比够；
+   亮金 --gold 配白字看不清）。与其余产品卡「hover 走各自主色」的规则一致。 */
+.pcsub--house:hover{background:var(--gold-d)}
 .pcsub:hover .pplate-h{color:#fff}
 .pcsub:hover .pplate-k{color:rgba(255,255,255,.76)}
 /* V314 用户指令：主产品卡（桂农易通／桂资通）的图片高度要收成与下方扩展卡一致。
