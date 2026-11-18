@@ -9,10 +9,8 @@
 <link rel="icon" type="image/png" href="assets/img/_img_index_bbw-logo.png?v=351">
 <link rel="preconnect" href="https://www.gxci.com.cn" crossorigin>
 <link rel="preload" as="image" href="assets/img/hero-guokong.avif?v=351" type="image/avif" fetchpriority="high">
-<link rel="stylesheet" href="css/main.min.css?v=436">
-<link rel="stylesheet" href="css/pages.min.css?v=434">
-<!-- V436：首页产品中心改用产品线版式（与索引页对调），需要 .pline/.pcard/.pcsub 体系 -->
-<link rel="stylesheet" href="css/sub.min.css?v=438">
+<link rel="stylesheet" href="css/main.min.css?v=439">
+<link rel="stylesheet" href="css/pages.min.css?v=439">
 </head>
 <body class="dark-hero" data-page="index">
 
@@ -92,60 +90,43 @@
         <h2>产品中心</h2>
       </div>
     </div>
-    <!-- V436 用户指令：与产品中心索引页对调内容 —— 这里改用索引页的产品线版式，
-         去掉左侧产品线介绍文字，两条产品线左右水平并排，桂资通下方补一张自身产品卡。
-         主图沿索引页 3.69:1 扁比例，保证「主图 + 铭牌 + 小卡」能压进一屏。 -->
-    <div class="prod-lines">
-      <div class="pline">
-        <div class="pline-body">
-          <div class="pline-main">
-            <a class="pcard pcard--nongyi" href="product-nongyi.html">
-              <div class="pcard-fig"><img src="assets/img/prod/card-nongyi.webp?v=414" alt="桂农易通 · 特色农产品产业服务平台" loading="lazy"></div>
-              <div class="pcard-plate">
-                <h2 class="pplate-h">桂农易通</h2>
-                <p class="pplate-k">特色农业产业服务平台 · 底座</p>
-                <ul class="pplate-tags"><li>反向开票</li><li>集中代采</li><li>供应链金融</li></ul>
-              </div>
-            </a>
-          </div>
-          <div class="pline-subs">
-            <a class="pcsub pcsub--cocoon" href="case-jiayitong.html">
-              <span class="pcsub-icw"><img class="pcsub-ic" src="assets/img/prod/logo-cocoon.png?v=413" alt="茧易通产品标识"></span>
-              <h2 class="pplate-h">茧易通</h2>
-              <p class="pplate-k">桑蚕茧丝绸产业服务平台</p>
-            </a>
-            <a class="pcsub pcsub--chenpi" href="case-chenpitong.html">
-              <span class="pcsub-icw"><img class="pcsub-ic" src="assets/img/prod/logo-chenpi.svg?v=413" alt="陈皮通产品标识"></span>
-              <h2 class="pplate-h">陈皮通</h2>
-              <p class="pplate-k">浦北陈皮产业服务平台</p>
-            </a>
-            <a class="pcsub pcsub--forest" href="case-linyitong.html">
-              <span class="pcsub-icw"><img class="pcsub-ic" src="assets/img/prod/logo-forest.svg?v=413" alt="林易通产品标识"></span>
-              <h2 class="pplate-h">林易通</h2>
-              <p class="pplate-k">林产品交易市场线上综合平台</p>
-            </a>
-          </div>
+    <div class="prod-cols">
+      <div class="pcol">
+        <div class="phead">
+          <span class="plogo"><img src="assets/img/prod/logo-nongyi.svg?v=410" alt="桂农易通产品标识"></span>
+          <b class="pname">桂农易通</b>
+          <span class="pdesc">桂农易通从源头破解农产品收购企业获票难、农户凭证缺失等行业堵点，依托交易数据搭建农业可信数据链，为产业监管、金融增信、数据要素流通提供底座支撑。</span>
+        </div>
+        <div class="psubs">
+          <a class="psub" href="product-nongyi.html">
+            <span class="psub-ic"><img src="assets/img/prod/logo-nongyi.svg?v=410" alt=""></span>
+            <span class="psub-n">桂农易通</span>
+          </a>
+          <a class="psub" href="case-jiayitong.html">
+            <span class="psub-ic"><img src="assets/img/prod/logo-cocoon.png?v=410" alt=""></span>
+            <span class="psub-n">茧易通</span>
+          </a>
+          <a class="psub" href="case-chenpitong.html">
+            <span class="psub-ic"><img src="assets/img/prod/logo-chenpi.svg?v=412" alt=""></span>
+            <span class="psub-n">陈皮通</span>
+          </a>
+          <a class="psub" href="case-linyitong.html">
+            <span class="psub-ic"><img src="assets/img/prod/logo-forest.svg?v=410" alt=""></span>
+            <span class="psub-n">林易通</span>
+          </a>
         </div>
       </div>
-      <div class="pline">
-        <div class="pline-body">
-          <div class="pline-main">
-            <a class="pcard pcard--house" href="case-house.html">
-              <div class="pcard-fig"><img src="assets/img/prod/card-house.webp?v=414" alt="广西国有企业房产类资产登记管理系统" loading="lazy"></div>
-              <div class="pcard-plate">
-                <h2 class="pplate-h">桂资通</h2>
-                <p class="pplate-k">国企房产资产登记管理系统</p>
-                <ul class="pplate-tags"><li>统一登记</li><li>动态更新</li><li>盘活交易</li></ul>
-              </div>
-            </a>
-          </div>
-          <div class="pline-subs pline-subs--single">
-            <a class="pcsub" href="case-house.html">
-              <span class="pcsub-icw"><img class="pcsub-ic" src="assets/img/prod/logo-house.svg?v=413" alt="桂资通产品标识"></span>
-              <h2 class="pplate-h">桂资通</h2>
-              <p class="pplate-k">国企房产资产登记管理系统</p>
-            </a>
-          </div>
+      <div class="pcol">
+        <div class="phead">
+          <span class="plogo"><img src="assets/img/prod/logo-house.svg?v=410" alt="桂资通产品标识"></span>
+          <b class="pname">桂资通</b>
+          <span class="pdesc">围绕国资管理运营与盘活，构建“登记—经营—交易—监管—盘活”全链条数字化服务，服务监管方、国企及运营机构。</span>
+        </div>
+        <div class="psubs psubs--single">
+          <a class="psub" href="case-house.html">
+            <span class="psub-ic"><img src="assets/img/prod/logo-house.svg?v=410" alt=""></span>
+            <span class="psub-n">桂资通</span>
+          </a>
         </div>
       </div>
     </div>
