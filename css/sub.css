@@ -560,6 +560,8 @@ figure.bfig figcaption{margin-top:12px;font-size:0.8125rem;line-height:1.7;lette
    图标顶 682 落在主牌底之下 18px，两者不打架，故 .pline-subs 不再额外加 margin-top。 */
 .pline-subs{grid-area:subs;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
   gap:clamp(16px,1.4vw,20px)}
+/* V436 首页桂资通线只有一张小卡：占满整栏宽，与左栏三张卡的总宽对齐，两栏底部齐平。 */
+.pline-subs--single{grid-template-columns:1fr}
 .pcsub{
   position:relative;overflow:visible;
   background:#fff;border-radius:4px;

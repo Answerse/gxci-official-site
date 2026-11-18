@@ -1029,6 +1029,29 @@ html.pg-on{scroll-behavior:auto}
    注：本站默认禁装饰分割线、字号下限 13px，此处 14/16px 系用户点定版式本体，照稿保留。
    V391：用户要求板块加标题「产品中心」，标题与首页其他屏的 .shead 一致。 */
 .sec-prod{background:#F0F4F5}
+/* V436 用户指令：首页产品中心与产品中心索引页对调内容。
+   首页改用索引页的「产品线」版式（主图 + 铭牌 + 破形小卡，样式全部复用 sub.css），
+   这里只覆盖排布：去掉左侧介绍文字后的单列栅格、两线左右并排。
+   .pline 体系本身在 sub.css，勿在此重复定义尺寸。 */
+.prod-lines{display:grid;grid-template-columns:1fr;gap:56px;width:100%}
+body[data-page="index"] .pline{padding-top:0;display:flex;flex-direction:column}
+body[data-page="index"] .pline+.pline{padding-top:0}
+body[data-page="index"] .pline-body{
+  flex:1 1 auto;
+  grid-template-columns:1fr;grid-template-areas:"main" "subs";
+  grid-template-rows:auto 1fr;
+  row-gap:clamp(40px,5vh,58px)}
+/* .pline-body 是 align-items:start，subs 不拉伸时桂资通单卡会比左栏矮一截；
+   只让 subs 区域拉伸填满（main 保持 start，否则铭牌 bottom 定位会跑）。 */
+body[data-page="index"] .pline-subs{align-self:stretch}
+/* V436 产品中心索引页改用首页原有的两栏白卡版式；上边距补足 banner 底 → 内容顶 40px
+   （.bizgrid-sec 上内边距 12px + 这里的 28px）。
+   必须用 minmax(0,1fr)：纯 1fr 的下限是 min-content，内容多的左栏会把列撑宽、
+   两卡在 1024/900 下宽度不等（实测 490 vs 392）。 */
+body[data-page="products"] .prod-cols{grid-template-columns:repeat(2,minmax(0,1fr));gap:40px;margin-top:28px}
+@media (max-width:899px){
+  body[data-page="products"] .prod-cols{grid-template-columns:1fr;gap:24px}
+}
 /* V389 曾按稿把 h2 视觉隐藏；V391 恢复显示。h2 仍是 home-scroll.js 取屏指示器标签的来源。 */
 .prod-cols{display:grid;grid-template-columns:1fr;gap:24px;width:100%;max-width:1320px;margin-inline:auto}
 .pcol{background:#fff;border-radius:4px;padding:40px 30px;display:flex;flex-direction:column;align-items:center;gap:40px;text-align:center}
@@ -1137,6 +1160,16 @@ html.pg-on{scroll-behavior:auto}
     grid-template-columns:1fr 1fr;
     gap:40px}
   body[data-page="index"] .pcol{justify-content:flex-start}
+  /* V436 首页产品中心改为两条产品线左右并排，屏内垂直居中；主图沿用索引页 3.69:1 扁比例，
+     保证「主图 + 铭牌 + 三张小卡」压进一屏（1440×900 实测总高约 390px，余量充足）。 */
+  body[data-page="index"] .prod-lines{
+    margin-top:auto;margin-bottom:auto;
+    grid-template-columns:1fr 1fr;gap:40px}
+  body[data-page="index"] .pline-main .pcard-fig{aspect-ratio:3.69/1}
+  /* 正好 900px 时 sub.css 的 @media(max-width:900px) 会把小卡压成单列（3 张竖排、两栏严重不齐），
+     而首页 ≥900 已两栏并排。这里明确保持 3 列，与 901+ 一致；桂资通单卡排除在外。 */
+  body[data-page="index"] .pline-subs:not(.pline-subs--single){
+    grid-template-columns:repeat(3,minmax(0,1fr))}
 }
 
 /* ============================================================
