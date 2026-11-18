@@ -128,7 +128,10 @@ body[data-page="business"] .dhero-shade{background:
 .dpanel-h{margin-bottom:clamp(18px,2.4vh,26px);font-size:clamp(1.375rem,2.35vw,1.875rem);font-weight:600;line-height:1.36;letter-spacing:.02em}
 /* h3 与上一段正文之间留 36px（段落之间才 24px），分组才看得出来。
    下限 18px：窄屏正文是 17px，靠 600 字重撑层级；再往下就与正文混同 */
-.dsub-h{margin-top:clamp(24px,3.4vh,36px);font-size:clamp(1.125rem,1.35vw,1.25rem);font-weight:600;line-height:1.5;letter-spacing:.02em}
+/* V435：520px 下长节标题尾行出现孤字（如 case-house「…资产管理系 / 统」19/19/1）。
+   text-wrap:pretty 对中文无效（实测 19/18/2），balance 对块级标题有效（实测 13/13/13）。
+   仅在标题本身折行时均衡各行，单行标题不受影响，不改变字号/字重/颜色。 */
+.dsub-h{margin-top:clamp(24px,3.4vh,36px);font-size:clamp(1.125rem,1.35vw,1.25rem);font-weight:600;line-height:1.5;letter-spacing:.02em;text-wrap:balance}
 
 /* ---------- V285 五个业务领域页的节标题统一（用户指令：40px / 加粗 / 居中） ----------
    5 个领域页正文里「业务简介 / 具体服务内容 / 典型业务场景 / 建设成果与交付内容 /
